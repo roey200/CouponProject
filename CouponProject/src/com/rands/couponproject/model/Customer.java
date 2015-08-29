@@ -1,0 +1,65 @@
+package com.rands.couponproject.model;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+public class Customer {
+	private long id;
+	private String customerName;
+	private String password;
+	private Collection<Coupon> coupons;
+
+	public Customer()
+	{
+		coupons = new ArrayList<Coupon>();
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getCustomerName() {
+		return customerName;
+	}
+
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Collection<Coupon> getCoupons() {
+		return coupons;
+	}
+
+	public void setCoupons(ArrayList<Coupon> coupons) {
+		this.coupons = coupons;
+	}
+
+	@Override
+	public String toString() {
+		return "Customer [id=" + id + ", name=" + customerName + "]";
+	}
+	public boolean equals(Object other)
+	{
+		if(other instanceof Customer)
+		{
+			Customer otherCustomer=((Customer)other);
+			if(this.customerName.equals(otherCustomer.customerName))
+				if(this.id==otherCustomer.id)
+					return true;
+		}
+		return false;
+	}
+
+}

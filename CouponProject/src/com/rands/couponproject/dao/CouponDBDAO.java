@@ -1,0 +1,239 @@
+ package com.rands.couponproject.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+
+import org.apache.log4j.Logger;
+
+import com.rands.couponproject.model.Coupon;
+import com.rands.couponproject.model.CouponType;
+import com.rands.couponproject.utils.DBUtils;
+
+
+public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
+	static Logger logger = Logger.getLogger(CouponDBDAO.class);
+	
+	public CouponDBDAO()
+	{
+		super();
+	}
+	
+	public CouponDBDAO(Connection conn)
+	{
+		super(conn);
+	}
+	
+	private Coupon getFromResultSet(ResultSet rs) throws SQLException {
+		Coupon coupon = new Coupon();       
+		coupon.setId(rs.getInt("id"));
+		coupon.setTitle(rs.getString("title"));
+		coupon.setAmount(rs.getInt("amount"));
+		coupon.setStartDate(rs.getDate("start_date"));
+		coupon.setEndDate(rs.getDate("end_date"));
+		coupon.setImage(rs.getString("image"));
+		coupon.setMassage(rs.getString("message"));
+		coupon.setPrice(rs.getDouble("price"));
+		
+		String type = rs.getString("coupon_type");
+		coupon.setType(CouponType.valueOf(type));
+		
+		return coupon;
+	}
+
+	@Override
+	public void createCoupon(Coupon coupon) {
+		 
+		Connection conn =getConnection();
+		try {
+			String sql = "insert into APP.coupon (title,start_date , end_date,amount , coupon_type, message , price , image) values(?,?,?,?,?,?,?,?)";
+			PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			
+			ps.setString(1, coupon.getTitle());
+			ps.setDate(2,coupon.getStartDate());
+			ps.setDate(3,coupon.getEndDate());
+			ps.setInt(4,coupon.getAmount());
+			ps.setString(5,coupon.getType().name());
+			ps.setString(6,coupon.getMassage());
+			ps.setDouble(7,coupon.getPrice());
+			ps.setString(8,coupon.getImage());
+
+			int affectedRows = ps.executeUpdate();
+	        if (affectedRows == 0) {
+	            throw new SQLException("Creating coupon failed, no rows affected.");
+	        }
+        	long id = DBUtils.getGeneratedKey(ps);
+        	coupon.setId(id);
+            System.out.println("coupon=" + coupon.getTitle() + " added to database, id=" + id);
+
+		} catch (SQLException e) {
+			System.out.println("failed to insert coupon " + coupon.getTitle() + " : " + e.toString());
+			e.printStackTrace();
+		} finally {
+			returnConnection(conn);
+		}		
+	}
+
+	@Override
+	public void removeCoupon(Coupon coupon) {
+		
+		
+		Connection conn = getConnection();
+		try {
+			//Statement st = conn.createStatement();
+			PreparedStatement ps = conn.prepareStatement("delete from APP.coupon where id=?");
+			
+			ps.setLong(1, coupon.getId());
+			ps.execute();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			returnConnection(conn);
+		}
+		
+	}
+
+	@Override
+	public void updateCoupon(Coupon coupon) {
+		Connection conn = getConnection();
+
+		try {
+			String sql = "update APP.coupon set title=?,start_date=? , end_date=?,amount=? , coupon_type=?, message=? , price=? , image=? where id=?";
+			//Statement st =conn.createStatement();
+			PreparedStatement ps = conn.prepareStatement(sql);
+			
+		
+			ps.setString(1, coupon.getTitle());
+			ps.setDate(2,coupon.getStartDate());
+			ps.setDate(3,coupon.getEndDate());
+			ps.setInt(4,coupon.getAmount());
+			ps.setString(5,coupon.getType().name());
+			ps.setString(6,coupon.getMassage());
+			ps.setDouble(7,coupon.getPrice());
+			ps.setString(8,coupon.getImage());
+
+			ps.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			returnConnection(conn);
+		}
+
+	}
+		
+	
+
+	@Override
+	public Coupon getCoupon(long id) {
+
+		Coupon coupon = null;
+		Connection conn = getConnection();
+
+		try {
+			String sql = "select * from APP.coupon where id=?";
+			PreparedStatement ps = conn.prepareStatement(sql);   
+            ps.setLong(1,id);
+            ResultSet rs = ps.executeQuery();   
+			
+			if (!rs.next())
+				return null;
+			
+			coupon = getFromResultSet(rs);
+			//coupon.setId(id);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			returnConnection(conn);
+		}
+		return coupon ; 
+	}
+
+	public Coupon getCoupon(String title) {
+
+		Coupon coupon = null;
+		Connection conn = getConnection();
+
+		try {
+			String sql = "select * from APP.coupon where title=?";
+			PreparedStatement ps = conn.prepareStatement(sql);   
+            ps.setString(1,title);
+            ResultSet rs = ps.executeQuery();   
+			
+			if(!rs.next())
+				return null;
+			
+			coupon = getFromResultSet(rs);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			returnConnection(conn);
+		}
+		return coupon ; 
+	}
+
+
+	@Override
+	public Collection<Coupon> getAllCoupons() {
+		 
+		Collection<Coupon> coupons = new ArrayList<Coupon>();
+		Connection conn = getConnection();
+
+		try {
+			String sql = "select * from APP.coupon";
+			Statement st = conn.createStatement(); //connects to company DB			
+			ResultSet rs = st.executeQuery(sql);
+
+			while (rs.next())
+			{
+				Coupon coupon = getFromResultSet(rs);
+				coupons.add(coupon);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			returnConnection(conn);
+			conn = null;
+		}
+
+		return coupons;
+	}
+	@Override
+	public Collection<Coupon> getCouponByType(CouponType couponType) {
+		 
+		Collection<Coupon> coupons = new ArrayList<Coupon>();
+		Connection conn = getConnection();
+		
+		String typeString = couponType.toString();
+
+		try {
+			String sql = "select * from APP.coupon where coupon_type=?";
+			PreparedStatement ps = conn.prepareStatement(sql);   
+            ps.setString(1,typeString);
+            ResultSet rs = ps.executeQuery();   			
+	
+			while (rs.next())
+			{
+				Coupon coupon = getFromResultSet(rs);
+				coupons.add(coupon);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			returnConnection(conn);
+			conn = null;
+		}
+
+		return coupons;
+	}
+}	

@@ -1,0 +1,42 @@
+CREATE TABLE APP.coupon (
+	id INTEGER PRIMARY KEY AUTO_INCREMENT,
+	title VARCHAR(50) NOT NULL,
+	start_date DATE NOT NULL,
+	end_date DATE NOT NULL, 
+	amount INTEGER NOT NULL,
+	coupon_type VARCHAR(20) NOT NULL,
+	message VARCHAR(144) NOT NULL,
+	price DOUBLE NOT NULL,
+	image VARCHAR(50)
+);
+
+CREATE TABLE APP.company(
+		id INTEGER PRIMARY KEY AUTO_INCREMENT,
+		comp_name VARCHAR(20) NOT NULL,
+		password VARCHAR(20) NOT NULL,
+		email VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE APP.customer (
+	id INTEGER PRIMARY KEY AUTO_INCREMENT,
+	cust_name VARCHAR(20) NOT NULL,
+	password VARCHAR(20) NOT NULL
+);
+
+
+CREATE TABLE APP.customer_coupon (
+   cust_id INTEGER,
+   coupon_id INTEGER,
+   
+   FOREIGN KEY (cust_id) REFERENCES customer(id),
+   FOREIGN KEY (coupon_id) REFERENCES coupon(id)
+);
+
+CREATE TABLE APP.company_coupon (
+   comp_id INTEGER,
+   coupon_id INTEGER,
+
+   FOREIGN KEY (comp_id) REFERENCES company(id),
+   FOREIGN KEY (coupon_id) REFERENCES coupon(id)
+);
+

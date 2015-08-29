@@ -72,8 +72,7 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
             System.out.println("coupon=" + coupon.getTitle() + " added to database, id=" + id);
 
 		} catch (SQLException e) {
-			System.out.println("failed to insert coupon " + coupon.getTitle() + " : " + e.toString());
-			e.printStackTrace();
+			logger.error("createCoupon " + coupon.getTitle() + " failed : " + e.toString());
 		} finally {
 			returnConnection(conn);
 		}		
@@ -81,22 +80,38 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 
 	@Override
 	public void removeCoupon(Coupon coupon) {
-		
-		
+
 		Connection conn = getConnection();
 		try {
-			//Statement st = conn.createStatement();
-			PreparedStatement ps = conn.prepareStatement("delete from APP.coupon where id=?");
-			
-			ps.setLong(1, coupon.getId());
+			long couponId = coupon.getId();
+			conn.setAutoCommit(false); // begin transaction
+
+			PreparedStatement ps;
+
+			ps = conn.prepareStatement("delete from APP.customer_coupon where coupon_id=?");
+			ps.setLong(1, couponId);
 			ps.execute();
-			
+
+			ps = conn.prepareStatement("delete from APP.company_coupon where coupon_id=?");
+			ps.setLong(1, couponId);
+			ps.execute();
+
+			ps = conn.prepareStatement("delete from APP.coupon where id=?");
+			ps.setLong(1, couponId);
+			ps.execute();
+
+			conn.setAutoCommit(true); // end the transaction
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error("removeCoupon failed : " + e.toString());
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				logger.error("removeCoupon rollback failed : " + e.toString());
+			}
 		} finally {
 			returnConnection(conn);
 		}
-		
+
 	}
 
 	@Override
@@ -120,15 +135,12 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 
 			ps.execute();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("updateCoupon failed : " + e.toString());
 		} finally {
 			returnConnection(conn);
 		}
 
 	}
-		
-	
 
 	@Override
 	public Coupon getCoupon(long id) {
@@ -207,6 +219,7 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 
 		return coupons;
 	}
+	
 	@Override
 	public Collection<Coupon> getCouponByType(CouponType couponType) {
 		 
@@ -236,4 +249,59 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 
 		return coupons;
 	}
+	
+	@Override
+	public Collection<Coupon> getCompanyCoupons(long companyId) {
+		 
+		Collection<Coupon> coupons = new ArrayList<Coupon>();
+		Connection conn = getConnection();
+
+		try {
+			String sql = "SELECT * from APP.coupon c JOIN APP.company_coupon cc ON c.id = cc.coupon_id WHERE cc.comp_id=?";
+			PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setLong(1,companyId);
+
+			ResultSet rs = ps.executeQuery(sql);
+
+			while (rs.next())
+			{
+				Coupon coupon = getFromResultSet(rs);
+				coupons.add(coupon);
+			}
+		} catch (SQLException e) {
+			logger.error("getCompanyCoupons failed : " + e.toString());
+		} finally {
+			returnConnection(conn);
+		}
+
+		return coupons;
+	}
+	
+	@Override
+	public Collection<Coupon> getCustomerCoupons(long customerId) {
+		 
+		Collection<Coupon> coupons = new ArrayList<Coupon>();
+		Connection conn = getConnection();
+
+		try {
+			String sql = "SELECT * from APP.coupon c JOIN APP.customer_coupon cc ON c.id = cc.coupon_id WHERE cc.cust_id=?";
+			PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setLong(1,customerId);
+
+			ResultSet rs = ps.executeQuery(sql);
+
+			while (rs.next())
+			{
+				Coupon coupon = getFromResultSet(rs);
+				coupons.add(coupon);
+			}
+		} catch (SQLException e) {
+			logger.error("getCompanyCoupons failed : " + e.toString());
+		} finally {
+			returnConnection(conn);
+		}
+
+		return coupons;
+	}	
+	
 }	

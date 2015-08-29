@@ -17,8 +17,17 @@ import com.rands.couponproject.model.Customer;
 public class CustomerFacade implements CouponClientFacade {
 	static Logger logger = Logger.getLogger(CustomerFacade.class);
 
-	private CustomerDAO customerDAO;
-	private CouponDAO couponDAO;
+//	private CustomerDAO customerDAO;
+//	private CouponDAO couponDAO;
+	
+	private long customerId;
+	
+	private CustomerFacade() {
+
+//		customerDAO = new CustomerDBDAO();
+//		couponDAO = new CouponDBDAO();
+
+	}	
 
 	public static CouponClientFacade login(String name, String password,ClientType clientType) throws Exception {
 		
@@ -26,27 +35,17 @@ public class CustomerFacade implements CouponClientFacade {
 			logger.error("company login failed mismitch clientType =" + clientType );
 			throw new Exception("LoginFailed");
 		}
-			
-		CustomerFacade facade = new CustomerFacade();
 		
-		Customer customer = facade.customerDAO.getCustomer(name);
-		if (null == customer) {
-			logger.error("customer login failed ,customer " + name + " dose not exist");
+		CustomerDAO customerDAO = new CustomerDBDAO();
+		if (!customerDAO.login(name, password)) {
+			logger.error("customer login failed ,customer " + name);
 			throw new Exception("LoginFailed");
 		}
-				
-		if (customer.getPassword().equals(password))
-			return facade;
-		
-		logger.error("customer login failed ,customer " + name + " password mismatch");
-		throw new Exception("LoginFailed");
-	}
 
-	private CustomerFacade() {
-
-		customerDAO = new CustomerDBDAO();
-		couponDAO = new CouponDBDAO();
-
+		CustomerFacade facade = new CustomerFacade();
+		Customer customer = customerDAO.getCustomer(name);
+		facade.customerId = customer.getId();
+		return facade;
 	}
 
 	public void purchaseCoupon(Coupon coupon) throws Exception {

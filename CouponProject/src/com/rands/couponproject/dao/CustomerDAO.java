@@ -9,10 +9,10 @@ public interface CustomerDAO {
 	public void createCustomer(Customer customer);
 	public void removeCustomer (Customer customer);
 	public void updateCustomer (Customer customer);
+	public Customer getCustomer(String name);
 	public Customer getCustomer (long id);
 	public Collection<Customer> getAllCustomers();
-	public Collection<Coupon> getCoupon();
+	public Collection<Coupon> getCoupons(long id);
 	public boolean login(String CustomerName, String password);
-	public Customer getCustomer(String name);
 
 }

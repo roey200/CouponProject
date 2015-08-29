@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -74,19 +75,33 @@ public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 
 	@Override
 	public void removeCustomer(Customer customer) {
-		// TODO Auto-generated method stub
 
 		Connection conn = getConnection();
+		
 		try {
+			conn.setAutoCommit(false); // begin transaction
+			
+			CouponDAO couponDAO = new CouponDBDAO(conn);
+			Collection<Coupon> coupons = getCoupons(customer.getId());
+			for (Coupon coupon:coupons) {
+				couponDAO.removeCoupon(coupon);
+			}
+
 			String sql = "delete from APP.customer where id=?";
-			//Statement st = conn.createStatement();
 			PreparedStatement ps = conn.prepareStatement(sql);
 
 			ps.setLong(1, customer.getId());
 			ps.execute();
+
+			conn.setAutoCommit(true); // end transaction
+
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("removeCustomer failed : " + e.toString());
+			try {
+				conn.rollback(); // abort the transaction
+			} catch (SQLException e1) {
+				logger.error("removeCustomer rollback failed : " + e1.toString());
+			}
 		} finally {
 			returnConnection(conn);
 		}
@@ -195,9 +210,10 @@ public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 	}
 
 	@Override
-	public Collection<Coupon> getCoupon() {
-		// TODO Auto-generated method stub
-		return null;
+	public Collection<Coupon> getCoupons(long customerId) {
+		CouponDAO couponDAO = new CouponDBDAO();
+		return couponDAO.getCustomerCoupons(customerId);
+		
 	}
 
 	@Override
@@ -205,9 +221,6 @@ public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 		Connection conn = getConnection();
 		boolean isCorrectPassword = false;
 		try {
-//			String sql = "select password from APP.Coustomer where cust_name='" + customerName + "'";
-//			Statement st = conn.createStatement();
-//			ResultSet rs = st.executeQuery(sql);
 
 			String sql = "select password from APP.Coustomer where cust_name=?";
 			PreparedStatement ps = conn.prepareStatement(sql);   
@@ -220,8 +233,7 @@ public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 			String dbPassword = rs.getString(1);
 			isCorrectPassword = (password.equals(dbPassword));
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("login failed : " + e.toString());
 		}
 		return isCorrectPassword;
 	}

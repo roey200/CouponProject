@@ -84,7 +84,7 @@ public class CompanyDBDAO extends BaseDBDAO implements CompanyDAO {
 	public void removeCompany(Company company) { // takes a company object and
 													// deletes it, if it does
 													// exist in the db
-		// TODO Auto-generated method stub
+TODO remove company coupons !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		Connection conn = getConnection();
 		try {
 			String sql = "delete from APP.company where id=?";
@@ -215,37 +215,12 @@ public class CompanyDBDAO extends BaseDBDAO implements CompanyDAO {
 
 		return companies;
 	}
-
+	
 	@Override
-	public Collection<Coupon> getCoupons() {
-		Connection conn = getConnection();
-		long companyId = company.getId();
-		ArrayList<Long> couponsid = new ArrayList<Long>();
-		Collection<Coupon> coupons = new ArrayList<Coupon>();
-
-		try {
-			String sql = "select * from APP.customer_coupon where company_id=?";
-			PreparedStatement ps = conn.prepareStatement(sql);   
-            ps.setLong(1,companyId);
-            ResultSet rs = ps.executeQuery();   						
-			
-			CouponDBDAO couponDBDAO = new CouponDBDAO();
-
-			while (rs.next()) {
-				Long couponId = rs.getLong("coupon_id");
-				couponsid.add(couponId);
-			}
-
-			for (Long each : couponsid) {
-				coupons.add(couponDBDAO.getCoupon(each));
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return coupons;
-	}
+	public Collection<Coupon> getCoupons(long companyId) {
+		CouponDAO couponDAO = new CouponDBDAO();
+		return couponDAO.getCompanyCoupons(companyId);
+	}	
 
 	@Override
 	public boolean login(String companyName, String password) {
@@ -261,8 +236,7 @@ public class CompanyDBDAO extends BaseDBDAO implements CompanyDAO {
 			String dbPassword = rs.getString(1);
 			isCorrectPassword = (password.equals(dbPassword));
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("login failed : " + e.toString());
 		}
 		return isCorrectPassword;
 	}

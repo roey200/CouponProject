@@ -11,8 +11,8 @@ public interface CompanyDAO {
 	public void updateCompany(Company company);
 	public Company getCompany(long id);
 	public Collection<Company> getAllCompanies();
-	public Collection<Coupon> getCoupons();
-	public boolean login(String companyName,  String password);
 	public Company getCompany(String name);
+	Collection<Coupon> getCoupons(long companyId);
+	public boolean login(String companyName,  String password);
 
 }

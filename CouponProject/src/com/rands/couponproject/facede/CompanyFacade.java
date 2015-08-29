@@ -27,38 +27,58 @@ public class CompanyFacade implements CouponClientFacade {
 //		couponDAO = new CouponDBDAO();
 	}
 	
-	public static CouponClientFacade login(String name, String password,ClientType clientType) throws Exception {
-		
-		if (clientType != ClientType.COMPANY){
-			logger.error("company login failed mismitch clientType =" +clientType  );
+//	public static CouponClientFacade login(String name, String password,ClientType clientType) throws Exception {
+//		
+//		if (clientType != ClientType.COMPANY){
+//			logger.error("company login failed mismitch clientType =" +clientType  );
+//			throw new Exception("LoginFailed");
+//		}
+//		
+//		CompanyDAO companyDAO = new CompanyDBDAO();
+//		
+//		Company company = companyDAO.getCompany(name);
+//		if (null == company) {
+//			logger.error("company login failed ,company " + name + " dose not exist");
+//			throw new Exception("LoginFailed");
+//		}
+//				
+//		if (!company.getPassword().equals(password)) {
+//			logger.error("company login failed ,company " + name + " password mismatch");
+//			throw new Exception("LoginFailed");
+//		}
+//		
+//		CompanyFacade facade = new CompanyFacade();
+//		facade.companyId = company.getId();
+//		return facade;
+//	}
+
+	public static CouponClientFacade login(String name, String password, ClientType clientType) throws Exception {
+
+		if (clientType != ClientType.COMPANY) {
+			logger.error("company login failed mismitch clientType =" + clientType);
 			throw new Exception("LoginFailed");
 		}
-		
+
 		CompanyDAO companyDAO = new CompanyDBDAO();
-		
-		Company company = companyDAO.getCompany(name);
-		if (null == company) {
-			logger.error("company login failed ,company " + name + " dose not exist");
+
+		if (!companyDAO.login(name, password)) {
+			logger.error("company login failed ,company " + name);
 			throw new Exception("LoginFailed");
 		}
-				
-		if (!company.getPassword().equals(password)) {
-			logger.error("company login failed ,company " + name + " password mismatch");
-			throw new Exception("LoginFailed");
-		}
-		
+
 		CompanyFacade facade = new CompanyFacade();
-		facade.companyId = company.getId();
+		Company company = companyDAO.getCompany(name);
+		facade.companyId = company.getId(); 
 		return facade;
 	}
 	
 	public void createCoupon(Coupon coupon) {
-		String title=coupon.getTitle(); // not finisheddddddddddd++++++++++++++++++++
+		CouponDAO couponDAO = new CouponDBDAO();
 		couponDAO.createCoupon(coupon);
-		
 	}
 	
 	public void removeCoupon(Coupon coupon) {
+		CouponDAO couponDAO = new CouponDBDAO();
 		couponDAO.removeCoupon(coupon);// not finisheddddddd
 	}
 	
@@ -81,12 +101,4 @@ public class CompanyFacade implements CouponClientFacade {
 	public Collection<Coupon> getCouponByType(CouponType couponType) {
 		return couponDAO.getCouponByType(couponType);
 	}
-	
-	
-
-
-	
-	
-	
-	
 }

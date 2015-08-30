@@ -62,6 +62,8 @@ public class CustomerFacade implements CouponClientFacade {
 			throw new CouponException("not availabe anymore " + coupon.toString());
 
 		}
+		
+		// TODO -- tha actual 
 
 	}
 

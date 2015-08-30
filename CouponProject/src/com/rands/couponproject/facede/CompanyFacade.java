@@ -1,14 +1,19 @@
 package com.rands.couponproject.facede;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Collection;
 
 import org.apache.log4j.Logger;
 
+import com.rands.couponproject.ConnectionPool;
 import com.rands.couponproject.CouponSystem;
 import com.rands.couponproject.dao.CompanyDAO;
 import com.rands.couponproject.dao.CompanyDBDAO;
 import com.rands.couponproject.dao.CouponDAO;
 import com.rands.couponproject.dao.CouponDBDAO;
+import com.rands.couponproject.dao.CustomerDAO;
+import com.rands.couponproject.dao.CustomerDBDAO;
 import com.rands.couponproject.model.ClientType;
 import com.rands.couponproject.model.Company;
 import com.rands.couponproject.model.Coupon;
@@ -77,9 +82,37 @@ public class CompanyFacade implements CouponClientFacade {
 		couponDAO.createCoupon(coupon);
 	}
 	
-	public void removeCoupon(Coupon coupon) {
-		CouponDAO couponDAO = new CouponDBDAO();
-		couponDAO.removeCoupon(coupon);// not finisheddddddd
+	public void removeCoupon(Coupon coupon) throws Exception {
+		ConnectionPool pool;
+		Connection conn;
+
+		try {
+			pool = ConnectionPool.getInstance();
+			conn = pool.getConnection();
+		} catch (Exception e) {
+			logger.error("removeCoupon failed to get a connection : " + e.toString());
+			throw e;
+		}
+
+		CouponDAO couponDAO = new CouponDBDAO(conn);
+
+		try {
+			conn.setAutoCommit(true); // begin transaction
+			
+			couponDAO.removeCoupon(coupon); 
+			
+			conn.commit(); // end the transaction
+		} catch (Exception e) {
+			logger.error("removeCoupon failed : " + e.toString());
+			try {
+				conn.rollback(); // abort the transaction
+			} catch (SQLException e1) {
+				logger.error("removeCoupon rollback failed : " + e.toString());
+			}
+			throw (e);
+		} finally {
+			pool.returnConnection(conn);
+		}		
 	}
 	
 	public void updateCoupon(Coupon coupon){

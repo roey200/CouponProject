@@ -81,23 +81,18 @@ public class CompanyDBDAO extends BaseDBDAO implements CompanyDAO {
 	}
 
 	@Override
-	public void removeCompany(Company company) { // takes a company object and
+	public void removeCompany(Company company) throws SQLException { // takes a company object and
 													// deletes it, if it does
 													// exist in the db
-TODO remove company coupons !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		Connection conn = getConnection();
 		try {
 			String sql = "delete from APP.company where id=?";
-			// Statement st = conn.createStatement(); //connects to company DB
 			PreparedStatement ps = conn.prepareStatement(sql);//
-
 			ps.setLong(1, company.getId());
 			ps.execute();
-			System.out
-					.println("company has successfully been removed from database");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			System.err.println("somthing went worng please try again");
+			logger.error("removeCompany failed : " + e.toString());
+			throw e;
 		} finally {
 			returnConnection(conn);
 			conn = null;

@@ -79,12 +79,11 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 	}
 
 	@Override
-	public void removeCoupon(Coupon coupon) {
+	public void removeCoupon(Coupon coupon) throws SQLException {
 
 		Connection conn = getConnection();
 		try {
 			long couponId = coupon.getId();
-			conn.setAutoCommit(false); // begin transaction
 
 			PreparedStatement ps;
 
@@ -100,14 +99,9 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 			ps.setLong(1, couponId);
 			ps.execute();
 
-			conn.setAutoCommit(true); // end the transaction
 		} catch (SQLException e) {
 			logger.error("removeCoupon failed : " + e.toString());
-			try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				logger.error("removeCoupon rollback failed : " + e.toString());
-			}
+			throw e;
 		} finally {
 			returnConnection(conn);
 		}

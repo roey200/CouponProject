@@ -49,6 +49,8 @@ public class AdminFacade implements CouponClientFacade {
 		throw new Exception("LoginFailed");		
 	}
 	
+	// Handling companies
+	
 	public void createCompany(Company c)
 	{
 		CompanyDAO companyDAO = new CompanyDBDAO();
@@ -60,11 +62,11 @@ public class AdminFacade implements CouponClientFacade {
 		}
 	}
 
-	public void removeCompany(Company c) throws Exception
+	public void removeCompany(Company company) throws Exception
 	{
 		ConnectionPool pool;
 		Connection conn;
-		long companyId = c.getId();
+		long companyId = company.getId();
 		
 		try {
 			pool = ConnectionPool.getInstance();
@@ -74,17 +76,17 @@ public class AdminFacade implements CouponClientFacade {
 			throw e;
 		}
 
-		CompanyDAO companyDAO = new CompanyDBDAO(conn);
+		CompanyDAO companyDAO = new CompanyDBDAO(conn); // use the same connection for the transaction
 		CouponDAO couponDAO = new CouponDBDAO(conn);
 
 		try {
-			conn.setAutoCommit(true); // begin transaction
-			Collection<Coupon> coupons = couponDAO.getCustomerCoupons(companyId);
+			conn.setAutoCommit(false); // begin transaction
+			Collection<Coupon> coupons = couponDAO.getCompanyCoupons(companyId);
 			for (Coupon coupon:coupons) {
-				couponDAO.removeCoupon(coupon);
+				couponDAO.removeCoupon(coupon); // remove the coupon and the links
 			}
 			
-			companyDAO.removeCompany(c); 
+			companyDAO.removeCompany(company); 
 			
 			conn.commit(); // end the transaction
 		} catch (Exception e) {
@@ -117,6 +119,8 @@ public class AdminFacade implements CouponClientFacade {
 		CompanyDAO companyDAO = new CompanyDBDAO();
 		return companyDAO.getAllCompanies();
 	}
+	
+	// Handling customers	
 
 	public void createCustomer(Customer c)
 	{
@@ -150,7 +154,7 @@ public class AdminFacade implements CouponClientFacade {
 			conn.setAutoCommit(true); // begin transaction
 			Collection<Coupon> coupons = couponDAO.getCustomerCoupons(customerId);
 			for (Coupon coupon:coupons) {
-				couponDAO.removeCoupon(coupon);
+				couponDAO.removeCustomerCoupon(coupon); // remove the links
 			}
 			
 			customerDAO.removeCustomer(customer); 

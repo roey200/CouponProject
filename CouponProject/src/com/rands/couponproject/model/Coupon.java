@@ -98,7 +98,8 @@ public class Coupon {
 				+ ", type=" + type + ", massage=" + massage + ", price="
 				+ price + ", image=" + image + "]";
 	}
-	public boolean equals(Object other){
+	
+	public boolean equals(Object other) {
 		if (other instanceof Coupon) {
 			Coupon otherCoupon = (Coupon)other ;
 			if (otherCoupon.title.equals(this.title))

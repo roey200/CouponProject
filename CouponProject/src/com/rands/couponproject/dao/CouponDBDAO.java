@@ -47,7 +47,7 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 	}
 
 	@Override
-	public void createCoupon(Coupon coupon) {
+	public void createCoupon(Coupon coupon) throws SQLException {
 		 
 		Connection conn =getConnection();
 		try {
@@ -73,10 +73,64 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 
 		} catch (SQLException e) {
 			logger.error("createCoupon " + coupon.getTitle() + " failed : " + e.toString());
+			throw e;
 		} finally {
 			returnConnection(conn);
 		}		
 	}
+	
+	@Override
+	public void createCompanyCoupon(long companyId,long couponId) throws SQLException {
+		Connection conn =getConnection();
+		try {
+			String sql = "insert into APP.company_coupon (comp_id,coupon_id) values(?,?)";
+			PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			
+			ps.setLong(1, companyId);
+			ps.setLong(2,couponId);
+			
+			int affectedRows = ps.executeUpdate();
+	        if (affectedRows == 0) {
+	            throw new SQLException("createCompanyCoupon, no rows affected.");
+	        }
+        	long id = DBUtils.getGeneratedKey(ps);
+            System.out.println("company_coupon added to database, id=" + id);
+
+		} catch (SQLException e) {
+			logger.error("createCompanyCoupon failed : " + e.toString());
+			throw e;
+		} finally {
+			returnConnection(conn);
+		}					
+		
+	}
+	
+	@Override
+	public void createCustomerCoupon(long customerId,long couponId) throws SQLException {
+		Connection conn =getConnection();
+		try {
+			String sql = "insert into APP.customer_coupon (cust_id,coupon_id) values(?,?)";
+			PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			
+			ps.setLong(1, customerId);
+			ps.setLong(2,couponId);
+			
+			int affectedRows = ps.executeUpdate();
+	        if (affectedRows == 0) {
+	            throw new SQLException("createCustomerCoupon, no rows affected.");
+	        }
+        	long id = DBUtils.getGeneratedKey(ps);
+            System.out.println("customer_coupon added to database, id=" + id);
+
+		} catch (SQLException e) {
+			logger.error("createCustomerCoupon failed : " + e.toString());
+			throw e;
+		} finally {
+			returnConnection(conn);
+		}					
+		
+	}
+	
 
 	@Override
 	public void removeCoupon(Coupon coupon) throws SQLException {
@@ -86,18 +140,16 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 			long couponId = coupon.getId();
 
 			PreparedStatement ps;
+			int n;
 
-			ps = conn.prepareStatement("delete from APP.customer_coupon where coupon_id=?");
-			ps.setLong(1, couponId);
-			ps.execute();
-
-			ps = conn.prepareStatement("delete from APP.company_coupon where coupon_id=?");
-			ps.setLong(1, couponId);
-			ps.execute();
+			removeCustomerCoupon(coupon); // remove the links
+			removeCompanyCoupon(coupon);
 
 			ps = conn.prepareStatement("delete from APP.coupon where id=?");
 			ps.setLong(1, couponId);
-			ps.execute();
+			n = ps.executeUpdate();
+			logger.debug(n + " records removed from APP.coupon");
+			
 
 		} catch (SQLException e) {
 			logger.error("removeCoupon failed : " + e.toString());
@@ -107,6 +159,55 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 		}
 
 	}
+	
+	@Override
+	public void removeCustomerCoupon(Coupon coupon) throws SQLException {
+
+		Connection conn = getConnection();
+		try {
+			long couponId = coupon.getId();
+
+			PreparedStatement ps;
+			int n;
+
+			ps = conn.prepareStatement("delete from APP.customer_coupon where coupon_id=?");
+			ps.setLong(1, couponId);
+			n = ps.executeUpdate();
+			logger.debug(n + " records removed from APP.customer_coupon");
+
+		} catch (SQLException e) {
+			logger.error("removeCustomerCoupon failed : " + e.toString());
+			throw e;
+		} finally {
+			returnConnection(conn);
+		}
+
+	}	
+	
+	@Override
+	public void removeCompanyCoupon(Coupon coupon) throws SQLException {
+
+		Connection conn = getConnection();
+		try {
+			long couponId = coupon.getId();
+
+			PreparedStatement ps;
+			int n;
+
+			ps = conn.prepareStatement("delete from APP.company_coupon where coupon_id=?");
+			ps.setLong(1, couponId);
+			n = ps.executeUpdate();
+			logger.debug(n + " records removed from APP.company_coupon");
+
+		} catch (SQLException e) {
+			logger.error("removeCompanyCoupon failed : " + e.toString());
+			throw e;
+		} finally {
+			returnConnection(conn);
+		}
+
+	}
+	
 
 	@Override
 	public void updateCoupon(Coupon coupon) {

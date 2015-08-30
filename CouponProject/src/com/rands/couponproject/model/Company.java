@@ -51,7 +51,7 @@ public class Company {
 		return coupons;
 	}
 
-	public void setCoupons(ArrayList<Coupon> coupons) {
+	public void setCoupons(Collection<Coupon> coupons) {
 		this.coupons = coupons;
 	}
 

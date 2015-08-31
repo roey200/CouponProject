@@ -40,8 +40,9 @@ public class CouponSystem {
 	}
 
 	// the private constructor
-	private CouponSystem() throws Exception {
-
+	private CouponSystem() {
+		Thread t = new DailyCouponExpirationTask();
+		t.start();
 	}
 
 	public CouponClientFacade login(String name, String password, ClientType clientType) throws Exception {

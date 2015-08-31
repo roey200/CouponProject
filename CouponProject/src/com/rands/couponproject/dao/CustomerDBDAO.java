@@ -19,19 +19,19 @@ import com.rands.couponproject.utils.DBUtils;
 public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 
 	static Logger logger = Logger.getLogger(CustomerDBDAO.class);
-	
+
 	public CustomerDBDAO()
 	{
 		super();
 	}
-	
+
 	public CustomerDBDAO(Connection conn)
 	{
 		super(conn);
 	}
-	
+
 	private Customer getFromResultSet(ResultSet rs) throws SQLException {
-		
+
 		long id = rs.getLong("id");
 		String name = rs.getString("cust_name");
 		String password = rs.getString("password");
@@ -40,10 +40,10 @@ public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 		customer = new Customer();
 		customer.setId(id);
 		customer.setCustomerName(name);
-		customer.setPassword(password);		
-		
+		customer.setPassword(password);
+
 		return customer;
-	}		
+	}
 
 	@Override
 	public void createCustomer(Customer customer) {
@@ -51,18 +51,18 @@ public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 		try {
 			String sql = "insert into APP.customer (cust_name, password) values(?,?)";
 			//PreparedStatement ps = conn.prepareStatement(sql);
-			PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);			
+			PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
 			ps.setString(1, customer.getCustomerName());
 			ps.setString(2, customer.getPassword());
-			
+
 			int affectedRows = ps.executeUpdate();
-	        if (affectedRows == 0) {
-	            throw new SQLException("Creating customer failed, no rows affected.");
-	        }
-        	long id = DBUtils.getGeneratedKey(ps);
-        	customer.setId(id);
-            System.out.println("customer=" + customer.getCustomerName() + " added to database, id=" + id);
+			if (affectedRows == 0) {
+				throw new SQLException("Creating customer failed, no rows affected.");
+			}
+			long id = DBUtils.getGeneratedKey(ps);
+			customer.setId(id);
+			System.out.println("customer=" + customer.getCustomerName() + " added to database, id=" + id);
 
 		} catch (SQLException e) {
 			System.out.println("failed to insert customer " + customer.getCustomerName() + " : " + e.toString());
@@ -77,7 +77,7 @@ public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 	public void removeCustomer(Customer customer) throws SQLException {
 
 		Connection conn = getConnection();
-		
+
 		try {
 			String sql = "delete from APP.customer where id=?";
 			PreparedStatement ps = conn.prepareStatement(sql);
@@ -119,19 +119,20 @@ public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 
 	@Override
 	public Customer getCustomer(long id) {
-		Customer customet = null;
+		Customer customer = null;
 		Connection conn = getConnection();
 
 		try {
 			String sql = "select * from APP.customer where id=?";
-			PreparedStatement ps = conn.prepareStatement(sql);   
-            ps.setLong(1,id);
-            ResultSet rs = ps.executeQuery();   
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setLong(1, id);
+			ResultSet rs = ps.executeQuery();
 
-			if(!rs.next())
+			if (!rs.next())
 				return null;
 
-			customet = getFromResultSet(rs);
+			customer = getFromResultSet(rs);
+			customer.setCoupons(getCoupons(customer.getId()));
 			//customet.setId(id);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -140,23 +141,26 @@ public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 			returnConnection(conn);
 		}
 
-		return customet;
+		return customer;
 	}
+
 	public Customer getCustomer(String name) {
 		Customer customer = null;
 		Connection conn = getConnection();
 
 		try {
 			String sql = "select * from APP.customer where cust_name=?";
-			PreparedStatement ps = conn.prepareStatement(sql);   
-            ps.setString(1,name);
-            ResultSet rs = ps.executeQuery();   
-			
-			if(!rs.next())
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, name);
+			ResultSet rs = ps.executeQuery();
+
+			if (!rs.next())
 				return null;
 
 			customer = getFromResultSet(rs);
 			//customer.setCustomerName(name);
+			customer.setCoupons(getCoupons(customer.getId()));
+
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -196,9 +200,8 @@ public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 
 	@Override
 	public Collection<Coupon> getCoupons(long customerId) {
-		CouponDAO couponDAO = new CouponDBDAO();
+		CouponDAO couponDAO = new CouponDBDAO(conn);
 		return couponDAO.getCustomerCoupons(customerId);
-		
 	}
 
 	@Override
@@ -208,11 +211,11 @@ public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 		try {
 
 			String sql = "select password from APP.Coustomer where cust_name=?";
-			PreparedStatement ps = conn.prepareStatement(sql);   
-            ps.setString(1,customerName);
-            ResultSet rs = ps.executeQuery();   
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, customerName);
+			ResultSet rs = ps.executeQuery();
 
-            if(!rs.next())
+			if (!rs.next())
 				return false;
 
 			String dbPassword = rs.getString(1);

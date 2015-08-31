@@ -147,6 +147,8 @@ public class CompanyDBDAO extends BaseDBDAO implements CompanyDAO {
 
 			company = getFromResultSet(rs);
 			//company.setId(id);
+			company.setCoupons(getCoupons(company.getId()));
+
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -174,6 +176,7 @@ public class CompanyDBDAO extends BaseDBDAO implements CompanyDAO {
 				return null;
 			
 			company = getFromResultSet(rs);
+			company.setCoupons(getCoupons(company.getId()));
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

@@ -132,7 +132,7 @@ public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 				return null;
 
 			customer = getFromResultSet(rs);
-			customer.setCoupons(getCoupons(customer.getId()));
+			customer.setCoupons(getCoupons(customer.getId(),conn));
 			//customet.setId(id);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -159,8 +159,7 @@ public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 
 			customer = getFromResultSet(rs);
 			//customer.setCustomerName(name);
-			customer.setCoupons(getCoupons(customer.getId()));
-
+			customer.setCoupons(getCoupons(customer.getId(),conn));
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -197,11 +196,15 @@ public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 		return customers;
 
 	}
+	
+	private Collection<Coupon> getCoupons(long customerId,Connection conn) {
+		CouponDAO couponDAO = new CouponDBDAO(conn);
+		return couponDAO.getCustomerCoupons(customerId);
+	}	
 
 	@Override
 	public Collection<Coupon> getCoupons(long customerId) {
-		CouponDAO couponDAO = new CouponDBDAO(conn);
-		return couponDAO.getCustomerCoupons(customerId);
+		return getCoupons(customerId,null);
 	}
 
 	@Override

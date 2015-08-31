@@ -147,7 +147,7 @@ public class CompanyDBDAO extends BaseDBDAO implements CompanyDAO {
 
 			company = getFromResultSet(rs);
 			//company.setId(id);
-			company.setCoupons(getCoupons(company.getId()));
+			company.setCoupons(getCoupons(company.getId(),conn));
 
 
 		} catch (SQLException e) {
@@ -176,7 +176,7 @@ public class CompanyDBDAO extends BaseDBDAO implements CompanyDAO {
 				return null;
 			
 			company = getFromResultSet(rs);
-			company.setCoupons(getCoupons(company.getId()));
+			company.setCoupons(getCoupons(company.getId(),conn));
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -214,10 +214,14 @@ public class CompanyDBDAO extends BaseDBDAO implements CompanyDAO {
 		return companies;
 	}
 	
+	private Collection<Coupon> getCoupons(long companyId, Connection conn) {
+		CouponDAO couponDAO = new CouponDBDAO(conn);
+		return couponDAO.getCompanyCoupons(companyId);
+	}
+	
 	@Override
 	public Collection<Coupon> getCoupons(long companyId) {
-		CouponDAO couponDAO = new CouponDBDAO();
-		return couponDAO.getCompanyCoupons(companyId);
+		return getCoupons(companyId,null);
 	}	
 
 	@Override

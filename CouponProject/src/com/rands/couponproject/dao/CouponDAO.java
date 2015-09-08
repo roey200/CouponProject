@@ -22,7 +22,7 @@ public interface CouponDAO {
 	void createCompanyCoupon(long companyId,long couponId) throws SQLException;
 	void createCustomerCoupon(long customerId,long couponId) throws SQLException;
 	void removeCoupon(long id) throws SQLException;
+
 	void removeCompanyCoupon(long couponId) throws SQLException;
 	void removeCustomerCoupon(long couponId) throws SQLException;
-
 }

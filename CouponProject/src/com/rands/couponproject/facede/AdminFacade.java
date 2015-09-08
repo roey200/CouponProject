@@ -62,47 +62,52 @@ public class AdminFacade implements CouponClientFacade {
 		}
 	}
 
-	public void removeCompany(long companyId) throws Exception	{
-		ConnectionPool pool;
-		Connection conn;
-		//long companyId = company.getId();
-		
-		try {
-			pool = ConnectionPool.getInstance();
-			conn = pool.getConnection();
-		} catch (Exception e) {
-			logger.error("removeCustomer failed to get a connection : " + e.toString());
-			throw e;
-		}
-
-		CompanyDAO companyDAO = new CompanyDBDAO(conn); // use the same connection for the transaction
-		CouponDAO couponDAO = new CouponDBDAO(conn);
-
-		try {
-			conn.setAutoCommit(false); // begin transaction
-			Collection<Coupon> coupons = couponDAO.getCompanyCoupons(companyId);
-			for (Coupon coupon:coupons) {
-//				couponDAO.removeCoupon(coupon); // remove the coupon and the links
-				couponDAO.removeCoupon(coupon.getId()); // remove the coupon and the links
-			}
-			
-			//companyDAO.removeCompany(company); 
-			companyDAO.removeCompany(companyId); 
-			
-			conn.commit(); // end the transaction
-		} catch (Exception e) {
-			logger.error("removeCompany failed : " + e.toString());
-			try {
-				conn.rollback(); // abort the transaction
-			} catch (SQLException e1) {
-				logger.error("removeCompany rollback failed : " + e.toString());
-			}
-			throw (e);
-		} finally {
-			pool.returnConnection(conn);
-		}
-	}
+//	public void removeCompany(long companyId) throws Exception	{
+//		ConnectionPool pool;
+//		Connection conn;
+//		//long companyId = company.getId();
+//		
+//		try {
+//			pool = ConnectionPool.getInstance();
+//			conn = pool.getConnection();
+//		} catch (Exception e) {
+//			logger.error("removeCustomer failed to get a connection : " + e.toString());
+//			throw e;
+//		}
+//
+//		CompanyDAO companyDAO = new CompanyDBDAO(conn); // use the same connection for the transaction
+//		CouponDAO couponDAO = new CouponDBDAO(conn);
+//
+//		try {
+//			conn.setAutoCommit(false); // begin transaction
+//			Collection<Coupon> coupons = couponDAO.getCompanyCoupons(companyId);
+//			for (Coupon coupon:coupons) {
+////				couponDAO.removeCoupon(coupon); // remove the coupon and the links
+//				couponDAO.removeCoupon(coupon.getId()); // remove the coupon and the links
+//			}
+//			
+//			//companyDAO.removeCompany(company); 
+//			companyDAO.removeCompany(companyId); 
+//			
+//			conn.commit(); // end the transaction
+//		} catch (Exception e) {
+//			logger.error("removeCompany failed : " + e.toString());
+//			try {
+//				conn.rollback(); // abort the transaction
+//			} catch (SQLException e1) {
+//				logger.error("removeCompany rollback failed : " + e.toString());
+//			}
+//			throw (e);
+//		} finally {
+//			pool.returnConnection(conn);
+//		}
+//	}
 	
+	public void removeCompany(long companyId) throws Exception	{
+		CompanyDAO companyDAO = new CompanyDBDAO();
+		companyDAO.removeCompany(companyId);
+	}
+
 	public void removeCompany(Company company) throws Exception	{
 		removeCompany(company.getId());
 	}
@@ -138,46 +143,51 @@ public class AdminFacade implements CouponClientFacade {
 		}
 	}
 
-	public void removeCustomer(long customerId) throws Exception {
-		ConnectionPool pool;
-		Connection conn;
-		//long customerId = customer.getId();
-		
-		try {
-			pool = ConnectionPool.getInstance();
-			conn = pool.getConnection();
-		} catch (Exception e) {
-			logger.error("removeCustomer failed to get a connection : " + e.toString());
-			throw e;
-		}
-
-		CustomerDAO customerDAO = new CustomerDBDAO(conn);
-		CouponDAO couponDAO = new CouponDBDAO(conn);
-
-		try {
-			conn.setAutoCommit(true); // begin transaction
-			Collection<Coupon> coupons = couponDAO.getCustomerCoupons(customerId);
-			for (Coupon coupon:coupons) {
-				//couponDAO.removeCustomerCoupon(coupon); // remove the links
-				couponDAO.removeCustomerCoupon(coupon.getId()); // remove the links
-			}
-			
-			customerDAO.removeCustomer(customerId); 
-			
-			conn.commit(); // end the transaction
-		} catch (Exception e) {
-			logger.error("removeCustomer failed : " + e.toString());
-			try {
-				conn.rollback(); // abort the transaction
-			} catch (SQLException e1) {
-				logger.error("removeCustomer rollback failed : " + e.toString());
-			}
-			throw (e);
-		} finally {
-			pool.returnConnection(conn);
-		}
-	}
+//	public void removeCustomer(long customerId) throws Exception {
+//		ConnectionPool pool;
+//		Connection conn;
+//		//long customerId = customer.getId();
+//		
+//		try {
+//			pool = ConnectionPool.getInstance();
+//			conn = pool.getConnection();
+//		} catch (Exception e) {
+//			logger.error("removeCustomer failed to get a connection : " + e.toString());
+//			throw e;
+//		}
+//
+//		CustomerDAO customerDAO = new CustomerDBDAO(conn);
+//		CouponDAO couponDAO = new CouponDBDAO(conn);
+//
+//		try {
+//			conn.setAutoCommit(true); // begin transaction
+//			Collection<Coupon> coupons = couponDAO.getCustomerCoupons(customerId);
+//			for (Coupon coupon:coupons) {
+//				//couponDAO.removeCustomerCoupon(coupon); // remove the links
+//				couponDAO.removeCustomerCoupon(coupon.getId()); // remove the links
+//			}
+//			
+//			customerDAO.removeCustomer(customerId); 
+//			
+//			conn.commit(); // end the transaction
+//		} catch (Exception e) {
+//			logger.error("removeCustomer failed : " + e.toString());
+//			try {
+//				conn.rollback(); // abort the transaction
+//			} catch (SQLException e1) {
+//				logger.error("removeCustomer rollback failed : " + e.toString());
+//			}
+//			throw (e);
+//		} finally {
+//			pool.returnConnection(conn);
+//		}
+//	}
 	
+	public void removeCustomer(long customerId) throws Exception {
+		CustomerDAO customerDAO = new CustomerDBDAO();
+		customerDAO.removeCustomer(customerId);
+	}
+
 	public void removeCustomer(Customer customer) throws Exception {
 		removeCustomer(customer.getId());
 	}	

@@ -72,22 +72,48 @@ public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 		}
 
 	}
+	
+	private void removeCustomerCoupons(long customerId) throws SQLException {
+		CouponDAO couponDAO = new CouponDBDAO(conn);
+		Collection<Coupon> coupons = couponDAO.getCustomerCoupons(customerId);
+		for (Coupon coupon:coupons) {
+			couponDAO.removeCustomerCoupon(coupon.getId()); // remove the coupon links
+		}		
+	}
 
 	@Override
 	public void removeCustomer(long id) throws SQLException {
 
 		Connection conn = getConnection();
-
+		boolean doTransaction = false;
 		try {
+			doTransaction = conn.getAutoCommit(); // if auto commit is false we assume that a transaction has already been started
+			if (doTransaction)
+				conn.setAutoCommit(false); // begin transaction			
+			removeCustomerCoupons(id);
+			
 			String sql = "delete from APP.customer where id=?";
 			PreparedStatement ps = conn.prepareStatement(sql);
 
 			ps.setLong(1, id);
 			ps.execute();
+			
+			if (doTransaction)
+				conn.commit(); // end the transaction
+
 		} catch (SQLException e) {
 			logger.error("removeCustomer failed : " + e.toString());
+			
+			try {
+				if (doTransaction)				
+				  conn.rollback(); // abort the transaction
+			} catch (SQLException e1) {
+				logger.error("removeCustomer rollback failed : " + e.toString());
+			}						
 			throw e;
 		} finally {
+//			if (doTransaction)
+//				conn.setAutoCommit(true);
 			returnConnection(conn);
 		}
 

@@ -74,7 +74,7 @@ public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 	}
 
 	@Override
-	public void removeCustomer(Customer customer) throws SQLException {
+	public void removeCustomer(long id) throws SQLException {
 
 		Connection conn = getConnection();
 
@@ -82,7 +82,7 @@ public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 			String sql = "delete from APP.customer where id=?";
 			PreparedStatement ps = conn.prepareStatement(sql);
 
-			ps.setLong(1, customer.getId());
+			ps.setLong(1, id);
 			ps.execute();
 		} catch (SQLException e) {
 			logger.error("removeCustomer failed : " + e.toString());
@@ -91,6 +91,11 @@ public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 			returnConnection(conn);
 		}
 
+	}
+	
+	@Override
+	public void removeCustomer(Customer customer) throws SQLException {
+		removeCustomer(customer.getId());
 	}
 
 	@Override

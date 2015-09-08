@@ -62,11 +62,10 @@ public class AdminFacade implements CouponClientFacade {
 		}
 	}
 
-	public void removeCompany(Company company) throws Exception
-	{
+	public void removeCompany(long companyId) throws Exception	{
 		ConnectionPool pool;
 		Connection conn;
-		long companyId = company.getId();
+		//long companyId = company.getId();
 		
 		try {
 			pool = ConnectionPool.getInstance();
@@ -83,10 +82,12 @@ public class AdminFacade implements CouponClientFacade {
 			conn.setAutoCommit(false); // begin transaction
 			Collection<Coupon> coupons = couponDAO.getCompanyCoupons(companyId);
 			for (Coupon coupon:coupons) {
-				couponDAO.removeCoupon(coupon); // remove the coupon and the links
+//				couponDAO.removeCoupon(coupon); // remove the coupon and the links
+				couponDAO.removeCoupon(coupon.getId()); // remove the coupon and the links
 			}
 			
-			companyDAO.removeCompany(company); 
+			//companyDAO.removeCompany(company); 
+			companyDAO.removeCompany(companyId); 
 			
 			conn.commit(); // end the transaction
 		} catch (Exception e) {
@@ -100,6 +101,10 @@ public class AdminFacade implements CouponClientFacade {
 		} finally {
 			pool.returnConnection(conn);
 		}
+	}
+	
+	public void removeCompany(Company company) throws Exception	{
+		removeCompany(company.getId());
 	}
 
 	public void updateCompany(Company c)
@@ -133,11 +138,10 @@ public class AdminFacade implements CouponClientFacade {
 		}
 	}
 
-	public void removeCustomer(Customer customer) throws Exception
-	{
+	public void removeCustomer(long customerId) throws Exception {
 		ConnectionPool pool;
 		Connection conn;
-		long customerId = customer.getId();
+		//long customerId = customer.getId();
 		
 		try {
 			pool = ConnectionPool.getInstance();
@@ -154,10 +158,11 @@ public class AdminFacade implements CouponClientFacade {
 			conn.setAutoCommit(true); // begin transaction
 			Collection<Coupon> coupons = couponDAO.getCustomerCoupons(customerId);
 			for (Coupon coupon:coupons) {
-				couponDAO.removeCustomerCoupon(coupon); // remove the links
+				//couponDAO.removeCustomerCoupon(coupon); // remove the links
+				couponDAO.removeCustomerCoupon(coupon.getId()); // remove the links
 			}
 			
-			customerDAO.removeCustomer(customer); 
+			customerDAO.removeCustomer(customerId); 
 			
 			conn.commit(); // end the transaction
 		} catch (Exception e) {
@@ -172,6 +177,10 @@ public class AdminFacade implements CouponClientFacade {
 			pool.returnConnection(conn);
 		}
 	}
+	
+	public void removeCustomer(Customer customer) throws Exception {
+		removeCustomer(customer.getId());
+	}	
 
 	public void updateCustomer(Customer c)
 	{

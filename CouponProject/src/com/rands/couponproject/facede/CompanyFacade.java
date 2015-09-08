@@ -134,7 +134,7 @@ public class CompanyFacade implements CouponClientFacade {
 		}	
 	}
 	
-	public void removeCoupon(Coupon coupon) throws Exception {
+	public void removeCoupon(long couponId) throws Exception {
 		Connection conn = getConnection();
 
 		CouponDAO couponDAO = new CouponDBDAO(conn);
@@ -142,7 +142,8 @@ public class CompanyFacade implements CouponClientFacade {
 		try {
 			conn.setAutoCommit(true); // begin transaction
 			
-			couponDAO.removeCoupon(coupon); 
+			//couponDAO.removeCoupon(coupon); 
+			couponDAO.removeCoupon(couponId); 
 			
 			conn.commit(); // end the transaction
 		} catch (Exception e) {
@@ -156,6 +157,10 @@ public class CompanyFacade implements CouponClientFacade {
 		} finally {
 			returnConnection(conn);
 		}		
+	}
+	
+	public void removeCoupon(Coupon coupon) throws Exception {
+		removeCoupon(coupon.getId());
 	}
 	
 	public void updateCoupon(Coupon coupon){

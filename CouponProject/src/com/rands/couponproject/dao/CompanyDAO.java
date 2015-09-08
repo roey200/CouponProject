@@ -15,5 +15,6 @@ public interface CompanyDAO {
 	public Company getCompany(String name);
 	Collection<Coupon> getCoupons(long companyId);
 	public boolean login(String companyName,  String password);
+	void removeCompany(long id) throws SQLException;
 
 }

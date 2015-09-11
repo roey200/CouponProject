@@ -52,8 +52,9 @@ public class ConnectionPool {
 		initProps();
 
 		loadDriver(driver);
-
+		
 		logger.info("creating " + minConnections + " connections url = " + url);
+		
 		freeConnections = new ArrayList<Connection>();
 		allConnections = new ArrayList<Connection>();
 

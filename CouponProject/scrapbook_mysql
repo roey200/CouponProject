@@ -1,5 +1,5 @@
 CREATE TABLE APP.coupon (
-	id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+	id INTEGER PRIMARY KEY AUTO_INCREMENT,
 	title VARCHAR(50) NOT NULL,
 	start_date DATE NOT NULL,
 	end_date DATE NOT NULL, 
@@ -11,14 +11,14 @@ CREATE TABLE APP.coupon (
 );
 
 CREATE TABLE APP.company(
-	id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
-	comp_name VARCHAR(20) NOT NULL,
-	password VARCHAR(20) NOT NULL,
-	email VARCHAR(50) NOT NULL
+		id INTEGER PRIMARY KEY AUTO_INCREMENT,
+		comp_name VARCHAR(20) NOT NULL,
+		password VARCHAR(20) NOT NULL,
+		email VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE APP.customer (
-	id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+	id INTEGER PRIMARY KEY AUTO_INCREMENT,
 	cust_name VARCHAR(20) NOT NULL,
 	password VARCHAR(20) NOT NULL
 );
@@ -28,15 +28,15 @@ CREATE TABLE APP.customer_coupon (
    cust_id INTEGER,
    coupon_id INTEGER,
    
-   FOREIGN KEY (cust_id) REFERENCES APP.customer(id),
-   FOREIGN KEY (coupon_id) REFERENCES APP.coupon(id)
+   FOREIGN KEY (cust_id) REFERENCES customer(id),
+   FOREIGN KEY (coupon_id) REFERENCES coupon(id)
 );
 
 CREATE TABLE APP.company_coupon (
    comp_id INTEGER,
    coupon_id INTEGER,
 
-   FOREIGN KEY (comp_id) REFERENCES APP.company(id),
-   FOREIGN KEY (coupon_id) REFERENCES APP.coupon(id)
+   FOREIGN KEY (comp_id) REFERENCES company(id),
+   FOREIGN KEY (coupon_id) REFERENCES coupon(id)
 );
 

@@ -27,21 +27,26 @@ public class DailyCouponExpirationTask extends Thread {
 		Collection<Coupon> coupons;
 
 		while (!quit) {
-			coupons = couponDAO.getAllCoupons();
-			long millis = System.currentTimeMillis();
-			Date currentDate = new Date(millis);
-			int nRemoved = 0;
-			for (Coupon coupon : coupons) {
-				if (coupon.getEndDate().before(currentDate)) {
-					try {
-						couponDAO.removeCoupon(coupon);
-						nRemoved++;
-					} catch (SQLException e) {
-						logger.error("remove expired coupon failed");
+			try {
+				coupons = couponDAO.getAllCoupons();
+				long millis = System.currentTimeMillis();
+				Date currentDate = new Date(millis);
+				int nRemoved = 0;
+				for (Coupon coupon : coupons) {
+					if (coupon.getEndDate().before(currentDate)) {
+						try {
+							couponDAO.removeCoupon(coupon);
+							nRemoved++;
+						} catch (SQLException e) {
+							logger.error("remove expired coupon failed");
+						}
 					}
 				}
+				logger.info("DailyCouponExpirationTask removed " + nRemoved + " expierd coupons");
+			} catch (SQLException e) {
+				logger.error("DailyCouponExpirationTask run failed : " + e.toString());
 			}
-			logger.info("DailyCouponExpirationTask removed " + nRemoved + " expierd coupons");
+
 			try {
 				//sleep(15 * minute);
 				sleep(1 * minute);

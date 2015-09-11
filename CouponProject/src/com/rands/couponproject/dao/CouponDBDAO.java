@@ -291,13 +291,13 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 
 
 	@Override
-	public Collection<Coupon> getAllCoupons() {
+	public Collection<Coupon> getAllCoupons() throws SQLException {
 		 
 		Collection<Coupon> coupons = new ArrayList<Coupon>();
 		Connection conn = getConnection();
 
 		try {
-			String sql = "select * from APP.coupon";
+			String sql = "SELECT * from APP.coupon";
 			Statement st = conn.createStatement(); //connects to company DB			
 			ResultSet rs = st.executeQuery(sql);
 
@@ -307,8 +307,8 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 				coupons.add(coupon);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("getAllCoupons() failed : " + e.toString());
+			throw e;
 		} finally {
 			returnConnection(conn);
 			conn = null;

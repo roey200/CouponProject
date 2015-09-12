@@ -384,7 +384,7 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 			PreparedStatement ps = conn.prepareStatement(sql);
             ps.setLong(1,customerId);
 
-			ResultSet rs = ps.executeQuery(sql);
+			ResultSet rs = ps.executeQuery();
 
 			while (rs.next())
 			{

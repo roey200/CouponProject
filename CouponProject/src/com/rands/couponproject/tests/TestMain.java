@@ -67,9 +67,13 @@ public class TestMain {
 
 
 	private static void PrintCompanies() {
-		Collection<Company> companies = a.getAllCompanies();
-		for(Company each :companies)
-			System.out.println(each);
+		try {
+			Collection<Company> companies = a.getAllCompanies();
+			for (Company each : companies)
+				System.out.println(each);
+		} catch (Exception e) {
+			logger.error("PrintCompanies failed : " + e.toString());
+		}
 	}
 
 	private static void updateCompany(long id) {

@@ -55,10 +55,14 @@ public class AdminFacade implements CouponClientFacade {
 	{
 		CompanyDAO companyDAO = new CompanyDBDAO();
 		String name = c.getCompanyName();
-		if (null == (companyDAO.getCompany(name))) {
-			companyDAO.createCompany(c);
-		} else {
-			logger.error("createCompany ,Company " + name + " already exists");
+		if (null != (companyDAO.getCompany(name))) {
+			logger.error("createCompany " + name + " already exists");
+			return;
+		}
+		try {
+		companyDAO.createCompany(c);
+		} catch (Exception e) {
+			logger.error("createCompany " + name + " failed : " + e.toString());
 		}
 	}
 
@@ -115,7 +119,11 @@ public class AdminFacade implements CouponClientFacade {
 	public void updateCompany(Company c)
 	{
 		CompanyDAO companyDAO = new CompanyDBDAO();
-		companyDAO.updateCompany(c);
+		try {
+			companyDAO.updateCompany(c);
+		} catch (Exception e) {
+			logger.error("updateCompany failed : " + e.toString());
+		}
 	}
 
 	public Company getCompany(long id)
@@ -130,10 +138,15 @@ public class AdminFacade implements CouponClientFacade {
 		return companyDAO.getCompany(name);
 	}
 	
-	public Collection<Company> getAllCompanies()
+	public Collection<Company> getAllCompanies() throws Exception
 	{
 		CompanyDAO companyDAO = new CompanyDBDAO();
-		return companyDAO.getAllCompanies();
+		try {
+			return companyDAO.getAllCompanies();
+		} catch (Exception e) {
+			logger.error("getAllCompanies failed : " + e.toString());
+			throw e;
+		}
 	}
 	
 	// Handling customers	
@@ -201,7 +214,11 @@ public class AdminFacade implements CouponClientFacade {
 	public void updateCustomer(Customer c)
 	{
 		CustomerDAO customerDAO = new CustomerDBDAO();
+		try {
 		customerDAO.updateCustomer(c);
+		} catch (Exception e) {
+			logger.error("updateCustomer " + c.getCustomerName() + " failed : " + e.toString());
+		}
 	}
 
 	public Collection<Customer> getAllCustomers()

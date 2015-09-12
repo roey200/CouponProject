@@ -42,9 +42,7 @@ public class CompanyDBDAO extends BaseDBDAO implements CompanyDAO {
 	}	
 
 	@Override
-	public void createCompany(Company company) { // takes a company object and
-													// inserts its values to
-													// company table
+	public void createCompany(Company company) throws Exception { 
 		// TODO Auto-generated method stub
 		Connection conn = getConnection();
 		try {
@@ -69,11 +67,11 @@ public class CompanyDBDAO extends BaseDBDAO implements CompanyDAO {
 	        }
         	long id = getGeneratedKey(ps);
         	company.setId(id);
-            System.out.println("company=" + company.getCompanyName() + " added to database, id=" + id);
+            logger.debug("Company created : " + company);
 
-		} catch (SQLException e) {
-			System.out.println("failed to insert company " + company.getCompanyName() + " : " + e.toString());
-			e.printStackTrace();
+		} catch (Exception e) {
+            logger.debug("createCompany failed : " + e.toString());
+			throw e;
 		} finally {
 			returnConnection(conn);
 		}
@@ -133,7 +131,7 @@ public class CompanyDBDAO extends BaseDBDAO implements CompanyDAO {
 	}
 	
 	@Override
-	public void updateCompany(Company company) { // takes a company object and
+	public void updateCompany(Company company) throws SQLException { // takes a company object and
 													// updates its parameters
 													// (-id) to the db
 		// TODO Auto-generated method stub
@@ -153,7 +151,8 @@ public class CompanyDBDAO extends BaseDBDAO implements CompanyDAO {
 			logger.debug("Company has been updated : " + company);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			System.err.println("something went worng please try again");
+			logger.error("updateCompany failed : " + e.toString());
+			throw e;
 		} finally {
 			returnConnection(conn);
 			conn = null;
@@ -183,11 +182,9 @@ public class CompanyDBDAO extends BaseDBDAO implements CompanyDAO {
 
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("getCompany(" + id + ") failed : " + e.toString());
 		} finally {
 			returnConnection(conn);
-			conn = null;
 		}
 		return company;
 	}
@@ -211,17 +208,15 @@ public class CompanyDBDAO extends BaseDBDAO implements CompanyDAO {
 			company.setCoupons(getCoupons(company.getId(),conn));
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("getCompany(" + name + ") failed : " + e.toString());
 		} finally {
 			returnConnection(conn);
-			conn = null;
 		}
 		return company;
 	}
 
 	@Override
-	public Collection<Company> getAllCompanies() {
+	public Collection<Company> getAllCompanies() throws SQLException {
 		// TODO Auto-generated method stub
 		Collection<Company> companies = new ArrayList<Company>();
 		Connection conn = getConnection();
@@ -236,11 +231,10 @@ public class CompanyDBDAO extends BaseDBDAO implements CompanyDAO {
 				companies.add(company);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("getAllCompanies failed : " + e.toString());
+			throw e;
 		} finally {
 			returnConnection(conn);
-			conn = null;
 		}
 
 		return companies;

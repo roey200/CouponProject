@@ -124,7 +124,7 @@ public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 	}
 
 	@Override
-	public void updateCustomer(Customer customer) {
+	public void updateCustomer(Customer customer) throws Exception {
 		// TODO Auto-generated method stub
 
 		Connection conn = getConnection();
@@ -138,9 +138,9 @@ public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 			ps.setString(2, customer.getPassword());
 			ps.setLong(3, customer.getId());
 			ps.execute();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			logger.error("updateCustomer failed : " + e.toString());
+			throw e;
 		} finally {
 			returnConnection(conn);
 		}

@@ -35,7 +35,11 @@ public class TestAdmin {
 		
 		printCompanies();
 
-		//updateCompany (4);
+		logger.info("removing companies");
+		removeCompany("amazon");
+		removeCompany("mass");
+		
+		printCompanies();
 
 		//PrintCompanies();
 		logger.info("creating customers");
@@ -52,25 +56,23 @@ public class TestAdmin {
 		updateCustomer("mass");
 		
 		printCustomers();
+		
+		logger.info("removing customers");
+		removeCustomer("moshe");
+		removeCustomer("moshe");
 
+		printCustomers();
 	}
 
 	private void printCompanies() {
-		Collection<Company> companies = admin.getAllCompanies();
-		for (Company each : companies)
-			System.out.println(each);
-	}
-
-	private void updateCompany(String companyName) {
-		Company c = admin.getCompany(companyName);
-		if (null == c){
-			logger.error("company does not exist : " + companyName);
-			return;
+		Collection<Company> companies;
+		try {
+			companies = admin.getAllCompanies();
+			for (Company each : companies)
+				System.out.println(each);
+		} catch (Exception e) {
+			logger.error("printCompanies failed : " + e.toString());
 		}
-		c.setEmail(c.getCompanyName() + "@yahoo.com");
-		String password = c.getCompanyName().substring(0, 2) + "9999";
-		c.setPassword(password);
-		admin.updateCompany(c);
 	}
 
 	private void createComapny(String name) {
@@ -83,6 +85,28 @@ public class TestAdmin {
 		c.setEmail(name + "@gmail.com");
 		admin.createCompany(c);
 	}
+	
+	private void updateCompany(String companyName) {
+		Company c = admin.getCompany(companyName);
+		if (null == c){
+			logger.error("company does not exist : " + companyName);
+			return;
+		}
+		c.setEmail(c.getCompanyName() + "@yahoo.com");
+		String password = c.getCompanyName().substring(0, 2) + "9999";
+		c.setPassword(password);
+		admin.updateCompany(c);
+	}
+	
+	private void removeCompany(String companyName) {
+		logger.info("removing company : " + companyName);
+		Company c = admin.getCompany(companyName);
+		try {
+			admin.removeCompany(c.getId());
+		} catch (Exception e) {
+			logger.error("removeCompany " + companyName + " failed : " + e.toString());
+		}
+	}	
 
 	private void printCustomers() {
 		Collection<Customer> coustomers = admin.getAllCustomers();
@@ -108,4 +132,16 @@ public class TestAdmin {
 		c.setPassword(password);
 		admin.updateCustomer(c);
 	}
+	
+	private void removeCustomer(String customerName) {
+		logger.info("removing customer : " + customerName);
+
+		Customer c = admin.getCustomer(customerName);
+		try {
+			admin.removeCustomer(c.getId());
+		} catch (Exception e) {
+			logger.error("removeCustomer " + customerName + " failed : " + e.toString());
+		}
+	}	
+	
 }

@@ -8,6 +8,7 @@ import java.util.*;
 import org.apache.log4j.Logger;
 
 import com.rands.couponproject.utils.Props;
+import com.rands.couponproject.utils.Utils;
 
 public class ConnectionPool {
 	static Logger logger = Logger.getLogger(ConnectionPool.class);
@@ -53,6 +54,8 @@ public class ConnectionPool {
 
 		loadDriver(driver);
 		
+		url = Utils.expandEnvVars(url); // replace environment variables
+
 		logger.info("creating " + minConnections + " connections url = " + url);
 		
 		freeConnections = new ArrayList<Connection>();

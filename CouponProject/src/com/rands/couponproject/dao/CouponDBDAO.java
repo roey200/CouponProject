@@ -13,7 +13,6 @@ import org.apache.log4j.Logger;
 
 import com.rands.couponproject.model.Coupon;
 import com.rands.couponproject.model.CouponType;
-import com.rands.couponproject.utils.DBUtils;
 
 
 public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
@@ -67,7 +66,7 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 	        if (affectedRows == 0) {
 	            throw new SQLException("Creating coupon failed, no rows affected.");
 	        }
-        	long id = DBUtils.getGeneratedKey(ps);
+        	long id = getGeneratedKey(ps);
         	coupon.setId(id);
             System.out.println("coupon=" + coupon.getTitle() + " added to database, id=" + id);
 
@@ -93,7 +92,7 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 	        if (affectedRows == 0) {
 	            throw new SQLException("createCompanyCoupon, no rows affected.");
 	        }
-        	long id = DBUtils.getGeneratedKey(ps);
+        	long id = getGeneratedKey(ps);
             System.out.println("company_coupon added to database, id=" + id);
 
 		} catch (SQLException e) {
@@ -119,7 +118,7 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 	        if (affectedRows == 0) {
 	            throw new SQLException("createCustomerCoupon, no rows affected.");
 	        }
-        	long id = DBUtils.getGeneratedKey(ps);
+        	long id = getGeneratedKey(ps);
             System.out.println("customer_coupon added to database, id=" + id);
 
 		} catch (SQLException e) {

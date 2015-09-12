@@ -14,7 +14,6 @@ import org.apache.log4j.Logger;
 import com.rands.couponproject.model.Company;
 import com.rands.couponproject.model.Coupon;
 import com.rands.couponproject.model.Customer;
-import com.rands.couponproject.utils.DBUtils;
 
 public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 
@@ -60,7 +59,7 @@ public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 			if (affectedRows == 0) {
 				throw new SQLException("Creating customer failed, no rows affected.");
 			}
-			long id = DBUtils.getGeneratedKey(ps);
+			long id = getGeneratedKey(ps);
 			customer.setId(id);
 			System.out.println("customer=" + customer.getCustomerName() + " added to database, id=" + id);
 

@@ -13,7 +13,6 @@ import org.apache.log4j.Logger;
 import com.rands.couponproject.model.Company;
 import com.rands.couponproject.model.Coupon;
 import com.rands.couponproject.model.CouponType;
-import com.rands.couponproject.utils.DBUtils;
 
 public class CompanyDBDAO extends BaseDBDAO implements CompanyDAO {
 	
@@ -68,7 +67,7 @@ public class CompanyDBDAO extends BaseDBDAO implements CompanyDAO {
 	        if (affectedRows == 0) {
 	            throw new SQLException("Creating company failed, no rows affected.");
 	        }
-        	long id = DBUtils.getGeneratedKey(ps);
+        	long id = getGeneratedKey(ps);
         	company.setId(id);
             System.out.println("company=" + company.getCompanyName() + " added to database, id=" + id);
 

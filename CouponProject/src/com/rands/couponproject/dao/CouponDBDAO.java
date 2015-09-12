@@ -11,6 +11,7 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 
+import com.rands.couponproject.exceptions.CouponException;
 import com.rands.couponproject.model.Coupon;
 import com.rands.couponproject.model.CouponType;
 
@@ -46,8 +47,16 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 	}
 
 	@Override
-	public void createCoupon(Coupon coupon) throws SQLException {
+	public void createCoupon(Coupon coupon) throws Exception {
 		 
+		if(coupon.getEndDate().before(coupon.getStartDate())) {
+			throw new Exception("coupon endDate < startDate");   // not finished
+		}
+		Date currentDate = new Date();
+//		if (currentDate.before(coupon.getEndDate())) {
+//			throw new CouponException("coupon endDate < currentDate");
+//		}	
+		
 		Connection conn =getConnection();
 		try {
 			String sql = "insert into APP.coupon (title,start_date , end_date,amount , coupon_type, message , price , image) values(?,?,?,?,?,?,?,?)";
@@ -211,7 +220,7 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 	}
 
 	@Override
-	public void updateCoupon(Coupon coupon) {
+	public void updateCoupon(Coupon coupon) throws Exception {
 		Connection conn = getConnection();
 
 		try {
@@ -228,10 +237,13 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 			ps.setString(6,coupon.getMassage());
 			ps.setDouble(7,coupon.getPrice());
 			ps.setString(8,coupon.getImage());
+			
+			ps.setLong(9, coupon.getId());
 
 			ps.execute();
 		} catch (SQLException e) {
 			logger.error("updateCoupon failed : " + e.toString());
+			throw e;
 		} finally {
 			returnConnection(conn);
 		}

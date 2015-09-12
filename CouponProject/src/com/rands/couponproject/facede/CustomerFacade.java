@@ -6,6 +6,8 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 
+import com.rands.couponproject.dao.CompanyDAO;
+import com.rands.couponproject.dao.CompanyDBDAO;
 import com.rands.couponproject.dao.CouponDAO;
 import com.rands.couponproject.dao.CouponDBDAO;
 import com.rands.couponproject.dao.CustomerDAO;
@@ -112,4 +114,17 @@ public class CustomerFacade implements CouponClientFacade {
 		return coupons;
 	}
 
+	public Customer getCustomer() {
+
+		CustomerDAO customerDAO = new CustomerDBDAO();
+		return customerDAO.getCustomer(customerId);
+	}
+	
+	private boolean customerHasCoupon(Coupon coupon) throws Exception {
+		for (Coupon cup : getAllPurchasedCoupons()) { // check all coupons of the current (logedin) company 
+			if (cup.getTitle().equals(coupon.getTitle()))
+				return true;
+		}
+		return false;
+	}
 }

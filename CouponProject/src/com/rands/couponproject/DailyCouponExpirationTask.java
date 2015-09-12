@@ -37,7 +37,7 @@ public class DailyCouponExpirationTask extends Thread {
 						try {
 							couponDAO.removeCoupon(coupon);
 							nRemoved++;
-						} catch (SQLException e) {
+						} catch (Exception e) {
 							logger.error("remove expired coupon failed");
 						}
 					}

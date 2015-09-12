@@ -20,44 +20,47 @@ public class TestAdmin {
 
 	public void Test() {
 
-		logger.info("creating companies");
+		System.out.println("creating companies");
 		createComapny("cocacola");
 		createComapny("google");
 		createComapny("alphabet");
 		createComapny("google");
 		createComapny("amazon");
+		createComapny("RandS BurgersBar");
 
 		printCompanies();
 
-		logger.info("updating companies");
+		System.out.println("updating companies");
 		updateCompany("alphabet");
+		updateCompany("RandS BurgersBar");
 		updateCompany("mass");
 		
 		printCompanies();
 
-		logger.info("removing companies");
+		System.out.println("removing companies");
 		removeCompany("amazon");
 		removeCompany("mass");
 		
 		printCompanies();
 
 		//PrintCompanies();
-		logger.info("creating customers");
+		System.out.println("creating customers");
 		createCustomer("arik");
 		createCustomer("bents");
 		createCustomer("moshe");
 		createCustomer("kermit");
 		createCustomer("miss piggie");
+		createCustomer("roey");
 
 		printCustomers();
 
-		logger.info("updating customers");
+		System.out.println("updating customers");
 		updateCustomer("moshe");
 		updateCustomer("mass");
 		
 		printCustomers();
 		
-		logger.info("removing customers");
+		System.out.println("removing customers");
 		removeCustomer("moshe");
 		removeCustomer("moshe");
 
@@ -99,7 +102,7 @@ public class TestAdmin {
 	}
 	
 	private void removeCompany(String companyName) {
-		logger.info("removing company : " + companyName);
+		System.out.println("removing company : " + companyName);
 		Company c = admin.getCompany(companyName);
 		try {
 			admin.removeCompany(c.getId());
@@ -134,7 +137,7 @@ public class TestAdmin {
 	}
 	
 	private void removeCustomer(String customerName) {
-		logger.info("removing customer : " + customerName);
+		System.out.println("removing customer : " + customerName);
 
 		Customer c = admin.getCustomer(customerName);
 		try {

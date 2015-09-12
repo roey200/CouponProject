@@ -243,7 +243,7 @@ public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 		boolean isCorrectPassword = false;
 		try {
 
-			String sql = "select password from APP.Coustomer where cust_name=?";
+			String sql = "select password from APP.Customer where cust_name=?";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, customerName);
 			ResultSet rs = ps.executeQuery();

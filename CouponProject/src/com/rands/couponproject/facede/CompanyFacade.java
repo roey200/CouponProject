@@ -25,35 +25,35 @@ import com.rands.couponproject.model.Customer;
 public class CompanyFacade implements CouponClientFacade {
 	static Logger logger = Logger.getLogger(CompanyFacade.class);
 
-	private long companyId; 
-	
-	private  CompanyFacade() {
+	private long companyId;
+
+	private CompanyFacade() {
 	}
-	
-//	public static CouponClientFacade login(String name, String password,ClientType clientType) throws Exception {
-//		
-//		if (clientType != ClientType.COMPANY){
-//			logger.error("company login failed mismitch clientType =" +clientType  );
-//			throw new Exception("LoginFailed");
-//		}
-//		
-//		CompanyDAO companyDAO = new CompanyDBDAO();
-//		
-//		Company company = companyDAO.getCompany(name);
-//		if (null == company) {
-//			logger.error("company login failed ,company " + name + " dose not exist");
-//			throw new Exception("LoginFailed");
-//		}
-//				
-//		if (!company.getPassword().equals(password)) {
-//			logger.error("company login failed ,company " + name + " password mismatch");
-//			throw new Exception("LoginFailed");
-//		}
-//		
-//		CompanyFacade facade = new CompanyFacade();
-//		facade.companyId = company.getId();
-//		return facade;
-//	}
+
+	//	public static CouponClientFacade login(String name, String password,ClientType clientType) throws Exception {
+	//		
+	//		if (clientType != ClientType.COMPANY){
+	//			logger.error("company login failed mismitch clientType =" +clientType  );
+	//			throw new Exception("LoginFailed");
+	//		}
+	//		
+	//		CompanyDAO companyDAO = new CompanyDBDAO();
+	//		
+	//		Company company = companyDAO.getCompany(name);
+	//		if (null == company) {
+	//			logger.error("company login failed ,company " + name + " dose not exist");
+	//			throw new Exception("LoginFailed");
+	//		}
+	//				
+	//		if (!company.getPassword().equals(password)) {
+	//			logger.error("company login failed ,company " + name + " password mismatch");
+	//			throw new Exception("LoginFailed");
+	//		}
+	//		
+	//		CompanyFacade facade = new CompanyFacade();
+	//		facade.companyId = company.getId();
+	//		return facade;
+	//	}
 
 	public static CouponClientFacade login(String name, String password, ClientType clientType) throws Exception {
 
@@ -71,10 +71,10 @@ public class CompanyFacade implements CouponClientFacade {
 
 		CompanyFacade facade = new CompanyFacade();
 		Company company = companyDAO.getCompany(name);
-		facade.companyId = company.getId(); 
+		facade.companyId = company.getId();
 		return facade;
 	}
-	
+
 	private Company getLogedinCompany() throws Exception {
 		CompanyDAO companyDAO = new CompanyDBDAO();
 		Company company = companyDAO.getCompany(companyId);
@@ -82,14 +82,14 @@ public class CompanyFacade implements CouponClientFacade {
 			logger.error("getLogedinCompany company does not exist any more");
 			throw new Exception("getLogedinCompany company does not exist any more");
 		}
-		
+
 		CouponDAO couponDAO = new CouponDBDAO();
 		Collection<Coupon> coupons = couponDAO.getCompanyCoupons(companyId);
 		company.setCoupons(coupons);
-		
+
 		return company;
-	}		
-	
+	}
+
 	private Connection getConnection() throws Exception {
 		try {
 			ConnectionPool pool = ConnectionPool.getInstance();
@@ -100,26 +100,28 @@ public class CompanyFacade implements CouponClientFacade {
 			throw e;
 		}
 	}
-	
+
 	private void returnConnection(Connection conn) {
 		try {
 			ConnectionPool pool = ConnectionPool.getInstance();
 			pool.returnConnection(conn);
 		} catch (Exception e) {
 			logger.error("returnConnection failed : " + e.toString());
-		}		
+		}
 	}
-	
+
 	public void createCoupon(Coupon coupon) throws Exception {
+		if (companyHasCoupon(coupon)) {
+			throw new Exception("duplicate coupon " + coupon.getTitle() + " for company " +  companyId);
+		}
+
 		Connection conn = getConnection();
-		
 		CouponDAO couponDAO = new CouponDBDAO(conn);
-		
 		try {
 			conn.setAutoCommit(true); // begin transaction
 			couponDAO.createCoupon(coupon);
-			couponDAO.createCompanyCoupon(companyId,coupon.getId());
-			
+			couponDAO.createCompanyCoupon(companyId, coupon.getId());
+
 			conn.commit(); // end the transaction
 		} catch (Exception e) {
 			logger.error("createCoupon failed : " + e.toString());
@@ -131,9 +133,9 @@ public class CompanyFacade implements CouponClientFacade {
 			throw (e);
 		} finally {
 			returnConnection(conn);
-		}	
+		}
 	}
-	
+
 	public void removeCoupon(long couponId) throws Exception {
 		Connection conn = getConnection();
 
@@ -141,10 +143,10 @@ public class CompanyFacade implements CouponClientFacade {
 
 		try {
 			conn.setAutoCommit(true); // begin transaction
-			
+
 			//couponDAO.removeCoupon(coupon); 
-			couponDAO.removeCoupon(couponId); 
-			
+			couponDAO.removeCoupon(couponId);
+
 			conn.commit(); // end the transaction
 		} catch (Exception e) {
 			logger.error("removeCoupon failed : " + e.toString());
@@ -156,62 +158,81 @@ public class CompanyFacade implements CouponClientFacade {
 			throw (e);
 		} finally {
 			returnConnection(conn);
-		}		
+		}
 	}
-	
+
 	public void removeCoupon(Coupon coupon) throws Exception {
 		removeCoupon(coupon.getId());
 	}
-	
-	public void updateCoupon(Coupon coupon){
+
+	public void updateCoupon(Coupon coupon) {
 		CouponDAO couponDAO = new CouponDBDAO();
-		couponDAO.updateCoupon(coupon);
+		try {
+			couponDAO.updateCoupon(coupon);
+		} catch (Exception e) {
+			logger.error("update coupon failed : " + e.toString());
+		}
+
 	}
-	
-	public Coupon getCoupon(long id){
+
+	public Coupon getCoupon(long id) {
 		CouponDAO couponDAO = new CouponDBDAO();
 		return couponDAO.getCoupon(id);
 	}
-	
+
 	public Collection<Coupon> getAllCoupons() throws Exception
 	{
 		Company company = getLogedinCompany();
 		return company.getCoupons();
-	} 
-	
+	}
+
 	public Collection<Coupon> getCouponByType(CouponType type) throws Exception {
 		Collection<Coupon> coupons = new ArrayList<Coupon>();
-		
-		for (Coupon coupon:getAllCoupons()) {
+
+		for (Coupon coupon : getAllCoupons()) {
 			if (coupon.getType() == type)
 				coupons.add(coupon);
 		}
-		
+
 		return coupons;
 	}
-	
-	public Collection<Coupon> getCouponsByPrice(long price) throws Exception{
+
+	public Collection<Coupon> getCouponsByPrice(long price) throws Exception {
 		Collection<Coupon> coupons = new ArrayList<Coupon>();
-		
-		for (Coupon coupon:getAllCoupons()) {
+
+		for (Coupon coupon : getAllCoupons()) {
 			if (coupon.getPrice() <= price)
 				coupons.add(coupon);
 		}
-		
+
 		return coupons;
 	}
-	
-	public Collection<Coupon> getCouponsByDate(Date toDate) throws Exception{
+
+	public Collection<Coupon> getCouponsByDate(Date toDate) throws Exception {
 		Collection<Coupon> coupons = new ArrayList<Coupon>();
-		
-		for (Coupon coupon:getAllCoupons()) {
-//			if (toDate.after(coupon.getEndDate()))
-//				coupons.add(coupon);
+
+		for (Coupon coupon : getAllCoupons()) {
+			//			if (toDate.after(coupon.getEndDate()))
+			//				coupons.add(coupon);
 			if (coupon.getEndDate().before(toDate))
 				coupons.add(coupon);
 		}
-		
+
 		return coupons;
-	}	
+	}
+
+	public Company getCompany() {
+
+		CompanyDAO companyDao = new CompanyDBDAO();
+		return companyDao.getCompany(companyId);
+	}
 	
+	private boolean companyHasCoupon(Coupon coupon) throws Exception {
+		for (Coupon cup : getAllCoupons()) { // check all coupons of the current (logedin) company 
+			if (cup.getTitle().equals(coupon.getTitle()))
+				return true;
+		}
+		return false;
+	}
+
 }

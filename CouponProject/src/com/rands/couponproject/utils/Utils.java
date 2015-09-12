@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -90,5 +91,18 @@ public class Utils {
 		logger.info("executing sqlfile : " + sqlFileName);
 		InputStream is = new FileInputStream(sqlFileName);
 		executeSqlScript(conn,is);
-	}	
+	}
+	
+	public static java.sql.Date string2Date(String dateString) throws Exception {
+		try {
+			SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+
+			java.util.Date date = sdf1.parse(dateString);
+			java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+			return sqlDate;
+		} catch (Exception e) {
+			logger.error("invalide date : " + dateString);
+			throw e;
+		}
+	}
 }

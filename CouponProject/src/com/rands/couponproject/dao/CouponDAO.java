@@ -7,9 +7,9 @@ import com.rands.couponproject.model.Coupon;
 import com.rands.couponproject.model.CouponType;
 
 public interface CouponDAO {
-	public void createCoupon(Coupon coupon) throws SQLException;
-	public void removeCoupon(Coupon coupon) throws SQLException;
-	public void updateCoupon(Coupon coupon);
+	public void createCoupon(Coupon coupon) throws Exception;
+	public void removeCoupon(Coupon coupon) throws Exception;
+	public void updateCoupon(Coupon coupon) throws Exception;
 	public Coupon getCoupon(long id);
 	public Collection<Coupon> getAllCoupons() throws SQLException;
 	public Collection<Coupon> getCouponByType(CouponType couponType);

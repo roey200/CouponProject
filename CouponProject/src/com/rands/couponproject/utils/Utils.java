@@ -25,7 +25,8 @@ public class Utils {
 	 */
 	public static String expandEnvVars(String text) {
 		Map<String, String> envMap = System.getenv();
-		String pattern = "\\$\\{([A-Za-z0-9]+)\\}"; // pattern for things like ${USERNAME}
+//		String pattern = "\\$\\{([A-Za-z0-9]+)\\}"; // pattern for things like ${USERNAME}
+		String pattern = "\\$\\{([\\w]+)\\}"; // pattern for things like ${USERNAME}
 		Pattern expr = Pattern.compile(pattern);
 		Matcher matcher = expr.matcher(text);
 		while (matcher.find()) {

@@ -130,11 +130,11 @@ public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 		Connection conn = getConnection();
 
 		try {
-			String sql = "update APP.customer cust_name=? , password=? where id=?";
+			String sql = "update APP.customer set cust_name=? , password=? where id=?";
 			//Statement st =conn.createStatement();
 			PreparedStatement ps = conn.prepareStatement(sql);
 
-			ps.setString(1, customer.getCustomerName());
+			ps.setString(1, customer.getCustomerName()); // we can change the name becuase the primary key is the id
 			ps.setString(2, customer.getPassword());
 			ps.setLong(3, customer.getId());
 			ps.execute();
@@ -209,7 +209,7 @@ public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 
 		try {
 			Statement st = conn.createStatement();
-			ResultSet rs = st.executeQuery("select * from APP.customer;");
+			ResultSet rs = st.executeQuery("select * from APP.customer");
 
 			while (rs.next())
 			{

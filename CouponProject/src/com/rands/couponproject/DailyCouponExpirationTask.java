@@ -21,7 +21,7 @@ public class DailyCouponExpirationTask extends Thread {
 
 	@Override
 	public void run() {
-		logger.error("DailyCouponExpirationTask starting");
+		logger.info("DailyCouponExpirationTask starting");
 
 		CouponDAO couponDAO = new CouponDBDAO();
 		Collection<Coupon> coupons;
@@ -54,7 +54,7 @@ public class DailyCouponExpirationTask extends Thread {
 				logger.error("DailyCouponExpirationTask interrupted");
 			}
 		}
-		logger.error("DailyCouponExpirationTask finished");
+		logger.info("DailyCouponExpirationTask finished");
 	}
 
 	public void stopTask() {

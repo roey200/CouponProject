@@ -123,7 +123,13 @@ public class AdminFacade implements CouponClientFacade {
 		CompanyDAO companyDAO = new CompanyDBDAO();
 		return companyDAO.getCompany(id);
 	}
-
+	
+	public Company getCompany(String name)
+	{
+		CompanyDAO companyDAO = new CompanyDBDAO();
+		return companyDAO.getCompany(name);
+	}
+	
 	public Collection<Company> getAllCompanies()
 	{
 		CompanyDAO companyDAO = new CompanyDBDAO();
@@ -208,6 +214,11 @@ public class AdminFacade implements CouponClientFacade {
 	{
 		CustomerDAO customerDAO = new CustomerDBDAO();
 		return customerDAO.getCustomer(id);
+	}
+	public Customer getCustomer(String name)
+	{
+		CustomerDAO customerDAO = new CustomerDBDAO();
+		return customerDAO.getCustomer(name);
 	}
 
 }

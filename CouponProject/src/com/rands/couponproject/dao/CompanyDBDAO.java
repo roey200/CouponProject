@@ -150,7 +150,7 @@ public class CompanyDBDAO extends BaseDBDAO implements CompanyDAO {
 			ps.setLong(4, company.getId());
 			ps.execute();
 
-			System.out.println("the company has been updated");
+			logger.debug("Company has been updated : " + company);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			System.err.println("something went worng please try again");

@@ -23,16 +23,31 @@ public class TestMain {
 	public static void main(String[] args) {
 		//LogUtils.initLogger(); // use this if the log4j.properties file is not in your path
 		
+		boolean optCreateDatabase = true;
+		
 		logger.debug("starting tests");
 		
 		try {
 			couponSystem = CouponSystem.getInstance();
-//			a = (AdminFacade) couponSystem.login("admin", "1234", ClientType.ADMIN);
+			
+			if (optCreateDatabase) {
+				createDataBase();
+			}
+			a = (AdminFacade) couponSystem.login("admin", "1234", ClientType.ADMIN);
+			TestAdmin testAdmin = new TestAdmin(a);
+			testAdmin.Test();
 		} catch (Exception e) {
 			logger.error("TestMain failed : " + e.toString());
 			return;
 		}
 		
+	}
+
+	/**
+	 * createDataBase - creates the database tables from the scrapbook file 
+	 */
+	private static void createDataBase() {
+		logger.info("Creating the database");
 		Connection conn = null;
 		try {
 			conn = ConnectionPool.getInstance().getConnection();
@@ -46,28 +61,7 @@ public class TestMain {
 			} catch (Exception e) {
 			}
 		}
-
-//		logger.info("creating companies");
-//		createComapny ("cocacola");
-//		createComapny ("google");
-//		createComapny ("alphabet");
-//		createComapny ("google");
-//		createComapny ("amazon");
-//		
-//		PrintCompanies();
-//		
-//		//updateCompany (4);
-//		
-//		//PrintCompanies();
-//		logger.info("creating customers");
-//		createCustomer("arik");
-//		createCustomer("bents");
-//		createCustomer("moshe");
-//		createCustomer("kermit");
-//		createCustomer("miss piggie");
-//		
-//		printCustomers();
-
+		logger.info("Creating the database done");
 
 	}
 

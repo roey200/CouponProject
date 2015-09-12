@@ -1,15 +1,18 @@
 package com.rands.couponproject.tests;
 
+import java.sql.Connection;
 import java.util.Collection;
 
 import org.apache.log4j.Logger;
 
+import com.rands.couponproject.ConnectionPool;
 import com.rands.couponproject.CouponSystem;
 import com.rands.couponproject.facede.AdminFacade;
 import com.rands.couponproject.model.ClientType;
 import com.rands.couponproject.model.Company;
 import com.rands.couponproject.model.Customer;
 import com.rands.couponproject.utils.LogUtils;
+import com.rands.couponproject.utils.Utils;
 
 public class TestMain {
 	static Logger logger = Logger.getLogger(TestMain.class);
@@ -26,8 +29,22 @@ public class TestMain {
 			couponSystem = CouponSystem.getInstance();
 //			a = (AdminFacade) couponSystem.login("admin", "1234", ClientType.ADMIN);
 		} catch (Exception e) {
-			logger.error("TestCreateCompany failed : " + e.toString());
+			logger.error("TestMain failed : " + e.toString());
 			return;
+		}
+		
+		Connection conn = null;
+		try {
+			conn = ConnectionPool.getInstance().getConnection();
+			Utils.executeSqlScript(conn,"scrapbook_derby");
+		} catch (Exception e) {
+			logger.error("TestMain failed : " + e.toString());
+			return;
+		} finally {
+			try {
+				ConnectionPool.getInstance().returnConnection(conn);
+			} catch (Exception e) {
+			}
 		}
 
 //		logger.info("creating companies");

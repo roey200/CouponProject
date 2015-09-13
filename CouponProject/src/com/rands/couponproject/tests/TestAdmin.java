@@ -26,13 +26,13 @@ public class TestAdmin {
 		createComapny("alphabet");
 		createComapny("google");
 		createComapny("amazon");
-		createComapny("RandS BurgersBar");
+		createComapny("RandS EveryThingGoos");
 
 		printCompanies();
 
 		System.out.println("updating companies");
 		updateCompany("alphabet");
-		updateCompany("RandS BurgersBar");
+		updateCompany("RandS EveryThingGoos");
 		updateCompany("mass");
 		
 		printCompanies();

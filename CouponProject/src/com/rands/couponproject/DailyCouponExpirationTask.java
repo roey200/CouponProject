@@ -10,15 +10,14 @@ import org.apache.log4j.Logger;
 import com.rands.couponproject.dao.CouponDAO;
 import com.rands.couponproject.dao.CouponDBDAO;
 import com.rands.couponproject.model.Coupon;
+import com.rands.couponproject.utils.Utils;
 
 public class DailyCouponExpirationTask extends Thread {
 
 	static Logger logger = Logger.getLogger(DailyCouponExpirationTask.class);
 	private boolean quit = false;
 
-	private static final long second = 1000;
-	private static final long minute = 60 * second;
-	private static final long houer = 60 * minute;
+	
 
 	@Override
 	public void run() {
@@ -49,8 +48,8 @@ public class DailyCouponExpirationTask extends Thread {
 			}
 
 			try {
-				//sleep(15 * minute);
-				sleep(1 * minute);
+				//sleep(15 * Utils.minute);
+				sleep(1 * Utils.minute);
 			} catch (InterruptedException e) {
 				logger.error("DailyCouponExpirationTask interrupted");
 			}
@@ -60,10 +59,10 @@ public class DailyCouponExpirationTask extends Thread {
 
 	public void stopTask() {
 		if (!quit) {
-			logger.error("Stopping the DailyCouponExpirationTask");
+			logger.info("Stopping the DailyCouponExpirationTask");
 			quit = true;
 		} else {
-			logger.error("DailyCouponExpirationTask already stopped");
+			logger.info("DailyCouponExpirationTask already stopped");
 		}
 	}
 

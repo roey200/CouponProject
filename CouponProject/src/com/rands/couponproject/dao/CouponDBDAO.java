@@ -330,7 +330,8 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 
 		Collection<Coupon> purchasableCoupons = new ArrayList<Coupon>();
 		for (Coupon coupon : coupons) {
-			if (coupon.getEndDate().after(currentDate) && coupon.getAmount() > 0) {
+//			if (coupon.getEndDate().after(currentDate) && coupon.getAmount() > 0)
+			{
 				purchasableCoupons.add(coupon);
 			}
 

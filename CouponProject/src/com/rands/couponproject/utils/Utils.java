@@ -18,6 +18,10 @@ public class Utils {
 	
 	private static final Logger logger = Logger.getLogger(Utils.class);
 	
+	public static final long second = 1000;
+	public static final long minute = 60 * second;
+	public static final long houer = 60 * minute;
+	
 	/**
 	 * expandEnvVars : replaces environment variables in string to their value.
 	 * @param text - the string containing the environment variables (like ${HOME}).

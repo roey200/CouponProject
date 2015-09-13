@@ -39,10 +39,11 @@ public class CouponSystem {
 
 	}
 
+	DailyCouponExpirationTask dailyTask=null;
 	// the private constructor
 	private CouponSystem() {
-		Thread t = new DailyCouponExpirationTask();
-		t.start();
+		dailyTask = new DailyCouponExpirationTask();
+		dailyTask.start();
 	}
 
 	public CouponClientFacade login(String name, String password, ClientType clientType) throws Exception {
@@ -70,4 +71,18 @@ public class CouponSystem {
 		return facade;
 	}
 
+	public void shutdown(){
+		System.out.println("Coupon System is Shuting Down");
+		System.out.println("stopping the daily task");
+		dailyTask.stopTask();
+		System.out.println("closing all DB connections");
+
+		try {
+			ConnectionPool.getInstance().closeAllconnections();
+		} catch (Exception e) {
+			logger.error("closing all connection failed");
+		}
+	}
+	
+	
 }

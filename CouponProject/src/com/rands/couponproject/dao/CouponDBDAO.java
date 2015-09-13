@@ -76,7 +76,7 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 			}
 			long id = getGeneratedKey(ps);
 			coupon.setId(id);
-			System.out.println("coupon=" + coupon.getTitle() + " added to database, id=" + id);
+			logger.debug("coupon created " + coupon);
 
 		} catch (SQLException e) {
 			logger.error("createCoupon " + coupon.getTitle() + " failed : " + e.toString());
@@ -101,7 +101,7 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 				throw new SQLException("createCompanyCoupon, no rows affected.");
 			}
 			//long id = getGeneratedKey(ps);
-			//logger.debug("company_coupon added to database, id=" + id);
+			//logger.debug("company_coupon created, id=" + id);
 
 		} catch (SQLException e) {
 			logger.error("createCompanyCoupon failed : " + e.toString());
@@ -127,7 +127,7 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 				throw new SQLException("createCustomerCoupon, no rows affected.");
 			}
 			//long id = getGeneratedKey(ps);
-			//logger.debug("customer_coupon added to database, id=" + id);
+			//logger.debug("customer_coupon created, id=" + id);
 
 		} catch (SQLException e) {
 			logger.error("createCustomerCoupon failed : " + e.toString());

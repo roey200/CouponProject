@@ -123,7 +123,7 @@ public class CompanyFacade implements CouponClientFacade {
 		Connection conn = getConnection();
 		CouponDAO couponDAO = new CouponDBDAO(conn);
 		try {
-			conn.setAutoCommit(true); // begin transaction
+			conn.setAutoCommit(false); // begin transaction
 			couponDAO.createCoupon(coupon);
 			couponDAO.createCompanyCoupon(companyId, coupon.getId());
 
@@ -150,7 +150,7 @@ public class CompanyFacade implements CouponClientFacade {
 		CouponDAO couponDAO = new CouponDBDAO(conn);
 
 		try {
-			conn.setAutoCommit(true); // begin transaction
+			conn.setAutoCommit(false); // begin transaction
 
 			//couponDAO.removeCoupon(coupon); 
 			couponDAO.removeCoupon(couponId);

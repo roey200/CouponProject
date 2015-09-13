@@ -1,3 +1,9 @@
+DROP TABLE APP.customer_coupon;
+DROP TABLE APP.company_coupon;
+DROP TABLE APP.coupon;
+DROP TABLE APP.company;
+DROP TABLE APP.customer;
+
 CREATE TABLE APP.coupon (
 	id INTEGER PRIMARY KEY AUTO_INCREMENT,
 	title VARCHAR(50) NOT NULL,
@@ -25,6 +31,7 @@ CREATE TABLE APP.customer (
 
 
 CREATE TABLE APP.customer_coupon (
+	id INTEGER PRIMARY KEY AUTO_INCREMENT,
    cust_id INTEGER,
    coupon_id INTEGER,
    
@@ -33,6 +40,7 @@ CREATE TABLE APP.customer_coupon (
 );
 
 CREATE TABLE APP.company_coupon (
+	id INTEGER PRIMARY KEY AUTO_INCREMENT,
    comp_id INTEGER,
    coupon_id INTEGER,
 

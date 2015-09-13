@@ -39,7 +39,7 @@ public class TestCompany {
 
 		createCoupon("ExtreamJava", "2015-01-01", "2020-12-31", 1, CouponType.CAMPING, "1+1 flight and camping to Java islend", 1000);
 		createCoupon("ExtreamC#", "2015-01-01", "2025-01-31", 0, CouponType.TECH, "1+1 .NET Course", 1200); // note amount = 0
-		createCoupon("ExtreamUnix", "1970-01-01", "2032-12-31", 10000, CouponType.TECH, "100% discount for FreeBSD", 500);
+		createCoupon("ExtreamUnix", "1970-01-02", "2032-12-31", 10000, CouponType.TECH, "100% discount for FreeBSD", 500);
 
 		printCompany();
 
@@ -66,7 +66,7 @@ public class TestCompany {
 	public void test2() {
 		long couponId;
 		
-		couponId = createCoupon("Phantom", "1970-01-01", "2032-12-31", 1, CouponType.TECH, "This Coupon should expire!", 100);
+		couponId = createCoupon("Phantom", "2/1/1970", "2032-12-31", 1, CouponType.TECH, "This Coupon should expire!", 100);
 		expireCoupon(couponId);
 		
 	}

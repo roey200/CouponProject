@@ -7,7 +7,7 @@ import com.rands.couponproject.model.Coupon;
 import com.rands.couponproject.model.Customer;
 
 public interface CustomerDAO {
-	public void createCustomer(Customer customer);
+	public void createCustomer(Customer customer) throws Exception;
 	public void removeCustomer (Customer customer) throws Exception;
 	public void updateCustomer (Customer customer) throws Exception;
 	public Customer getCustomer(String name);

@@ -155,10 +155,14 @@ public class AdminFacade implements CouponClientFacade {
 	{
 		CustomerDAO customerDAO = new CustomerDBDAO();
 		String name = c.getCustomerName();
-		if (null == customerDAO.getCustomer(name)) {
-			customerDAO.createCustomer(c);
-		} else {
+		if (null != customerDAO.getCustomer(name)) {
 			logger.error("createCustomer ,Customer " + name + " already exists");
+			return;
+		}
+		try {
+			customerDAO.createCustomer(c);
+		} catch (Exception e) {
+			logger.error("createCustomer failed : " + e.toString());
 		}
 	}
 
@@ -215,7 +219,7 @@ public class AdminFacade implements CouponClientFacade {
 	{
 		CustomerDAO customerDAO = new CustomerDBDAO();
 		try {
-		customerDAO.updateCustomer(c);
+			customerDAO.updateCustomer(c);
 		} catch (Exception e) {
 			logger.error("updateCustomer " + c.getCustomerName() + " failed : " + e.toString());
 		}

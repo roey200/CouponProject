@@ -45,7 +45,7 @@ public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 	}
 
 	@Override
-	public void createCustomer(Customer customer) {
+	public void createCustomer(Customer customer) throws SQLException {
 		Connection conn = getConnection();
 		try {
 			String sql = "insert into APP.customer (cust_name, password) values(?,?)";
@@ -61,11 +61,11 @@ public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 			}
 			long id = getGeneratedKey(ps);
 			customer.setId(id);
-			System.out.println("customer=" + customer.getCustomerName() + " added to database, id=" + id);
+			logger.debug("customer created " + customer);
 
 		} catch (SQLException e) {
-			System.out.println("failed to insert customer " + customer.getCustomerName() + " : " + e.toString());
-			e.printStackTrace();
+			System.out.println("createCustomer " + customer.getCustomerName() + " failed : " + e.toString());
+			throw e;
 		} finally {
 			returnConnection(conn);
 		}

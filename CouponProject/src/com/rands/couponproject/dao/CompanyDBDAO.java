@@ -265,6 +265,8 @@ public class CompanyDBDAO extends BaseDBDAO implements CompanyDAO {
 			isCorrectPassword = (password.equals(dbPassword));
 		} catch (SQLException e) {
 			logger.error("login failed : " + e.toString());
+		} finally {
+			returnConnection(conn);
 		}
 		return isCorrectPassword;
 	}

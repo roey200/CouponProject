@@ -255,6 +255,8 @@ public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 			isCorrectPassword = (password.equals(dbPassword));
 		} catch (SQLException e) {
 			logger.error("login failed : " + e.toString());
+		} finally {
+			returnConnection(conn);
 		}
 		return isCorrectPassword;
 	}

@@ -50,7 +50,8 @@ public class Props {
 	public boolean getBool(String key,boolean defVal) {
     	try {
    			loadProps();
-    		return Boolean.parseBoolean(props.getProperty(key));
+   			String val = props.getProperty(key);
+    		return Boolean.parseBoolean(val);
     	} catch (Exception e) {
     	}
 		return defVal;
@@ -61,7 +62,8 @@ public class Props {
 	public int getInt(String key,int defVal) {
     	try {
    			loadProps();
-    		return Integer.parseInt(props.getProperty(key));
+   			String val = props.getProperty(key);
+    		return Integer.parseInt(val);
     	} catch (Exception e) {
     	}
 		return defVal;
@@ -72,7 +74,8 @@ public class Props {
 	public long getLong(String key,long defVal) {
     	try {
    			loadProps();
-    		return Long.parseLong(props.getProperty(key));
+   			String val =props.getProperty(key);
+    		return Long.parseLong(val);
     	} catch (Exception e) {
     	}
 		return defVal;
@@ -83,7 +86,8 @@ public class Props {
 	public Double getDouble(String key,double defVal) {
     	try {
    			loadProps();
-    		return Double.parseDouble(props.getProperty(key));
+   			String val =props.getProperty(key);
+    		return Double.parseDouble(val);
     	} catch (Exception e) {
     	}
 		return defVal;

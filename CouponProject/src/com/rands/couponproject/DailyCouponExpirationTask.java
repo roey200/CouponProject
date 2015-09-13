@@ -17,6 +17,11 @@ public class DailyCouponExpirationTask extends Thread {
 	static Logger logger = Logger.getLogger(DailyCouponExpirationTask.class);
 	private boolean quit = false;
 
+	public DailyCouponExpirationTask() {
+		super();
+		
+		setName("DailyCouponExpirationTask"); // set the thread name
+	}
 	
 
 	@Override
@@ -62,6 +67,7 @@ public class DailyCouponExpirationTask extends Thread {
 		if (!quit) {
 			logger.info("Stopping the DailyCouponExpirationTask");
 			quit = true;
+			this.interrupt(); // interrupt the sleep
 		} else {
 			logger.info("DailyCouponExpirationTask already stopped");
 		}

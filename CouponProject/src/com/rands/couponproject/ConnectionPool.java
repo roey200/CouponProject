@@ -27,7 +27,8 @@ public class ConnectionPool {
 
 	private String driver, url, username, password;
 	private int minConnections;
-
+	private boolean optDebug;
+	
 	/**
 	 * getInstance - created the singleton on the 1st call.
 	 * 
@@ -92,25 +93,48 @@ public class ConnectionPool {
 	}
 
 	private void initProps() {
+		optDebug = props.getBool("debug",false);
+		
 		driver = props.getString("dbdriver", "org.apache.derby.jdbc.ClientDriver");
-		url = props.getString("dburl", "jdbc:derby://localhost:1527/sample");
+		url = props.getString("dburl", "jdbc:derby://localhost:1527/${USERPROFILE}\\sampledb;create=true");
 
-		minConnections = props.getInt("minConnections", 5);
+		minConnections = props.getInt("minConnections", 10);
 
 		username = props.getString("dbuser");
 		password = props.getString("dbpassword");
 	}
 
+	/**
+	 * getThreadId - for debug only
+	 * @return the id and name of the current thread
+	 */
+	private String getThreadId() {
+		long threadId = Thread.currentThread().getId();
+		String threadName = Thread.currentThread().getName();
+		
+		return "thread " + threadId + "[" + threadName + "]";
+	}
+	
+	/**
+	 * getConnIndex - for debug only
+	 * @param conn
+	 * @return the index of conn within the allConnections array (or -1)
+	 */
+	private int getConnIndex(Connection conn) {
+		return allConnections.indexOf(conn);
+	}
+	
 	public Connection getConnection()
 	{
-		long threadId = Thread.currentThread().getId();
-
 		while (true) {
 			synchronized (freeConnections) {
 
 				if (freeConnections.size() != 0) { // free connection is available 
 					Connection conn = freeConnections.get(0);
 					freeConnections.remove(0);
+					
+					if (optDebug)
+					  logger.debug(getThreadId() + " got connection " + getConnIndex(conn));
 
 					try {
 						conn.setAutoCommit(true);
@@ -121,31 +145,40 @@ public class ConnectionPool {
 					return conn;
 				}
 				try {
-					logger.debug("thread " + threadId + " waiting for connection to become free");
+					logger.debug(getThreadId() + " waiting for connection to become free");
 					freeConnections.wait();
 				} catch (InterruptedException e) {
-					logger.debug("thread " + threadId + " done waiting");
+					logger.debug(getThreadId() + " done waiting");
 				}
 			}
 		}
 	}
 
-	public void returnConnection(Connection c)
+	public void returnConnection(Connection conn)
 	{
-		if (null == c) // ignore invalid value
-			return;
+		long threadId = Thread.currentThread().getId();
+		String threadName = Thread.currentThread().getName();
 		
-		if (!allConnections.contains(c)) {
-			logger.error("attempt to return a connection no from the connectionpool");
+		if (null == conn) { // ignore invalid value
+			logger.error(getThreadId() + " returning null connection");	
+			return;
+		}
+		if (!allConnections.contains(conn)) {
+			//logger.error("attempt to return a connection not from the connectionpool");
+			logger.error(getThreadId() + " attempt to return a connection not from the connection pool " + conn);	
 			return;
 		}
 		synchronized (freeConnections) {
-			if (freeConnections.contains(c)) {
-				logger.error("duplicate attempt to return a connection ");
+			if (freeConnections.contains(conn)) {
+				//logger.error("duplicate attempt to return a connection");
+				logger.error(getThreadId() + " duplicate attempt to return a connection " + getConnIndex(conn));	
 				return;
 			}
-			
-			freeConnections.add(c);
+
+			if (optDebug)
+				logger.debug(getThreadId() + " returning connection " + getConnIndex(conn));	
+
+			freeConnections.add(conn);
 			freeConnections.notifyAll();
 			return;
 		}

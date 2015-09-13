@@ -1,6 +1,7 @@
 package com.rands.couponproject.tests;
 
 import java.sql.Connection;
+import java.sql.Statement;
 import java.util.Collection;
 
 import org.apache.log4j.Logger;
@@ -35,6 +36,9 @@ public class TestMain {
 			if (optCreateDatabase) {
 				createDataBase();
 			}
+			
+			printHeader("Deleting all records");
+			deleteAll(); // delete all records from the data base
 			
 			printHeader("Teseting the AdminFacade");
 
@@ -111,5 +115,33 @@ public class TestMain {
 		System.out.println("Creating the database done");
 
 	}
+	
+	/**
+	 * deleteAll - deletes all db records so we can start with empty tables.
+	 */
+	private static void deleteAll() {
+		System.out.println("Emptying the database");
+
+		Connection conn = null;
+		try {
+			conn = ConnectionPool.getInstance().getConnection();
+			Utils.executeSqlCommand(conn,"DELETE from APP.customer_coupon");
+			Utils.executeSqlCommand(conn,"DELETE from APP.company_coupon");
+			Utils.executeSqlCommand(conn,"DELETE from APP.coupon");
+			Utils.executeSqlCommand(conn,"DELETE from APP.company");
+			Utils.executeSqlCommand(conn,"DELETE from APP.customer");
+		} catch (Exception e) {
+			logger.error("deleteAll failed : " + e.toString());
+			return;
+		} finally {
+			try {
+				ConnectionPool.getInstance().returnConnection(conn);
+			} catch (Exception e) {
+			}
+		}
+		System.out.println("Emptying the database done");		
+	}
+
+	
 
 }

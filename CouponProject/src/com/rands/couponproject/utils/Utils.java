@@ -1,6 +1,5 @@
 package com.rands.couponproject.utils;
 
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -85,8 +84,7 @@ public class Utils {
 					}
 				}
 			}
-		} finally
-		{
+		} finally {
 			if (st != null)
 				st.close();
 		}
@@ -94,8 +92,26 @@ public class Utils {
 	
 	public static void executeSqlScript(Connection conn, String sqlFileName) throws Exception {
 		logger.info("executing sqlfile : " + sqlFileName);
-		InputStream is = new FileInputStream(sqlFileName);
+		//InputStream is = new FileInputStream(sqlFileName);
+		
+		ClassLoader cl = Utils.class.getClassLoader();
+		InputStream is = cl.getResourceAsStream(sqlFileName);
 		executeSqlScript(conn,is);
+	}
+	
+	public static void executeSqlCommand(Connection conn, String sqlCommand) throws SQLException {
+		logger.info("executing sql : " + sqlCommand);
+		Statement st = null;
+		try {
+			st = conn.createStatement();
+			st.execute(sqlCommand);
+		} catch (Exception e) {
+			logger.info("executing sql failed : " + e.toString());
+		} finally {
+			if (st != null)
+				st.close();
+		}			
+		
 	}
 	
 	private static final String knownFormats = "yyyy-MM-dd hh:mm;yyyy-MM-dd;dd/MM/yyyy hh:mm;dd/MM/yyyy";

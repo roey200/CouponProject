@@ -1,5 +1,6 @@
 package com.rands.couponproject.facede;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -23,17 +24,17 @@ public class CustomerFacade implements CouponClientFacade {
 	static Logger logger = Logger.getLogger(CustomerFacade.class);
 
 	private long customerId;
-	
-	private CustomerFacade() {
-	}	
 
-	public static CouponClientFacade login(String name, String password,ClientType clientType) throws Exception {
-		
-		if (clientType != ClientType.CUSTOMER){
-			logger.error("company login failed mismitch clientType =" + clientType );
+	private CustomerFacade() {
+	}
+
+	public static CouponClientFacade login(String name, String password, ClientType clientType) throws Exception {
+
+		if (clientType != ClientType.CUSTOMER) {
+			logger.error("company login failed mismitch clientType =" + clientType);
 			throw new Exception("LoginFailed");
 		}
-		
+
 		CustomerDAO customerDAO = new CustomerDBDAO();
 		if (!customerDAO.login(name, password)) {
 			logger.error("customer login failed ,customer " + name);
@@ -45,7 +46,7 @@ public class CustomerFacade implements CouponClientFacade {
 		facade.customerId = customer.getId();
 		return facade;
 	}
-	
+
 	private Customer getLogedinCustomer() throws Exception {
 		CustomerDAO customerDAO = new CustomerDBDAO();
 		Customer customer = customerDAO.getCustomer(customerId);
@@ -53,13 +54,13 @@ public class CustomerFacade implements CouponClientFacade {
 			logger.error("getLogedinCustomer customer does not exist any more");
 			throw new Exception("getLogedinCustomer customer does not exist any more");
 		}
-		
+
 		CouponDAO couponDAO = new CouponDBDAO();
 		Collection<Coupon> coupons = couponDAO.getCustomerCoupons(customerId);
 		customer.setCoupons(coupons);
-		
+
 		return customer;
-	}	
+	}
 
 	public void purchaseCoupon(Coupon coupon) throws Exception {
 
@@ -81,7 +82,7 @@ public class CustomerFacade implements CouponClientFacade {
 			throw new CouponException("not availabe anymore " + coupon.toString());
 
 		}
-		
+
 		CouponDAO couponDAO = new CouponDBDAO();
 		couponDAO.createCustomerCoupon(customerId, coupon.getId());
 	}
@@ -91,27 +92,39 @@ public class CustomerFacade implements CouponClientFacade {
 		return customer.getCoupons();
 
 	}
-	
-	public Collection<Coupon> getAllPurchasedCouponsByType(CouponType type) throws Exception{
+
+	public Collection<Coupon> getAllPurchasedCouponsByType(CouponType type) throws Exception {
 		Collection<Coupon> coupons = new ArrayList<Coupon>();
-		
-		for (Coupon coupon:getAllPurchasedCoupons()) {
+
+		for (Coupon coupon : getAllPurchasedCoupons()) {
 			if (coupon.getType() == type)
 				coupons.add(coupon);
 		}
-		
+
 		return coupons;
 	}
-	
-	public Collection<Coupon> getAllPurchasedCouponsByPrice(long price) throws Exception{
+
+	public Collection<Coupon> getAllPurchasedCouponsByPrice(long price) throws Exception {
 		Collection<Coupon> coupons = new ArrayList<Coupon>();
-		
-		for (Coupon coupon:getAllPurchasedCoupons()) {
+
+		for (Coupon coupon : getAllPurchasedCoupons()) {
 			if (coupon.getPrice() <= price)
 				coupons.add(coupon);
 		}
-		
+
 		return coupons;
+	}
+
+	public Collection<Coupon> getAllPurchasableCoupons() throws SQLException {
+
+		CouponDAO couponDAO = new CouponDBDAO();
+		return couponDAO.getAllPurchasableCoupons();
+	}
+
+	public Collection<Coupon> getAllPurchasableCouponsByType(CouponType couponType) throws SQLException {
+
+		CouponDAO couponDAO = new CouponDBDAO();
+		return couponDAO.getAllPurchasableCouponsByType(couponType);
 	}
 
 	public Customer getCustomer() {
@@ -119,9 +132,9 @@ public class CustomerFacade implements CouponClientFacade {
 		CustomerDAO customerDAO = new CustomerDBDAO();
 		return customerDAO.getCustomer(customerId);
 	}
-	
+
 	private boolean customerHasCoupon(Coupon coupon) throws Exception {
-		for (Coupon cup : getAllPurchasedCoupons()) { // check all coupons of the current (logedin) company 
+		for (Coupon cup : getAllPurchasedCoupons()) { // check all coupons of the current (logedin) customer 
 			if (cup.getTitle().equals(coupon.getTitle()))
 				return true;
 		}

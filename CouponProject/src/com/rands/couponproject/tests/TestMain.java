@@ -82,6 +82,7 @@ public class TestMain {
 		try {
 			conn = ConnectionPool.getInstance().getConnection();
 			Utils.executeSqlScript(conn, "scrapbook_derby");
+//			Utils.executeSqlScript(conn, "scrapbook_mysql");
 		} catch (Exception e) {
 			logger.error("TestMain failed : " + e.toString());
 			return;

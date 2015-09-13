@@ -161,10 +161,11 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 
 	@Override
 	public void removeCoupon(long id) throws SQLException {
+		logger.debug("removeCoupon removing coupon with id = " + id);
 		removeCustomerCoupon(id); // remove the links
 		removeCompanyCoupon(id);
 
-		doUpdate("delete from APP.coupon where id=?", id);
+		doUpdate("delete from APP.coupon where id=?", id); // now remove the coupon
 	}
 
 	//	@Override
@@ -325,30 +326,30 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 		return coupons;
 	}
 
-	private Collection<Coupon> getPurchasableCoupons(Collection<Coupon> coupons) throws SQLException {
-		Date currentDate = new Date();
-
-		Collection<Coupon> purchasableCoupons = new ArrayList<Coupon>();
-		for (Coupon coupon : coupons) {
-//			if (coupon.getEndDate().after(currentDate) && coupon.getAmount() > 0)
-			{
-				purchasableCoupons.add(coupon);
-			}
-
-		}
-		return purchasableCoupons;
-	}
-
-	@Override
-	public Collection<Coupon> getAllPurchasableCoupons() throws SQLException {
-		return getPurchasableCoupons(getAllCoupons());
-	}
-
-	@Override
-	public Collection<Coupon> getAllPurchasableCouponsByType(CouponType couponType) throws SQLException {
-
-		return getPurchasableCoupons(getCouponByType(couponType));
-	}
+//	private Collection<Coupon> getPurchasableCoupons(Collection<Coupon> coupons) throws SQLException {
+//		Date currentDate = new Date();
+//
+//		Collection<Coupon> purchasableCoupons = new ArrayList<Coupon>();
+//		for (Coupon coupon : coupons) {
+////			if (coupon.getEndDate().after(currentDate) && coupon.getAmount() > 0)
+//			{
+//				purchasableCoupons.add(coupon);
+//			}
+//
+//		}
+//		return purchasableCoupons;
+//	}
+//
+//	@Override
+//	public Collection<Coupon> getAllPurchasableCoupons() throws SQLException {
+//		return getPurchasableCoupons(getAllCoupons());
+//	}
+//
+//	@Override
+//	public Collection<Coupon> getAllPurchasableCouponsByType(CouponType couponType) throws SQLException {
+//
+//		return getPurchasableCoupons(getCouponByType(couponType));
+//	}
 
 	@Override
 	public Collection<Coupon> getCouponByType(CouponType couponType) {

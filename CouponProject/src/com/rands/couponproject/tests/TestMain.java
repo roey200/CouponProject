@@ -27,7 +27,7 @@ public class TestMain {
 		
 		boolean optCreateDatabase = true;
 		
-		logger.debug("starting tests");
+		printHeader("starting tests");
 		
 		try {
 			couponSystem = CouponSystem.getInstance();
@@ -36,10 +36,13 @@ public class TestMain {
 				createDataBase();
 			}
 			
+			printHeader("Teseting the AdminFacade");
+
 			adminFacade = (AdminFacade) couponSystem.login("admin", "1234", ClientType.ADMIN);
 			TestAdmin testAdmin = new TestAdmin(adminFacade);
 			testAdmin.test();
 			
+			printHeader("Teseting the CompanyFacade");
 			CompanyFacade companyFacade;
 			
 			try {
@@ -54,6 +57,7 @@ public class TestMain {
 			TestCompany testCompany = new TestCompany(companyFacade);
 			testCompany.test();
 			
+			printHeader("Teseting the CustomerFacade");
 			CustomerFacade customerFacade;
 			
 			customerFacade = (CustomerFacade) couponSystem.login("roey", "r1234", ClientType.CUSTOMER);
@@ -61,13 +65,16 @@ public class TestMain {
 			TestCustomer testCustomer = new TestCustomer(customerFacade);
 			testCustomer.test();
 			
+			printHeader("Teseting the DailyCouponExpirationTask");
 			testCompany.test2(); // a test to expire a coupon 
 			
-			System.out.println("Shutting down in 2 min");
+			printHeader("Shutting down");
+			System.out.println("Shutting down in 2 min, please wait");
 			Thread.sleep(2 * Utils.minute); // waiting two minutes to allow the daily task to do some work
 			couponSystem.shutdown();
 			
-			
+			printHeader("All done");
+
 			
 		} catch (Exception e) {
 			logger.error("TestMain failed : " + e.toString());
@@ -75,19 +82,25 @@ public class TestMain {
 		}
 		
 	}
+	
+	private static void printHeader(String text) {
+		System.out.println("***********************************************************************");
+		System.out.println(text);
+		System.out.println("***********************************************************************");
+	}
 
 	/**
 	 * createDataBase - creates the database tables from the scrapbook file
 	 */
 	private static void createDataBase() {
-		logger.info("Creating the database");
+		System.out.println("Creating the database");
 		Connection conn = null;
 		try {
 			conn = ConnectionPool.getInstance().getConnection();
-			Utils.executeSqlScript(conn, "scrapbook_derby");
 //			Utils.executeSqlScript(conn, "scrapbook_mysql");
+			Utils.executeSqlScript(conn, "scrapbook_derby");
 		} catch (Exception e) {
-			logger.error("TestMain failed : " + e.toString());
+			logger.error("createDataBase failed : " + e.toString());
 			return;
 		} finally {
 			try {
@@ -95,7 +108,7 @@ public class TestMain {
 			} catch (Exception e) {
 			}
 		}
-		logger.info("Creating the database done");
+		System.out.println("Creating the database done");
 
 	}
 

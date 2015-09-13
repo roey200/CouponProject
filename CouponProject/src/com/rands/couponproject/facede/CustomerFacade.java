@@ -86,6 +86,22 @@ public class CustomerFacade implements CouponClientFacade {
 		CouponDAO couponDAO = new CouponDBDAO();
 		couponDAO.createCustomerCoupon(customerId, coupon.getId());
 	}
+	
+	/**
+	 * purchaseCoupon - a helper function  
+	 * @param couponTitle the title of the coupon to be purchased
+	 * @throws Exception 
+	 */
+	public void purchaseCoupon(String couponTitle) throws Exception {
+		CouponDAO couponDAO = new CouponDBDAO();
+		for (Coupon coupon : couponDAO.getAllCoupons()) { // find a coupon with the requested title
+			if (coupon.getTitle().equals(couponTitle)) {
+				purchaseCoupon(coupon);
+				return;
+			}
+		}
+		throw new Exception("Coupon with title " + couponTitle + " dose not exist");
+	}
 
 	public Collection<Coupon> getAllPurchasedCoupons() throws Exception {
 		Customer customer = getLogedinCustomer();
@@ -115,18 +131,22 @@ public class CustomerFacade implements CouponClientFacade {
 		return coupons;
 	}
 
-	public Collection<Coupon> getAllPurchasableCoupons() throws SQLException {
+//	public Collection<Coupon> getAllPurchasableCoupons() throws SQLException {
+//
+//		CouponDAO couponDAO = new CouponDBDAO();
+//		return couponDAO.getAllPurchasableCoupons();
+//	}
+//
+//	public Collection<Coupon> getAllPurchasableCouponsByType(CouponType couponType) throws SQLException {
+//
+//		CouponDAO couponDAO = new CouponDBDAO();
+//		return couponDAO.getAllPurchasableCouponsByType(couponType);
+//	}
 
-		CouponDAO couponDAO = new CouponDBDAO();
-		return couponDAO.getAllPurchasableCoupons();
-	}
-
-	public Collection<Coupon> getAllPurchasableCouponsByType(CouponType couponType) throws SQLException {
-
-		CouponDAO couponDAO = new CouponDBDAO();
-		return couponDAO.getAllPurchasableCouponsByType(couponType);
-	}
-
+	/**
+	 * 
+	 * @return the currently logedin Customer 
+	 */
 	public Customer getCustomer() {
 
 		CustomerDAO customerDAO = new CustomerDBDAO();
@@ -140,4 +160,5 @@ public class CustomerFacade implements CouponClientFacade {
 		}
 		return false;
 	}
+
 }

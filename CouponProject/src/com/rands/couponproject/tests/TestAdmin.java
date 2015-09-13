@@ -104,6 +104,10 @@ public class TestAdmin {
 	private void removeCompany(String companyName) {
 		System.out.println("removing company : " + companyName);
 		Company c = admin.getCompany(companyName);
+		if (null == c){
+			logger.error("company does not exist : " + companyName);
+			return;
+		}
 		try {
 			admin.removeCompany(c.getId());
 		} catch (Exception e) {
@@ -140,6 +144,11 @@ public class TestAdmin {
 		System.out.println("removing customer : " + customerName);
 
 		Customer c = admin.getCustomer(customerName);
+		if (null == c){
+			logger.error("Customer does not exist : " + customerName);
+			return;
+		}
+		
 		try {
 			admin.removeCustomer(c.getId());
 		} catch (Exception e) {

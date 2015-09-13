@@ -26,6 +26,6 @@ public interface CouponDAO {
 	void removeCompanyCoupon(long couponId) throws SQLException;
 	void removeCustomerCoupon(long couponId) throws SQLException;
 	
-	Collection<Coupon> getAllPurchasableCoupons() throws SQLException;
-	Collection<Coupon> getAllPurchasableCouponsByType(CouponType couponType) throws SQLException;
+//	Collection<Coupon> getAllPurchasableCoupons() throws SQLException;
+//	Collection<Coupon> getAllPurchasableCouponsByType(CouponType couponType) throws SQLException;
 }

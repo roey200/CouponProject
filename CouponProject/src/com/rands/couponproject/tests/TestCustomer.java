@@ -51,24 +51,11 @@ public class TestCustomer {
 	private void purchaseCoupon(String couponTitle) {
 		System.out.println("purchasing : " + couponTitle);
 		try {
-			Collection<Coupon> coupons = customerFacade.getAllPurchasableCoupons();
-			for (Coupon coupon : coupons) {
-				if (coupon.getTitle().equals(couponTitle)) {
-					customerFacade.purchaseCoupon(coupon);
-					return;
-				}
-
-			} 
-			// did not find coupon with that title in the list of purchable coupons
-			logger.error("cannot purchase coupon : " + couponTitle);
-
+			customerFacade.purchaseCoupon(couponTitle);
 		} catch (Exception e) {
 			logger.error("purchaseCoupon " + couponTitle + " failed : " + e.toString());
-
 		}
-
 	}
-
 
 	private void printCustomer() {
 		Customer customer = customerFacade.getCustomer(); // get the customer that is associated with the facade
@@ -77,6 +64,11 @@ public class TestCustomer {
 		printCoupons(customer.getCoupons(), "\t");
 	}
 
+	/**
+	 * printCoupons - prints a list of Coupons.
+	 * @param coupons the list of Coupons
+	 * @param prefix a prefix. for example use \t or blanks for indentation.
+	 */
 	private void printCoupons(Collection<Coupon> coupons, String prefix) {
 		for (Coupon coupon : coupons) {
 			System.out.println(prefix + coupon);
@@ -87,7 +79,6 @@ public class TestCustomer {
 		printCoupons(coupons, ""); // empty prefix
 
 	}
-	
 
 	private Collection<Coupon> getCouponByType(CouponType type) throws Exception {
 		Collection<Coupon> coupons = new ArrayList<Coupon>();

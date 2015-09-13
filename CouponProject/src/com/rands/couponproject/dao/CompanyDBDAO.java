@@ -131,10 +131,7 @@ public class CompanyDBDAO extends BaseDBDAO implements CompanyDAO {
 	}
 	
 	@Override
-	public void updateCompany(Company company) throws SQLException { // takes a company object and
-													// updates its parameters
-													// (-id) to the db
-		// TODO Auto-generated method stub
+	public void updateCompany(Company company) throws SQLException {
 		Connection conn = getConnection();
 
 		try {

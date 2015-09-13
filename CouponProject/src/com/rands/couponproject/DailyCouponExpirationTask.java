@@ -40,6 +40,7 @@ public class DailyCouponExpirationTask extends Thread {
 				for (Coupon coupon : coupons) {
 					if (coupon.getEndDate().before(currentDate)) {
 						try {
+							logger.info("removing expierd coupon : " + coupon);
 							couponDAO.removeCoupon(coupon);
 							nRemoved++;
 						} catch (Exception e) {

@@ -31,7 +31,7 @@ public class TestCompany {
 
 		System.out.println("creating coupons");
 
-		createCoupon("HienikenBeer", "2015-09-14 17:00", "2020-09-20", 3, CouponType.FOOD, "All You Can Drink Hieniken Beer", 35);
+		createCoupon("HienikenBeer", "2016-01-01 17:00", "2020-09-20", 3, CouponType.FOOD, "All You Can Drink Hieniken Beer", 35);
 		createCoupon("BurgerUpgrade", "2015-09-12 16:30", "2016-10-24 22:00", 40, CouponType.FOOD, "50% off ", 25);
 		couponId1 = createCoupon("DessertSpeacial", "14/09/2015", "2018-09-20 2:00", 10, CouponType.FOOD, "Banna Split Discount", 10);
 		couponId2 = createCoupon("wineBottle", "2015-07-10 22:00 16:30", "2016-12-20 04:30 23:45", 99, CouponType.FOOD, "1+1 wine bottels", 50);

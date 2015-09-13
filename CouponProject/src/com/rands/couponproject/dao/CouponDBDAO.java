@@ -52,9 +52,9 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 			throw new Exception("coupon endDate < startDate"); // not finished
 		}
 		Date currentDate = new Date();
-		//		if (currentDate.before(coupon.getEndDate())) {
-		//			throw new CouponException("coupon endDate < currentDate");
-		//		}	
+		if (coupon.getEndDate().before(currentDate)) {
+			throw new CouponException("coupon endDate < currentDate");
+		}	
 
 		Connection conn = getConnection();
 		try {

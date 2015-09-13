@@ -24,7 +24,7 @@ public class TestCustomer {
 
 	}
 
-	public void Test() {
+	public void test() {
 		printCustomer();
 		
 		purchaseCoupon("HienikenBeer");

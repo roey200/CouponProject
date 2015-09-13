@@ -38,7 +38,7 @@ public class TestMain {
 			
 			adminFacade = (AdminFacade) couponSystem.login("admin", "1234", ClientType.ADMIN);
 			TestAdmin testAdmin = new TestAdmin(adminFacade);
-			testAdmin.Test();
+			testAdmin.test();
 			
 			CompanyFacade companyFacade;
 			
@@ -52,15 +52,18 @@ public class TestMain {
 			companyFacade = (CompanyFacade) couponSystem.login("RandS EveryThingGoos", "Ra9999", ClientType.COMPANY);
 			logger.info("company " + "RandS EveryThingGoos" + " login with new password is ok");
 			TestCompany testCompany = new TestCompany(companyFacade);
-			testCompany.Test();
+			testCompany.test();
 			
 			CustomerFacade customerFacade;
 			
 			customerFacade = (CustomerFacade) couponSystem.login("roey", "r1234", ClientType.CUSTOMER);
 			logger.info("customer " + "roey" + " login ok");
 			TestCustomer testCustomer = new TestCustomer(customerFacade);
-			testCustomer.Test();
+			testCustomer.test();
 			
+			testCompany.test2(); // a test to expire a coupon 
+			
+			System.out.println("Shutting down in 2 min");
 			Thread.sleep(2 * Utils.minute); // waiting two minutes to allow the daily task to do some work
 			couponSystem.shutdown();
 			

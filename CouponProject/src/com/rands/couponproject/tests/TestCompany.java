@@ -1,6 +1,7 @@
 package com.rands.couponproject.tests;
 
 import java.util.Collection;
+import java.util.Date;
 
 import org.apache.log4j.Logger;
 
@@ -22,7 +23,7 @@ public class TestCompany {
 
 	}
 
-	public void Test() {
+	public void test() {
 		printCompany();
 
 		long couponId1;
@@ -30,14 +31,14 @@ public class TestCompany {
 
 		System.out.println("creating coupons");
 
-		createCoupon("HienikenBeer", "2015-09-14 17:00", "2015-09-20", 3, CouponType.FOOD, "All You Can Drink Hieniken Beer", 35);
-		createCoupon("BurgerUpgrade", "2015-09-12 16:30", "2015-10-24 22:00", 40, CouponType.FOOD, "50% off ", 25);
+		createCoupon("HienikenBeer", "2015-09-14 17:00", "2020-09-20", 3, CouponType.FOOD, "All You Can Drink Hieniken Beer", 35);
+		createCoupon("BurgerUpgrade", "2015-09-12 16:30", "2016-10-24 22:00", 40, CouponType.FOOD, "50% off ", 25);
 		couponId1 = createCoupon("DessertSpeacial", "14/09/2015", "2018-09-20 2:00", 10, CouponType.FOOD, "Banna Split Discount", 10);
-		couponId2 = createCoupon("wineBottle", "2015-07-10 22:00 16:30", "2015-12-20 04:30 23:45", 99, CouponType.FOOD, "1+1 wine bottels", 50);
-		createCoupon("wineBottle", "2015-10-10", "2015-10-20", 40, CouponType.FOOD, "1+1 wine bottels", 10); //should fial
+		couponId2 = createCoupon("wineBottle", "2015-07-10 22:00 16:30", "2016-12-20 04:30 23:45", 99, CouponType.FOOD, "1+1 wine bottels", 50);
+		createCoupon("wineBottle", "2015-10-10", "2015-12-31", 40, CouponType.FOOD, "1+1 wine bottels", 10); //should fial
 
-		createCoupon("ExtreamJava", "2015-01-01", "2015-12-31", 1, CouponType.CAMPING, "1+1 flight and camping to Java islend", 1000);
-		createCoupon("ExtreamC#", "2015-01-01", "2016-01-31", 0, CouponType.TECH, "1+1 .NET Course", 1200); // note amount = 0
+		createCoupon("ExtreamJava", "2015-01-01", "2020-12-31", 1, CouponType.CAMPING, "1+1 flight and camping to Java islend", 1000);
+		createCoupon("ExtreamC#", "2015-01-01", "2025-01-31", 0, CouponType.TECH, "1+1 .NET Course", 1200); // note amount = 0
 		createCoupon("ExtreamUnix", "1970-01-01", "2032-12-31", 10000, CouponType.TECH, "100% discount for FreeBSD", 500);
 
 		printCompany();
@@ -59,7 +60,15 @@ public class TestCompany {
 		printCouponsByType(CouponType.TECH);
 		printCouponsByPrice(30);
 		printCouponByDate("2015-11-01");
-
+		
+	}
+	
+	public void test2() {
+		long couponId;
+		
+		couponId = createCoupon("Phantom", "1970-01-01", "2032-12-31", 1, CouponType.TECH, "This Coupon should expire!", 100);
+		expireCoupon(couponId);
+		
 	}
 
 	private void printCoupons(Collection<Coupon> coupons, String prefix) {
@@ -157,6 +166,14 @@ public class TestCompany {
 			logger.error("removeCoupon failed : " + e.toString());
 		}
 
+	}
+	
+	private void expireCoupon(long couponId){
+		System.out.println("expiering coupon with id : " + couponId);
+
+		Coupon coupon = compFacade.getCoupon(couponId);
+		coupon.setEndDate(new Date()); // the DailyCouponExpirationTask will delete this coupon 
+		compFacade.updateCoupon(coupon);
 	}
 
 }

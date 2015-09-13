@@ -18,7 +18,7 @@ public class TestAdmin {
 		admin = a;
 	}
 
-	public void Test() {
+	public void test() {
 
 		System.out.println("creating companies");
 		createComapny("cocacola");

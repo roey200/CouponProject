@@ -48,8 +48,9 @@ public class DailyCouponExpirationTask extends Thread {
 			}
 
 			try {
+				//sleep(24 * Utils.houer);
 				//sleep(15 * Utils.minute);
-				sleep(1 * Utils.minute);
+				sleep(1 * Utils.minute); // 1 minute so that we can see the work in testMain
 			} catch (InterruptedException e) {
 				logger.error("DailyCouponExpirationTask interrupted");
 			}

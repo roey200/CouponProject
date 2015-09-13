@@ -116,10 +116,14 @@ public class TestCompany {
 	}
 
 	private void printCompany() {
-		Company company = compFacade.getCompany(); // get the company that is associated with the facade
-		System.out.println(company + " num coupons = " + company.getCoupons().size());
+		try {
+			Company company = compFacade.getCompany(); // get the company that is associated with the facade
+			System.out.println(company + " num coupons = " + company.getCoupons().size());
 
-		printCoupons(company.getCoupons(), "\t");
+			printCoupons(company.getCoupons(), "\t");
+		} catch (Exception e) {
+			logger.error("printCompany failed : " + e.toString());
+		}
 	}
 
 	private long createCoupon(String title, String startDate, String endDate, int amount, CouponType type, String massage, double price) {
@@ -152,10 +156,14 @@ public class TestCompany {
 	private void updateCoupon(long couponId) {
 		System.out.println("updating coupon with id : " + couponId);
 
-		Coupon coupon = compFacade.getCoupon(couponId);
-		coupon.setAmount(100);
-		coupon.setPrice(coupon.getPrice() / 2);
-		compFacade.updateCoupon(coupon);
+		try {
+			Coupon coupon = compFacade.getCoupon(couponId);
+			coupon.setAmount(100);
+			coupon.setPrice(coupon.getPrice() / 2);
+			compFacade.updateCoupon(coupon);
+		} catch (Exception e) {
+			logger.error("updateCoupon failed : " + e.toString());
+		}
 	}
 
 	private void removeCoupon(long couponId) {
@@ -168,12 +176,16 @@ public class TestCompany {
 
 	}
 	
-	private void expireCoupon(long couponId){
+	private void expireCoupon(long couponId) {
 		System.out.println("expiering coupon with id : " + couponId);
 
-		Coupon coupon = compFacade.getCoupon(couponId);
-		coupon.setEndDate(new Date()); // the DailyCouponExpirationTask will delete this coupon 
-		compFacade.updateCoupon(coupon);
+		try {
+			Coupon coupon = compFacade.getCoupon(couponId);
+			coupon.setEndDate(new Date()); // the DailyCouponExpirationTask will delete this coupon 
+			compFacade.updateCoupon(coupon);
+		} catch (Exception e) {
+			logger.error("expireCoupon failed : " + e.toString());
+		}
 	}
 
 }

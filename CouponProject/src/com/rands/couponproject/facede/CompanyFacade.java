@@ -23,6 +23,10 @@ import com.rands.couponproject.model.Coupon;
 import com.rands.couponproject.model.CouponType;
 import com.rands.couponproject.model.Customer;
 
+/**
+ * CompanyFacade - The CompanyFacade operates on behalf of a specific Company (the logedin Company). <br>
+ * 					A CompanyFacade object can only be acquired throw the login method.
+  */
 public class CompanyFacade implements CouponClientFacade {
 	static Logger logger = Logger.getLogger(CompanyFacade.class);
 
@@ -76,18 +80,18 @@ public class CompanyFacade implements CouponClientFacade {
 		return facade;
 	}
 
-	private Company getLogedinCompany() throws Exception {
+	/**
+	 * 
+	 * @return the currently logedin Company 
+	 * @throws Exception 
+	 */
+	public Company getCompany() throws Exception {
 		CompanyDAO companyDAO = new CompanyDBDAO();
 		Company company = companyDAO.getCompany(companyId);
 		if (null == company) {
-			logger.error("getLogedinCompany company does not exist any more");
-			throw new Exception("getLogedinCompany company does not exist any more");
+			logger.error("getCompany company does not exist any more");
+			throw new Exception("getCompany company does not exist any more");
 		}
-
-		CouponDAO couponDAO = new CouponDBDAO();
-		Collection<Coupon> coupons = couponDAO.getCompanyCoupons(companyId);
-		company.setCoupons(coupons);
-
 		return company;
 	}
 
@@ -112,7 +116,7 @@ public class CompanyFacade implements CouponClientFacade {
 	}
 
 	public void createCoupon(Coupon coupon) throws Exception {
-		if (companyHasCoupon(coupon)) {
+		if (companyHasCoupon(coupon.getTitle())) {
 			throw new Exception("duplicate coupon " + coupon.getTitle() + " for company " +  companyId);
 		}
 
@@ -138,8 +142,11 @@ public class CompanyFacade implements CouponClientFacade {
 	}
 
 	public void removeCoupon(long couponId) throws Exception {
-		Connection conn = getConnection();
+		if (!companyHasCoupon(couponId)) {
+			throw new Exception("company " +  companyId + " does not own coupon " + couponId);
+		}
 
+		Connection conn = getConnection();
 		CouponDAO couponDAO = new CouponDBDAO(conn);
 
 		try {
@@ -165,25 +172,36 @@ public class CompanyFacade implements CouponClientFacade {
 	public void removeCoupon(Coupon coupon) throws Exception {
 		removeCoupon(coupon.getId());
 	}
+	
+	public void updateCoupon(Coupon coupon) throws Exception {
+		if (!companyHasCoupon(coupon.getId())) {
+			throw new Exception("company " +  companyId + " does not own coupon " + coupon.getId());
+		}
 
-	public void updateCoupon(Coupon coupon) {
 		CouponDAO couponDAO = new CouponDBDAO();
 		try {
 			couponDAO.updateCoupon(coupon);
 		} catch (Exception e) {
 			logger.error("update coupon failed : " + e.toString());
+			throw e;
 		}
 
 	}
 
-	public Coupon getCoupon(long id) {
-		CouponDAO couponDAO = new CouponDBDAO();
-		return couponDAO.getCoupon(id);
-	}
+	public Coupon getCoupon(long couponId) throws Exception {
+//		CouponDAO couponDAO = new CouponDBDAO();
+//		return couponDAO.getCoupon(couponId);
 
+		for (Coupon coupon : getAllCoupons()) { // check all coupons of the current (logedin) company 
+			if (coupon.getId() == couponId)
+				return coupon;
+		}
+		return null;		
+	}
+	
 	public Collection<Coupon> getAllCoupons() throws Exception
 	{
-		Company company = getLogedinCompany();
+		Company company = getCompany();
 		return company.getCoupons();
 	}
 
@@ -213,8 +231,6 @@ public class CompanyFacade implements CouponClientFacade {
 		Collection<Coupon> coupons = new ArrayList<Coupon>();
 
 		for (Coupon coupon : getAllCoupons()) {
-			//			if (toDate.after(coupon.getEndDate()))
-			//				coupons.add(coupon);
 			if (coupon.getEndDate().before(toDate))
 				coupons.add(coupon);
 		}
@@ -222,15 +238,17 @@ public class CompanyFacade implements CouponClientFacade {
 		return coupons;
 	}
 
-	public Company getCompany() {
-
-		CompanyDAO companyDao = new CompanyDBDAO();
-		return companyDao.getCompany(companyId);
+	private boolean companyHasCoupon(long couponId) throws Exception {
+		for (Coupon coupon : getAllCoupons()) { // check all coupons of the current (logedin) company 
+			if (coupon.getId() == couponId)
+				return true;
+		}
+		return false;
 	}
-	
-	private boolean companyHasCoupon(Coupon coupon) throws Exception {
-		for (Coupon cup : getAllCoupons()) { // check all coupons of the current (logedin) company 
-			if (cup.getTitle().equals(coupon.getTitle()))
+
+	private boolean companyHasCoupon(String title) throws Exception {
+		for (Coupon coupon : getAllCoupons()) { // check all coupons of the current (logedin) company 
+			if (coupon.getTitle().equals(title))
 				return true;
 		}
 		return false;

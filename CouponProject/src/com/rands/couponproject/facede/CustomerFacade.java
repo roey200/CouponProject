@@ -20,6 +20,10 @@ import com.rands.couponproject.model.Coupon;
 import com.rands.couponproject.model.CouponType;
 import com.rands.couponproject.model.Customer;
 
+/**
+ * CustomerFacade - The CustomerFacade operates on behalf of a specific Customer (the logedin Customer). <br>
+ * 					A CustomerFacade object can only be acquired throw the login method.
+  */
 public class CustomerFacade implements CouponClientFacade {
 	static Logger logger = Logger.getLogger(CustomerFacade.class);
 
@@ -47,24 +51,41 @@ public class CustomerFacade implements CouponClientFacade {
 		return facade;
 	}
 
-	private Customer getLogedinCustomer() throws Exception {
+//	private Customer getLogedinCustomer() throws Exception {
+//		CustomerDAO customerDAO = new CustomerDBDAO();
+//		Customer customer = customerDAO.getCustomer(customerId);
+//		if (null == customer) {
+//			logger.error("getLogedinCustomer customer does not exist any more");
+//			throw new Exception("getLogedinCustomer customer does not exist any more");
+//		}
+//
+//		CouponDAO couponDAO = new CouponDBDAO();
+//		Collection<Coupon> coupons = couponDAO.getCustomerCoupons(customerId);
+//		customer.setCoupons(coupons);
+//
+//		return customer;
+//	}
+	
+	/**
+	 * 
+	 * @return the currently logedin Customer 
+	 * @throws Exception 
+	 */
+	public Customer getCustomer() throws Exception {
+
 		CustomerDAO customerDAO = new CustomerDBDAO();
 		Customer customer = customerDAO.getCustomer(customerId);
 		if (null == customer) {
-			logger.error("getLogedinCustomer customer does not exist any more");
-			throw new Exception("getLogedinCustomer customer does not exist any more");
-		}
-
-		CouponDAO couponDAO = new CouponDBDAO();
-		Collection<Coupon> coupons = couponDAO.getCustomerCoupons(customerId);
-		customer.setCoupons(coupons);
+			logger.error("getCustomer customer does not exist any more");
+			throw new Exception("getCustomer customer does not exist any more");
+		}		
 
 		return customer;
-	}
+	}	
 
 	public void purchaseCoupon(Coupon coupon) throws Exception {
 
-		Customer customer = getLogedinCustomer();
+		Customer customer = getCustomer();
 		Collection<Coupon> coupons = customer.getCoupons();
 		if (coupons.contains(coupon)) {
 			throw new CouponException("customer already owns coupon " + coupon.toString());
@@ -80,7 +101,6 @@ public class CustomerFacade implements CouponClientFacade {
 		}
 		if (currentDate.after(coupon.getEndDate())) {
 			throw new CouponException("not availabe anymore " + coupon.toString());
-
 		}
 
 		CouponDAO couponDAO = new CouponDBDAO();
@@ -104,9 +124,8 @@ public class CustomerFacade implements CouponClientFacade {
 	}
 
 	public Collection<Coupon> getAllPurchasedCoupons() throws Exception {
-		Customer customer = getLogedinCustomer();
+		Customer customer = getCustomer();
 		return customer.getCoupons();
-
 	}
 
 	public Collection<Coupon> getAllPurchasedCouponsByType(CouponType type) throws Exception {
@@ -116,7 +135,6 @@ public class CustomerFacade implements CouponClientFacade {
 			if (coupon.getType() == type)
 				coupons.add(coupon);
 		}
-
 		return coupons;
 	}
 
@@ -130,35 +148,21 @@ public class CustomerFacade implements CouponClientFacade {
 
 		return coupons;
 	}
-
-//	public Collection<Coupon> getAllPurchasableCoupons() throws SQLException {
-//
-//		CouponDAO couponDAO = new CouponDBDAO();
-//		return couponDAO.getAllPurchasableCoupons();
+	
+//	private boolean customerHasCoupon(long couponId) throws Exception {
+//		for (Coupon coupon : getAllPurchasedCoupons()) { // check all coupons of the current (logedin) customer 
+//			if (coupon.getId() == couponId)
+//				return true;
+//		}
+//		return false;
 //	}
 //
-//	public Collection<Coupon> getAllPurchasableCouponsByType(CouponType couponType) throws SQLException {
-//
-//		CouponDAO couponDAO = new CouponDBDAO();
-//		return couponDAO.getAllPurchasableCouponsByType(couponType);
-//	}
-
-	/**
-	 * 
-	 * @return the currently logedin Customer 
-	 */
-	public Customer getCustomer() {
-
-		CustomerDAO customerDAO = new CustomerDBDAO();
-		return customerDAO.getCustomer(customerId);
-	}
-
-	private boolean customerHasCoupon(Coupon coupon) throws Exception {
-		for (Coupon cup : getAllPurchasedCoupons()) { // check all coupons of the current (logedin) customer 
-			if (cup.getTitle().equals(coupon.getTitle()))
-				return true;
-		}
-		return false;
-	}
+//	private boolean customerHasCoupon(String title) throws Exception {
+//		for (Coupon coupon : getAllPurchasedCoupons()) { // check all coupons of the current (logedin) customer 
+//			if (coupon.getTitle().equals(title))
+//				return true;
+//		}
+//		return false;
+//	}	
 
 }

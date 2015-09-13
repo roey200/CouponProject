@@ -26,13 +26,13 @@ public class TestAdmin {
 		createComapny("alphabet");
 		createComapny("google");
 		createComapny("amazon");
-		createComapny("RandS EveryThingGoos");
+		createComapny("RandS EveryThingGoes");
 
 		printCompanies();
 
 		System.out.println("updating companies");
 		updateCompany("alphabet");
-		updateCompany("RandS EveryThingGoos");
+		updateCompany("RandS EveryThingGoes");
 		updateCompany("mass");
 		
 		printCompanies();
@@ -131,11 +131,11 @@ public class TestAdmin {
 
 	private void updateCustomer(String customerName) {
 		Customer c = admin.getCustomer(customerName);
-		if (null == c){
+		if (null == c) {
 			logger.error("Customer does not exist : " + customerName);
 			return;
 		}
-		String password = c.getCustomerName().substring(0,2)+"9999";
+		String password = c.getCustomerName().substring(0, 2) + "9999";
 		c.setPassword(password);
 		admin.updateCustomer(c);
 	}

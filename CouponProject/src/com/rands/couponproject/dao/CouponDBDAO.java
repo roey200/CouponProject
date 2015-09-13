@@ -434,4 +434,5 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 
 		return coupons;
 	}
+
 }

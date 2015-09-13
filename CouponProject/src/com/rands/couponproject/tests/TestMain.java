@@ -46,14 +46,14 @@ public class TestMain {
 			CompanyFacade companyFacade;
 			
 			try {
-				companyFacade = (CompanyFacade) couponSystem.login("RandS EveryThingGoos", "R1234", ClientType.COMPANY);
-				logger.error("company " + "RandS EveryThingGoos" + " login with old password"); // this is wrong since we changed the password
+				companyFacade = (CompanyFacade) couponSystem.login("RandS EveryThingGoes", "R1234", ClientType.COMPANY);
+				logger.error("company " + "RandS EveryThingGoes" + " login with old password"); // this is wrong since we changed the password
 			} catch (Exception e) {
-				logger.info("company " + "RandS EveryThingGoos" + " login with old password failed"); // this is ok since we changed the password
+				logger.info("company " + "RandS EveryThingGoes" + " login with old password failed"); // this is ok since we changed the password
 			}
 
-			companyFacade = (CompanyFacade) couponSystem.login("RandS EveryThingGoos", "Ra9999", ClientType.COMPANY);
-			logger.info("company " + "RandS EveryThingGoos" + " login with new password is ok");
+			companyFacade = (CompanyFacade) couponSystem.login("RandS EveryThingGoes", "Ra9999", ClientType.COMPANY);
+			logger.info("company " + "RandS EveryThingGoes" + " login with new password is ok");
 			TestCompany testCompany = new TestCompany(companyFacade);
 			testCompany.test();
 			

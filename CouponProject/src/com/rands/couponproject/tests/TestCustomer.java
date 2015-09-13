@@ -58,10 +58,14 @@ public class TestCustomer {
 	}
 
 	private void printCustomer() {
-		Customer customer = customerFacade.getCustomer(); // get the customer that is associated with the facade
-		System.out.println(customer + " num coupons = " + customer.getCoupons().size());
+		try {
+			Customer customer = customerFacade.getCustomer(); // get the customer that is associated with the facade
+			System.out.println(customer + " num coupons = " + customer.getCoupons().size());
 
-		printCoupons(customer.getCoupons(), "\t");
+			printCoupons(customer.getCoupons(), "\t");
+		} catch (Exception e) {
+			logger.error("printCustomer failed : " + e.toString());
+		}
 	}
 
 	/**

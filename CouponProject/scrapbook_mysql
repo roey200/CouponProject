@@ -1,8 +1,8 @@
 CREATE TABLE APP.coupon (
 	id INTEGER PRIMARY KEY AUTO_INCREMENT,
 	title VARCHAR(50) NOT NULL,
-	start_date DATE NOT NULL,
-	end_date DATE NOT NULL, 
+	start_date TIMESTAMP NOT NULL,
+	end_date TIMESTAMP NOT NULL, 
 	amount INTEGER NOT NULL,
 	coupon_type VARCHAR(20) NOT NULL,
 	message VARCHAR(144) NOT NULL,

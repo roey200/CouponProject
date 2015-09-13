@@ -34,8 +34,8 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 		coupon.setId(rs.getInt("id"));
 		coupon.setTitle(rs.getString("title"));
 		coupon.setAmount(rs.getInt("amount"));
-		coupon.setStartDate(rs.getDate("start_date"));
-		coupon.setEndDate(rs.getDate("end_date"));
+		coupon.setStartDate(rs.getTimestamp("start_date"));
+		coupon.setEndDate(rs.getTimestamp("end_date"));
 		coupon.setImage(rs.getString("image"));
 		coupon.setMassage(rs.getString("message"));
 		coupon.setPrice(rs.getDouble("price"));
@@ -63,8 +63,8 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 			PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			
 			ps.setString(1, coupon.getTitle());
-			ps.setDate(2,coupon.getStartDate());
-			ps.setDate(3,coupon.getEndDate());
+			ps.setTimestamp(2,new java.sql.Timestamp(coupon.getStartDate().getTime()));
+			ps.setTimestamp(3,new java.sql.Timestamp(coupon.getEndDate().getTime()));
 			ps.setInt(4,coupon.getAmount());
 			ps.setString(5,coupon.getType().name());
 			ps.setString(6,coupon.getMassage());
@@ -230,8 +230,8 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 			
 		
 			ps.setString(1, coupon.getTitle());
-			ps.setDate(2,coupon.getStartDate());
-			ps.setDate(3,coupon.getEndDate());
+			ps.setTimestamp(2,new java.sql.Timestamp(coupon.getStartDate().getTime()));
+			ps.setTimestamp(3,new java.sql.Timestamp(coupon.getEndDate().getTime()));
 			ps.setInt(4,coupon.getAmount());
 			ps.setString(5,coupon.getType().name());
 			ps.setString(6,coupon.getMassage());

@@ -1,6 +1,6 @@
 package com.rands.couponproject.model;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class Coupon {
 

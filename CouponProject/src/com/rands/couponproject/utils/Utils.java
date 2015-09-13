@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.Scanner;
@@ -93,16 +94,24 @@ public class Utils {
 		executeSqlScript(conn,is);
 	}
 	
-	public static java.sql.Date string2Date(String dateString) throws Exception {
-		try {
-			SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+	private static final String knownFormats = "yyyy-MM-dd hh:mm;yyyy-MM-dd;dd/MM/yyyy hh:mm;dd/MM/yyyy";
+	/**
+	 * string2Date - Converts String to Date. 
+	 * @param dateString the string to be converted. it may be in any of the following formats {@value #knownFormats}
+	 * @return the converted date
+	 * @throws Exception if dateString is not in any of the known date formats
+	 */
+	public static java.util.Date string2Date(String dateString) throws Exception {
+		String dateFormats[] = knownFormats.split(";");
+		for (String dateFormat : dateFormats) {// try a date format
+			try {
+				SimpleDateFormat df = new SimpleDateFormat(dateFormat);
 
-			java.util.Date date = sdf1.parse(dateString);
-			java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-			return sqlDate;
-		} catch (Exception e) {
-			logger.error("invalide date : " + dateString);
-			throw e;
+				java.util.Date date = df.parse(dateString);
+				return date;
+			} catch (Exception e) {
+			}
 		}
+		throw new ParseException(dateString, 0);
 	}
 }

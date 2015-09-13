@@ -1,8 +1,9 @@
 package com.rands.couponproject;
 
-import java.sql.Date;
+//import java.sql.Date;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Date;
 
 import org.apache.log4j.Logger;
 

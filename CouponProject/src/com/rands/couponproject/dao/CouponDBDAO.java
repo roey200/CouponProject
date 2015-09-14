@@ -11,7 +11,7 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 
-import com.rands.couponproject.exceptions.CouponException;
+import com.rands.couponproject.exceptions.CouponProjectException.CouponException;
 import com.rands.couponproject.model.Coupon;
 import com.rands.couponproject.model.CouponType;
 
@@ -49,11 +49,11 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 	public void createCoupon(Coupon coupon) throws Exception {
 
 		if (coupon.getEndDate().before(coupon.getStartDate())) {
-			throw new Exception("coupon endDate < startDate"); // not finished
+			throw new CouponException("createCoupon : coupon endDate < startDate");
 		}
 		Date currentDate = new Date();
 		if (coupon.getEndDate().before(currentDate)) {
-			throw new CouponException("coupon endDate < currentDate");
+			throw new CouponException("createCoupon : coupon endDate < currentDate");
 		}	
 
 		Connection conn = getConnection();
@@ -326,31 +326,6 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 		return coupons;
 	}
 
-//	private Collection<Coupon> getPurchasableCoupons(Collection<Coupon> coupons) throws SQLException {
-//		Date currentDate = new Date();
-//
-//		Collection<Coupon> purchasableCoupons = new ArrayList<Coupon>();
-//		for (Coupon coupon : coupons) {
-////			if (coupon.getEndDate().after(currentDate) && coupon.getAmount() > 0)
-//			{
-//				purchasableCoupons.add(coupon);
-//			}
-//
-//		}
-//		return purchasableCoupons;
-//	}
-//
-//	@Override
-//	public Collection<Coupon> getAllPurchasableCoupons() throws SQLException {
-//		return getPurchasableCoupons(getAllCoupons());
-//	}
-//
-//	@Override
-//	public Collection<Coupon> getAllPurchasableCouponsByType(CouponType couponType) throws SQLException {
-//
-//		return getPurchasableCoupons(getCouponByType(couponType));
-//	}
-
 	@Override
 	public Collection<Coupon> getCouponByType(CouponType couponType) {
 
@@ -435,4 +410,4 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 		return coupons;
 	}
 
-}
+} 

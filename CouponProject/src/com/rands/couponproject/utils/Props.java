@@ -24,7 +24,8 @@ public class Props {
     	
     	try {
     		ClassLoader cl = Props.class.getClassLoader();
-    		InputStream settingsStream = cl.getResourceAsStream(fileName);
+    		//InputStream settingsStream = cl.getResourceAsStream(fileName);
+    		InputStream settingsStream = Utils.findInputStream(fileName);
     		props.load(settingsStream);
     	} catch (Exception e) {
     		logger.error("can't load " + fileName + " : " + e.toString());

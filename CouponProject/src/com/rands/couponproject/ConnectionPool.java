@@ -7,6 +7,7 @@ import java.util.*;
 
 import org.apache.log4j.Logger;
 
+import com.rands.couponproject.exceptions.CouponProjectException;
 import com.rands.couponproject.utils.Props;
 import com.rands.couponproject.utils.Utils;
 
@@ -26,7 +27,7 @@ public class ConnectionPool {
 	private ArrayList<Connection> allConnections; // this will hold all connections that were created by the connectionpool
 
 	private String driver, url, username, password;
-	private int minConnections;
+	private int numConnections;
 	private boolean optDebug;
 	
 	/**
@@ -57,12 +58,12 @@ public class ConnectionPool {
 		
 		url = Utils.expandEnvVars(url); // replace environment variables
 
-		logger.info("creating " + minConnections + " connections url = " + url);
+		logger.info("creating " + numConnections + " connections url = " + url);
 		
 		freeConnections = new ArrayList<Connection>();
 		allConnections = new ArrayList<Connection>();
 
-		for (int i = 0; i < minConnections; i++)
+		for (int i = 0; i < numConnections; i++)
 		{
 			addNewConnection(url, username, password);
 		}
@@ -75,7 +76,7 @@ public class ConnectionPool {
 			Class.forName(driver);
 		} catch (ClassNotFoundException e) {
 			logger.error(driver + " not found " + e.toString());
-			throw new ClassNotFoundException(driver + " not found");
+			throw e;
 		}
 	}
 
@@ -88,18 +89,24 @@ public class ConnectionPool {
 
 		} catch (SQLException e) {
 			logger.error("addNewConnection " + url + " failed : " + e.toString());
-			throw new SQLException(url + " not found");
+			throw e;
 		}
 	}
 
+	/*
+	 *  initialize variables wit values from the properties file or defaults.
+	 */
 	private void initProps() {
 		optDebug = props.getBool("debug",false);
 		
 		driver = props.getString("dbdriver", "org.apache.derby.jdbc.ClientDriver");
 		url = props.getString("dburl", "jdbc:derby://localhost:1527/${USERPROFILE}\\sampledb;create=true");
 
-		minConnections = props.getInt("minConnections", 10);
-
+		numConnections = props.getInt("numConnections", 10);
+		if (numConnections < 3) {
+			numConnections = 3;
+			logger.info("numConnections set to minimum of " + numConnections);
+		}
 		username = props.getString("dbuser");
 		password = props.getString("dbpassword");
 	}
@@ -124,7 +131,7 @@ public class ConnectionPool {
 		return allConnections.indexOf(conn);
 	}
 	
-	public Connection getConnection()
+	public Connection getConnection() 
 	{
 		while (true) {
 			synchronized (freeConnections) {

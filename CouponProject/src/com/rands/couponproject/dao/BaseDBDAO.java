@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import org.apache.log4j.Logger;
 
 import com.rands.couponproject.ConnectionPool;
+import com.rands.couponproject.exceptions.CouponProjectException;
 
 /**
  * BaseDBDAO - is the base class for all of our DBDAOs. It's primary use is for sharing a Connection when 

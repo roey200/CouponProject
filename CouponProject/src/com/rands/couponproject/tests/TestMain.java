@@ -23,12 +23,21 @@ public class TestMain {
 	static CouponSystem couponSystem;
 	static AdminFacade adminFacade;
 
+	static boolean optCreateDatabase = true;
+
 	public static void main(String[] args) {
-		//LogUtils.initLogger(); // use this if the log4j.properties file is not in your path
+		LogUtils.initLogger(); // set log4j configuration properties 
 		
-		boolean optCreateDatabase = true;
 		
 		printHeader("starting tests");
+		
+		try {
+			ConnectionPool.getInstance();
+		} catch (Exception e) {
+			logger.error("ConnectionPool.getInstance() failed : " + e);
+			System.out.println("The ConnectionPool was not initialized properly : " + e.toString());
+			return;
+		}
 		
 		try {
 			couponSystem = CouponSystem.getInstance();
@@ -86,7 +95,7 @@ public class TestMain {
 		}
 		
 	}
-	
+
 	private static void printHeader(String text) {
 		System.out.println("***********************************************************************");
 		System.out.println(text);
@@ -101,8 +110,7 @@ public class TestMain {
 		Connection conn = null;
 		try {
 			conn = ConnectionPool.getInstance().getConnection();
-//			Utils.executeSqlScript(conn, "scrapbook_mysql");
-			Utils.executeSqlScript(conn, "scrapbook_derby");
+			Utils.executeSqlScript(conn, "scrapbook.sql");
 		} catch (Exception e) {
 			logger.error("createDataBase failed : " + e.toString());
 			return;
@@ -142,6 +150,5 @@ public class TestMain {
 		System.out.println("Emptying the database done");		
 	}
 
-	
 
 }

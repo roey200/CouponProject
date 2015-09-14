@@ -10,18 +10,18 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 
 import com.rands.couponproject.ConnectionPool;
-import com.rands.couponproject.CouponSystem;
 import com.rands.couponproject.dao.CompanyDAO;
 import com.rands.couponproject.dao.CompanyDBDAO;
 import com.rands.couponproject.dao.CouponDAO;
 import com.rands.couponproject.dao.CouponDBDAO;
-import com.rands.couponproject.dao.CustomerDAO;
-import com.rands.couponproject.dao.CustomerDBDAO;
+import com.rands.couponproject.exceptions.CouponProjectException.CompanyException;
+import com.rands.couponproject.exceptions.CouponProjectException.CompanyLoginException;
+import com.rands.couponproject.exceptions.CouponProjectException.CouponException;
+import com.rands.couponproject.exceptions.CouponProjectException.LoginException;
 import com.rands.couponproject.model.ClientType;
 import com.rands.couponproject.model.Company;
 import com.rands.couponproject.model.Coupon;
 import com.rands.couponproject.model.CouponType;
-import com.rands.couponproject.model.Customer;
 
 /**
  * CompanyFacade - The CompanyFacade operates on behalf of a specific Company (the logedin Company). <br>
@@ -35,43 +35,18 @@ public class CompanyFacade implements CouponClientFacade {
 	private CompanyFacade() {
 	}
 
-	//	public static CouponClientFacade login(String name, String password,ClientType clientType) throws Exception {
-	//		
-	//		if (clientType != ClientType.COMPANY){
-	//			logger.error("company login failed mismitch clientType =" +clientType  );
-	//			throw new Exception("LoginFailed");
-	//		}
-	//		
-	//		CompanyDAO companyDAO = new CompanyDBDAO();
-	//		
-	//		Company company = companyDAO.getCompany(name);
-	//		if (null == company) {
-	//			logger.error("company login failed ,company " + name + " dose not exist");
-	//			throw new Exception("LoginFailed");
-	//		}
-	//				
-	//		if (!company.getPassword().equals(password)) {
-	//			logger.error("company login failed ,company " + name + " password mismatch");
-	//			throw new Exception("LoginFailed");
-	//		}
-	//		
-	//		CompanyFacade facade = new CompanyFacade();
-	//		facade.companyId = company.getId();
-	//		return facade;
-	//	}
-
-	public static CouponClientFacade login(String name, String password, ClientType clientType) throws Exception {
+	public static CouponClientFacade login(String name, String password, ClientType clientType) throws LoginException {
 
 		if (clientType != ClientType.COMPANY) {
 			logger.error("company login failed mismitch clientType =" + clientType);
-			throw new Exception("LoginFailed");
+			throw new CompanyLoginException("Invalid ClientType : " + clientType);
 		}
 
 		CompanyDAO companyDAO = new CompanyDBDAO();
 
 		if (!companyDAO.login(name, password)) {
-			logger.error("company login failed ,company " + name);
-			throw new Exception("LoginFailed");
+			logger.error("company login failed name = " + name);
+			throw new CompanyLoginException(name);					
 		}
 
 		CompanyFacade facade = new CompanyFacade();
@@ -89,8 +64,8 @@ public class CompanyFacade implements CouponClientFacade {
 		CompanyDAO companyDAO = new CompanyDBDAO();
 		Company company = companyDAO.getCompany(companyId);
 		if (null == company) {
-			logger.error("getCompany company does not exist any more");
-			throw new Exception("getCompany company does not exist any more");
+			logger.error("getCompany company does not exist any more : id = " + companyId);
+			throw new CompanyException("getCompany company does not exist any more : id = " + companyId);
 		}
 		return company;
 	}
@@ -117,7 +92,7 @@ public class CompanyFacade implements CouponClientFacade {
 
 	public void createCoupon(Coupon coupon) throws Exception {
 		if (companyHasCoupon(coupon.getTitle())) {
-			throw new Exception("duplicate coupon " + coupon.getTitle() + " for company " +  companyId);
+			throw new CouponException("coupon exists" + coupon.getTitle() + " for company " +  companyId);
 		}
 
 		Connection conn = getConnection();
@@ -135,7 +110,7 @@ public class CompanyFacade implements CouponClientFacade {
 			} catch (SQLException e1) {
 				logger.error("createCoupon rollback failed : " + e.toString());
 			}
-			throw (e);
+			throw e;
 		} finally {
 			returnConnection(conn);
 		}
@@ -143,7 +118,7 @@ public class CompanyFacade implements CouponClientFacade {
 
 	public void removeCoupon(long couponId) throws Exception {
 		if (!companyHasCoupon(couponId)) {
-			throw new Exception("company " +  companyId + " does not own coupon " + couponId);
+			throw new CouponException("company " +  companyId + " does not own coupon " + couponId);
 		}
 
 		Connection conn = getConnection();
@@ -163,7 +138,7 @@ public class CompanyFacade implements CouponClientFacade {
 			} catch (SQLException e1) {
 				logger.error("removeCoupon rollback failed : " + e.toString());
 			}
-			throw (e);
+			throw e;
 		} finally {
 			returnConnection(conn);
 		}
@@ -175,7 +150,7 @@ public class CompanyFacade implements CouponClientFacade {
 	
 	public void updateCoupon(Coupon coupon) throws Exception {
 		if (!companyHasCoupon(coupon.getId())) {
-			throw new Exception("company " +  companyId + " does not own coupon " + coupon.getId());
+			throw new CouponException("company " +  companyId + " does not own coupon " + coupon.getId());
 		}
 
 		CouponDAO couponDAO = new CouponDBDAO();
@@ -188,6 +163,12 @@ public class CompanyFacade implements CouponClientFacade {
 
 	}
 
+	/**
+	 * 
+	 * @param couponId
+	 * @return the coupon with the couponId id or null if the current logedin company does not own that coupon
+	 * @throws Exception
+	 */
 	public Coupon getCoupon(long couponId) throws Exception {
 //		CouponDAO couponDAO = new CouponDBDAO();
 //		return couponDAO.getCoupon(couponId);
@@ -199,12 +180,23 @@ public class CompanyFacade implements CouponClientFacade {
 		return null;		
 	}
 	
+	/**
+	 * 
+	 * @return the coupons of the logedin company
+	 * @throws Exception
+	 */
 	public Collection<Coupon> getAllCoupons() throws Exception
 	{
 		Company company = getCompany();
 		return company.getCoupons();
 	}
 
+	/**
+	 * 
+	 * @param type
+	 * @return the coupons of the logedin company of a specific type 
+	 * @throws Exception
+	 */
 	public Collection<Coupon> getCouponByType(CouponType type) throws Exception {
 		Collection<Coupon> coupons = new ArrayList<Coupon>();
 
@@ -216,6 +208,12 @@ public class CompanyFacade implements CouponClientFacade {
 		return coupons;
 	}
 
+	/**
+	 * 
+	 * @param price
+	 * @return the coupons of the logedin company limited by price
+	 * @throws Exception
+	 */
 	public Collection<Coupon> getCouponsByPrice(long price) throws Exception {
 		Collection<Coupon> coupons = new ArrayList<Coupon>();
 
@@ -227,6 +225,12 @@ public class CompanyFacade implements CouponClientFacade {
 		return coupons;
 	}
 
+	/**
+	 * 
+	 * @param toDate
+	 * @return the coupons of the logedin company where endDate < toDate
+	 * @throws Exception
+	 */
 	public Collection<Coupon> getCouponsByDate(Date toDate) throws Exception {
 		Collection<Coupon> coupons = new ArrayList<Coupon>();
 

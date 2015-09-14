@@ -2,6 +2,7 @@ package com.rands.couponproject;
 
 import org.apache.log4j.Logger;
 
+import com.rands.couponproject.exceptions.CouponProjectException.LoginException;
 import com.rands.couponproject.facede.AdminFacade;
 import com.rands.couponproject.facede.CompanyFacade;
 import com.rands.couponproject.facede.CouponClientFacade;
@@ -66,7 +67,7 @@ public class CouponSystem {
 		
 		if (null == facade){
 			logger.error("login faild clientType = " + clientType + "name =" + name  );
-			throw new Exception("LoginFailed");
+			throw new LoginException("clientType = " + clientType + "name =" + name);
 		}
 		return facade;
 	}

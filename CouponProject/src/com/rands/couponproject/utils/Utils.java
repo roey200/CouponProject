@@ -1,5 +1,7 @@
 package com.rands.couponproject.utils;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -46,6 +48,28 @@ public class Utils {
 		return text;
 	}
 	
+	/**
+	 * findInputStream - locates a file in the current ${HOMEDIR} or in the application resources
+	 * @param fileName name of file 
+	 * @return InputStream if the file was found, null otherwise.
+	 */
+	public static InputStream findInputStream(String fileName) {
+		
+		// try to find the file in the current home directory
+		String fName = expandEnvVars("${HOMEPATH}" + File.separator + fileName);
+		logger.debug("looking for : " + fName);
+		try {
+			InputStream is = new FileInputStream(fName);
+			return is;
+		} catch (Exception e) {
+		}
+		// try to find the file in the application
+		ClassLoader cl = Utils.class.getClassLoader();
+		InputStream is = cl.getResourceAsStream(fileName);
+		
+		return is;
+	}
+
 	
 	/**
 	 * executeSqlScript - executes an sql script 
@@ -92,13 +116,10 @@ public class Utils {
 	
 	public static void executeSqlScript(Connection conn, String sqlFileName) throws Exception {
 		logger.info("executing sqlfile : " + sqlFileName);
-		//InputStream is = new FileInputStream(sqlFileName);
-		
-		ClassLoader cl = Utils.class.getClassLoader();
-		InputStream is = cl.getResourceAsStream(sqlFileName);
+		InputStream is = findInputStream(sqlFileName);
 		executeSqlScript(conn,is);
 	}
-	
+
 	public static void executeSqlCommand(Connection conn, String sqlCommand) throws SQLException {
 		logger.info("executing sql : " + sqlCommand);
 		Statement st = null;

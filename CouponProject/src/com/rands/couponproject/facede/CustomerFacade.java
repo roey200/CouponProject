@@ -1,21 +1,20 @@
 package com.rands.couponproject.facede;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
 
-import com.rands.couponproject.dao.CompanyDAO;
-import com.rands.couponproject.dao.CompanyDBDAO;
 import com.rands.couponproject.dao.CouponDAO;
 import com.rands.couponproject.dao.CouponDBDAO;
 import com.rands.couponproject.dao.CustomerDAO;
 import com.rands.couponproject.dao.CustomerDBDAO;
-import com.rands.couponproject.exceptions.CouponException;
+import com.rands.couponproject.exceptions.CouponProjectException.CouponException;
+import com.rands.couponproject.exceptions.CouponProjectException.CustomerException;
+import com.rands.couponproject.exceptions.CouponProjectException.CustomerLoginException;
+import com.rands.couponproject.exceptions.CouponProjectException.LoginException;
 import com.rands.couponproject.model.ClientType;
-import com.rands.couponproject.model.Company;
 import com.rands.couponproject.model.Coupon;
 import com.rands.couponproject.model.CouponType;
 import com.rands.couponproject.model.Customer;
@@ -32,17 +31,17 @@ public class CustomerFacade implements CouponClientFacade {
 	private CustomerFacade() {
 	}
 
-	public static CouponClientFacade login(String name, String password, ClientType clientType) throws Exception {
+	public static CouponClientFacade login(String name, String password, ClientType clientType) throws LoginException {
 
 		if (clientType != ClientType.CUSTOMER) {
-			logger.error("company login failed mismitch clientType =" + clientType);
-			throw new Exception("LoginFailed");
+			logger.error("customer login failed mismitch clientType =" + clientType);
+			throw new CustomerLoginException("Invalid ClientType : " + clientType);
 		}
 
 		CustomerDAO customerDAO = new CustomerDBDAO();
 		if (!customerDAO.login(name, password)) {
-			logger.error("customer login failed ,customer " + name);
-			throw new Exception("LoginFailed");
+			logger.error("customer login failed name = " + name);
+			throw new CustomerLoginException(name);							
 		}
 
 		CustomerFacade facade = new CustomerFacade();
@@ -51,21 +50,6 @@ public class CustomerFacade implements CouponClientFacade {
 		return facade;
 	}
 
-//	private Customer getLogedinCustomer() throws Exception {
-//		CustomerDAO customerDAO = new CustomerDBDAO();
-//		Customer customer = customerDAO.getCustomer(customerId);
-//		if (null == customer) {
-//			logger.error("getLogedinCustomer customer does not exist any more");
-//			throw new Exception("getLogedinCustomer customer does not exist any more");
-//		}
-//
-//		CouponDAO couponDAO = new CouponDBDAO();
-//		Collection<Coupon> coupons = couponDAO.getCustomerCoupons(customerId);
-//		customer.setCoupons(coupons);
-//
-//		return customer;
-//	}
-	
 	/**
 	 * 
 	 * @return the currently logedin Customer 
@@ -76,8 +60,8 @@ public class CustomerFacade implements CouponClientFacade {
 		CustomerDAO customerDAO = new CustomerDBDAO();
 		Customer customer = customerDAO.getCustomer(customerId);
 		if (null == customer) {
-			logger.error("getCustomer customer does not exist any more");
-			throw new Exception("getCustomer customer does not exist any more");
+			logger.error("getCompany customer does not exist any more : id = " + customerId);
+			throw new CustomerException("getCompany customer does not exist any more : id = " + customerId);			
 		}		
 
 		return customer;
@@ -120,14 +104,26 @@ public class CustomerFacade implements CouponClientFacade {
 				return;
 			}
 		}
-		throw new Exception("Coupon with title " + couponTitle + " dose not exist");
+		throw new CouponException("Coupon with title " + couponTitle + " dose not exist");
 	}
 
+	/**
+	 * 
+	 * @return the coupons that were purchased by the logedin customer
+	 * @throws Exception
+	 */
 	public Collection<Coupon> getAllPurchasedCoupons() throws Exception {
 		Customer customer = getCustomer();
 		return customer.getCoupons();
 	}
 
+	/**
+	 * 
+	 * @param type
+	 * @return the coupons that were purchased by the logedin customer limited by type
+	 * @throws Exception
+	 */
+	
 	public Collection<Coupon> getAllPurchasedCouponsByType(CouponType type) throws Exception {
 		Collection<Coupon> coupons = new ArrayList<Coupon>();
 
@@ -138,6 +134,13 @@ public class CustomerFacade implements CouponClientFacade {
 		return coupons;
 	}
 
+	/**
+	 * 
+	 * @param price
+	 * @return the coupons that were purchased by the logedin customer limited by price 
+	 * @throws Exception
+	 */
+	
 	public Collection<Coupon> getAllPurchasedCouponsByPrice(long price) throws Exception {
 		Collection<Coupon> coupons = new ArrayList<Coupon>();
 
@@ -148,21 +151,5 @@ public class CustomerFacade implements CouponClientFacade {
 
 		return coupons;
 	}
-	
-//	private boolean customerHasCoupon(long couponId) throws Exception {
-//		for (Coupon coupon : getAllPurchasedCoupons()) { // check all coupons of the current (logedin) customer 
-//			if (coupon.getId() == couponId)
-//				return true;
-//		}
-//		return false;
-//	}
-//
-//	private boolean customerHasCoupon(String title) throws Exception {
-//		for (Coupon coupon : getAllPurchasedCoupons()) { // check all coupons of the current (logedin) customer 
-//			if (coupon.getTitle().equals(title))
-//				return true;
-//		}
-//		return false;
-//	}	
 
 }

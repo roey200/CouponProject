@@ -47,7 +47,15 @@ public class CouponSystem {
 		dailyTask.start();
 	}
 
-	public CouponClientFacade login(String name, String password, ClientType clientType) throws Exception {
+	/**
+	 * login Is the entry point for users (admin,companies and customers) to the CouponSystem.  
+	 * @param name
+	 * @param password
+	 * @param clientType
+	 * @return an appropriate CouponClientFacade upon a successful login.
+	 * @throws LoginException if login is unsuccessful 
+	 */
+	public CouponClientFacade login(String name, String password, ClientType clientType) throws LoginException {
 
 		CouponClientFacade facade = null;
 		switch (clientType) {

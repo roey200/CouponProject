@@ -21,7 +21,7 @@ public class Utils {
 	
 	public static final long second = 1000;
 	public static final long minute = 60 * second;
-	public static final long houer = 60 * minute;
+	public static final long hour = 60 * minute;
 	
 	/**
 	 * expandEnvVars : replaces environment variables in string to their value.

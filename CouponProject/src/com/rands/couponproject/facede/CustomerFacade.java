@@ -88,6 +88,8 @@ public class CustomerFacade implements CouponClientFacade {
 		}
 
 		CouponDAO couponDAO = new CouponDBDAO();
+		coupon.setAmount(coupon.getAmount() - 1);
+		couponDAO.updateCoupon(coupon);
 		couponDAO.createCustomerCoupon(customerId, coupon.getId());
 	}
 	

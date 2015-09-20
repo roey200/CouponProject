@@ -1,9 +1,14 @@
 package com.rands.couponproject.rest.services;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import com.rands.couponproject.model.Company;
@@ -24,7 +29,7 @@ public class AdminService {
 	@Path("/company/{name}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Company produceJSON( @PathParam("name") String companyName ) {
+	public Company getCompany( @PathParam("name") String companyName ) {
 
 		Company c = new Company();
 		c.setId(1);
@@ -36,5 +41,16 @@ public class AdminService {
 
 	}
 	
+	@POST
+	@Path("/company")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Company updateCompany(Company company) {
+		
+		//String output = student.toString();
+		
+		company.setId(12345);
 
+		return company;
+	}	
 }

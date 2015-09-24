@@ -7,7 +7,6 @@ import java.util.*;
 
 import org.apache.log4j.Logger;
 
-import com.rands.couponproject.exceptions.CouponProjectException;
 import com.rands.couponproject.utils.Props;
 import com.rands.couponproject.utils.Utils;
 
@@ -193,7 +192,7 @@ public class ConnectionPool {
 
 	public void closeAllconnections()
 	{
-		for (Connection conn : freeConnections) {
+		for (Connection conn : allConnections) {
 			try {
 				conn.close();
 			} catch (SQLException e) {
@@ -201,6 +200,26 @@ public class ConnectionPool {
 			}
 		}
 		logger.info("all connections are closed");
+
+		deregisterDriver();
+	}
+	
+	/**
+	 * deregisterDriver - deregisters the jdbc driver.
+	 * this is needed for example in a Tomcat environment in order to prevent memory leakage.
+	 * this also prevents the following type of messages (for example) :  
+	 * SEVERE: A web application registered the JBDC driver [oracle.jdbc.driver.OracleDriver] but failed to unregister 
+	 * it when the web application was stopped. To prevent a memory leak, the JDBC Driver has been forcibly unregistered
+	 */
+	public void deregisterDriver() {
+		try {
+			logger.info("deregisterDriver : " + url);
+            java.sql.Driver driver = DriverManager.getDriver(url);
+            DriverManager.deregisterDriver(driver);
+        } catch (SQLException e) {
+            logger.info("Could not deregister driver : " + e.toString());
+        } 
+
 	}
 
 }

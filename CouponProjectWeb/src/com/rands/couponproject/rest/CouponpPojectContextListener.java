@@ -7,6 +7,14 @@ import org.apache.log4j.Logger;
 
 import com.rands.couponproject.CouponSystem;
 
+/**
+ * 
+ * CouponpPojectContextListener : starts and terminates the CouponSystem.
+ * 
+ * It is impotent to terminate the CouponSystem by calling it's shutdown() method so that it will release it's resources.
+ * the CouponSystem uses a ConnectionPool that is not managed by the Web Container. The Connections should be closed and
+ * the DriverManager should be deregistered. Otherwise whenever this Web application will be redeployed  memory may leak. 
+ */
 public class CouponpPojectContextListener implements ServletContextListener
 {
 	static Logger logger = Logger.getLogger(CouponpPojectContextListener.class);

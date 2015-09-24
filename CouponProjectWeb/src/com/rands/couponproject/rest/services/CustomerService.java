@@ -108,7 +108,7 @@ public class CustomerService {
 		}
 		
 		
-		
+		logger.debug("123");
 		
 		
 		

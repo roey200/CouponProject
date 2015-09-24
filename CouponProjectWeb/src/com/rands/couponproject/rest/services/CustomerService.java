@@ -12,8 +12,11 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.apache.log4j.Logger;
 
@@ -71,8 +74,9 @@ public class CustomerService {
 	}
 	
 
-	
-	
+	// example :
+	// http://localhost:9090/CouponProjectWeb/customer/coupons
+	//
 	@Path("/coupons")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -83,11 +87,31 @@ public class CustomerService {
     	return customerFacade.getAllPurchasedCoupons();
 	}
 	
+	// example :
+	// http://localhost:9090/CouponProjectWeb/customer/coupons/SPORTS
+	//
 	@Path("/coupons/{CouponType}") 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Collection<Coupon> getAllPurchasedCouponsByType(@PathParam("CouponType") CouponType couponType) throws Exception {
-		logger.debug("getAllPurchasedCouponsByType");
+		logger.debug("getAllPurchasedCouponsByType " + couponType);
+		
+		
+		if (CouponType.FOOD == couponType) {
+			throw new WebApplicationException(
+			        Response
+			          .status(Status.BAD_REQUEST)
+			          .entity("bad coupon type: " + couponType) // + " (" + e.getMessage() + ")")
+			          .build()
+			      );
+
+		}
+		
+		
+		
+		
+		
+		
 
 		CustomerFacade customerFacade = getCustomerFacade();
     	return customerFacade.getAllPurchasedCouponsByType(couponType);

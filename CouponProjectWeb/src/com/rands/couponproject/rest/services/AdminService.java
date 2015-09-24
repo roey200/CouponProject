@@ -80,28 +80,36 @@ public class AdminService {
 	
 	// Handling companies
 	
+	// example :
+	// http://localhost:9090/CouponProjectWeb/admin/company/5
+	//
 	@Path("/company/{id : \\d+}") // id pattern (digits only)
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Company getCompany( @PathParam("id") long companyId ) throws Exception {
-		logger.debug("getCompany" + companyId);
+		logger.debug("getCompany " + companyId);
 
 		AdminFacade adminFacade = getAdminFacade();
     	return adminFacade.getCompany(companyId);
 	}
 	
-	
-	@Path("/company/{name: [a-zA-Z][a-zA-Z_0-9]+}") // name pattern
+	// example :
+	// http://localhost:9090/CouponProjectWeb/admin/company/cocacola
+	//	
+	@Path("/company/{name: [a-zA-Z][a-zA-Z_0-9%]+}") // name pattern
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Company getCompany( @PathParam("name") String companyName ) throws Exception {
-		logger.debug("getCompany" + companyName);
+		logger.debug("getCompany " + companyName);
 
 		AdminFacade adminFacade = getAdminFacade();
     	return adminFacade.getCompany(companyName);
 	}
 	
-	@Path("/companies") // name pattern
+	// example :
+	// http://localhost:9090/CouponProjectWeb/admin/companyies
+	//	
+	@Path("/companies") 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Collection<Company> getAllCompanies() throws Exception{
@@ -111,13 +119,17 @@ public class AdminService {
     	return adminFacade.getAllCompanies();
 	}
 	
-	
+	// example :
+	// http://localhost:9090/CouponProjectWeb/admin/company
+	// and json Company object like (id may be 0 or ommited):
+	// {"id":0,"companyName":"cocacola","password":"c1234","email":"cocacola@cola.com","coupons":[]}
+	//
 	@POST
 	@Path("/company")
 	@Consumes(MediaType.APPLICATION_JSON)
 	//@Produces(MediaType.APPLICATION_JSON)
 	public void createCompany(Company company) throws Exception {
-		logger.debug("createCompany" + company);
+		logger.debug("createCompany " + company);
 
 		AdminFacade adminFacade = getAdminFacade();
 		
@@ -130,12 +142,18 @@ public class AdminService {
 
 	}	
 	
+	
+	// example :
+	// http://localhost:9090/CouponProjectWeb/admin/company
+	// and json Company object like :
+	// {"id":1,"companyName":"cocacola","password":"c1234","email":"cocacola@cola.com","coupons":[]}
+	//
 	@PUT
 	@Path("/company")
 	@Consumes(MediaType.APPLICATION_JSON)
 	//@Produces(MediaType.APPLICATION_JSON)
 	public void updateCompany(Company company) throws Exception {
-		logger.debug("updateCompany" + company);
+		logger.debug("updateCompany " + company);
 
 		AdminFacade adminFacade = getAdminFacade();
 		
@@ -148,6 +166,9 @@ public class AdminService {
 
 	}
 	
+	// example :
+	// http://localhost:9090/CouponProjectWeb/admin/company/1
+	//	
 	@Path("/company/{id : \\d+}") // id pattern (digits only)
 	@DELETE
 	public void removeCompany( @PathParam("id") long companyId ) throws Exception {
@@ -177,29 +198,35 @@ public class AdminService {
 	
 	// Handling customers
 	
-	
-	
+	// example :
+	// http://localhost:9090/CouponProjectWeb/admin/customer/5
+	//
 	@Path("/customer/{id : \\d+}") // id pattern (digits only)
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Customer getCustomer( @PathParam("id") long customerId ) throws Exception {
-		logger.debug("getCustomer" + customerId);
+		logger.debug("getCustomer " + customerId);
 
 		AdminFacade adminFacade = getAdminFacade();
     	return adminFacade.getCustomer(customerId);
 	}
 	
-	
-	@Path("/customer/{name: [a-zA-Z][a-zA-Z_0-9]+}") // name pattern
+	// example :
+	// http://localhost:9090/CouponProjectWeb/admin/customer/"miss piggie"
+	//
+	@Path("/customer/{name: [a-zA-Z][a-zA-Z_0-9%]+}") // name pattern
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Customer getCustomer( @PathParam("name") String customerName ) throws Exception {
-		logger.debug("getCustomer" + customerName);
+		logger.debug("getCustomer " + customerName);
 
 		AdminFacade adminFacade = getAdminFacade();
     	return adminFacade.getCustomer(customerName);
 	}
 	
+	// example :
+	// http://localhost:9090/CouponProjectWeb/admin/customers
+	//
 	@Path("/customers") // name pattern
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -210,13 +237,17 @@ public class AdminService {
     	return adminFacade.getAllCustomers();
 	}
 	
-	
+	// example :
+	// http://localhost:9090/CouponProjectWeb/admin/customer
+	// and json Company object like (id may be 0 or ommited):
+	// {"customerName":"miss piggie","password":"m1234","coupons":[]}
+	//	
 	@POST
 	@Path("/customer")
 	@Consumes(MediaType.APPLICATION_JSON)
 	//@Produces(MediaType.APPLICATION_JSON)
 	public void createCustomer(Customer customer) throws Exception {
-		logger.debug("createCustomer" + customer);
+		logger.debug("createCustomer " + customer);
 
 		AdminFacade adminFacade = getAdminFacade();
 		
@@ -229,12 +260,17 @@ public class AdminService {
 
 	}	
 	
+	// example :
+	// http://localhost:9090/CouponProjectWeb/admin/customer
+	// and json Company object like (id may be 0 or ommited):
+	// {"id":5,"customerName":"miss piggie","password":"m1234","coupons":[]}
+	//		
 	@PUT
 	@Path("/customer")
 	@Consumes(MediaType.APPLICATION_JSON)
 	//@Produces(MediaType.APPLICATION_JSON)
 	public void updateCustomer(Customer customer) throws Exception {
-		logger.debug("updateCustomer" + customer);
+		logger.debug("updateCustomer " + customer);
 
 		AdminFacade adminFacade = getAdminFacade();
 		
@@ -247,6 +283,9 @@ public class AdminService {
 
 	}
 	
+	// example :
+	// http://localhost:9090/CouponProjectWeb/admin/customer/5
+	//			
 	@Path("/customer/{id : \\d+}") // id pattern (digits only)
 	@DELETE
 	public void removeCustomer( @PathParam("id") long customerId ) throws Exception {

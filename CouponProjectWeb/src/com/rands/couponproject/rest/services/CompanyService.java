@@ -25,6 +25,7 @@ import com.rands.couponproject.facede.CompanyFacade;
 import com.rands.couponproject.model.ClientType;
 import com.rands.couponproject.model.Coupon;
 import com.rands.couponproject.model.CouponType;
+import com.rands.couponproject.utils.Utils;
 
 
 //Sets the path to base URL + /company
@@ -133,7 +134,7 @@ public class CompanyService {
 	}
 
 	// example :
-	// http://localhost:9090/CouponProjectWeb/company/coupons/SPORTS
+	// http://localhost:9090/CouponProjectWeb/company/coupons/2016-12-24
 	//
 	@Path("/coupons/{toDate :  \\d{4}\\-\\d{2}\\-\\d{2} }") 
 	@GET
@@ -145,7 +146,26 @@ Date toDate1 = toDate.getDate();
 		CompanyFacade companyFacade = getCompanyFacade();
     	return companyFacade.getCouponsByDate(toDate1);
 	}	
-	
+
+	// example :
+	// http://localhost:9090/CouponProjectWeb/company/coupons/2016-12-24
+	//
+	@Path("/coupons/date/{toDate}") 
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Coupon> getCouponsByDate(@PathParam("toDate") String toDate) throws Exception {
+		logger.debug("getCouponsByDate " + toDate);
+		
+		CompanyFacade companyFacade = getCompanyFacade();
+		try {
+			Date date = Utils.string2Date(toDate);
+	    	return companyFacade.getCouponsByDate(date);
+		}
+		catch (Exception e) {
+			throw new CouponProjectException("Invalid date : " + toDate);
+		}
+	}	
+
 	// example :
 	// http://localhost:9090/CouponProjectWeb/company/coupon
 	// and json Company object like (id may be 0 or ommited):

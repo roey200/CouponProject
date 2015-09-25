@@ -62,16 +62,7 @@ public class AdminService {
 		}
 	}
 	
-	
-	@Path("/hello")
-	@GET
-	@Produces(MediaType.TEXT_PLAIN)
-	public String hello() {
 
-		return "Hello Admin  ";
-
-	}
-	
 	// Handling companies
 	
 	// example :

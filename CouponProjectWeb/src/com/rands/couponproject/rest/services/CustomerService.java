@@ -132,5 +132,29 @@ public class CustomerService {
     	return customerFacade.getAllPurchasedCouponsByPrice(couponPrice);
 	}
 
+
+	
+	
+	@Path("/buy") 
+	@POST
+//	@Consumes(MediaType.APPLICATION_TEXT)
+	public void purchaseCoupon(String couponName) throws Exception {
+		logger.debug("purchaseCoupon " + couponName);		
+
+		CustomerFacade customerFacade = getCustomerFacade();
+    	customerFacade.purchaseCoupon(couponName);
+	}
+	
+	
+	@Path("/buy") 
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void purchaseCoupon(Coupon Coupon) throws Exception {
+		logger.debug("purchaseCoupon " + Coupon);		
+
+		CustomerFacade customerFacade = getCustomerFacade();
+    	customerFacade.purchaseCoupon(Coupon);
+	}
+	
 	
 }

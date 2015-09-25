@@ -98,17 +98,19 @@ public class CustomerService {
 		
 		
 		if (CouponType.FOOD == couponType) {
-			throw new WebApplicationException(
-			        Response
-			          .status(Status.BAD_REQUEST)
-			          .entity("bad coupon type: " + couponType) // + " (" + e.getMessage() + ")")
-			          .build()
-			      );
+			throw new CouponProjectException("123 Exception");
+//			throw new WebApplicationException(
+//			        Response
+//			          .status(Status.BAD_REQUEST)
+//			          .entity("bad coupon type: " + couponType) // + " (" + e.getMessage() + ")")
+//			          .build()
+//			      );
 
 		}
 		
 		
 		logger.debug("123");
+		logger.debug("37");
 		
 		
 		
@@ -117,6 +119,18 @@ public class CustomerService {
     	return customerFacade.getAllPurchasedCouponsByType(couponType);
 	}
 	
+	// example :
+	// http://localhost:9090/CouponProjectWeb/customer/coupons/100
+	//
+	@Path("/coupons/{price : \\d+}") 
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Coupon> getAllPurchasedCouponsByPrice(@PathParam("price") int couponPrice) throws Exception {
+		logger.debug("getAllPurchasedCouponsByPrice " + couponPrice);		
+
+		CustomerFacade customerFacade = getCustomerFacade();
+    	return customerFacade.getAllPurchasedCouponsByPrice(couponPrice);
+	}
 
 	
 }

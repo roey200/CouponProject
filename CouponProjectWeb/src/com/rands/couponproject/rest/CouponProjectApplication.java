@@ -19,7 +19,7 @@ public class CouponProjectApplication extends Application {
         
         // register root resource
         classes.add(AdminService.class);
-        //classes.add(CompanyService.class);
+        classes.add(CompanyService.class);
         classes.add(CustomerService.class);
 
         return classes;

@@ -22,6 +22,7 @@ import com.rands.couponproject.facede.AdminFacade;
 import com.rands.couponproject.model.ClientType;
 import com.rands.couponproject.model.Company;
 import com.rands.couponproject.model.Customer;
+import com.rands.couponproject.utils.Utils;
 import com.rands.couponproject.exceptions.CouponProjectException;
 import com.rands.couponproject.exceptions.CouponProjectException.AdminLoginException;
 
@@ -32,13 +33,6 @@ public class AdminService {
 	static Logger logger = Logger.getLogger(AdminService.class);
 
 	static final String FACADE_KEY =  "loginFacade";
-	
-//	static CouponSystem couponSystem;
-//	static AdminFacade adminFacade;
-//	couponSystem = CouponSystem.getInstance();
-//
-//	adminFacade = (AdminFacade) couponSystem.login("admin", "1234", ClientType.ADMIN);
-//	
 	
 	@Context
 	HttpServletRequest request;
@@ -313,5 +307,16 @@ public class AdminService {
 	}
 	
 	
+	// system configuration services
+	
+	@Path("/sleep/{sleep : \\d+}") //  (digits only)
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public void setDailyTaskSleepTime( @PathParam("sleep") long sleepTime ) throws Exception {
+		logger.debug("setDailyTaskSleepTime " + sleepTime);
+
+		CouponSystem couponSystem = CouponSystem.getInstance();
+		couponSystem.setDailyTaskSleepTime(sleepTime * Utils.minute);
+	}
 	
 }

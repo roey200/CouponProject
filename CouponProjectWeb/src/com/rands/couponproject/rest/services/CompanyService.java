@@ -135,15 +135,15 @@ public class CompanyService {
 	// example :
 	// http://localhost:9090/CouponProjectWeb/company/coupons/SPORTS
 	//
-	@Path("/coupons_by_date/{date}") 
+	@Path("/coupons/{toDate :  \\d{4}\\-\\d{2}\\-\\d{2} }") 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<Coupon> getCouponsByDate(@PathParam("date") Date toDate) throws Exception {
+	public Collection<Coupon> getCouponsByDate(@PathParam("toDate") DateParameter toDate) throws Exception {
 		logger.debug("getCouponsByDate " + toDate);
 		
-
+Date toDate1 = toDate.getDate();
 		CompanyFacade companyFacade = getCompanyFacade();
-    	return companyFacade.getCouponsByDate(toDate);
+    	return companyFacade.getCouponsByDate(toDate1);
 	}	
 	
 	// example :

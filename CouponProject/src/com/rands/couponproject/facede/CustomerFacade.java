@@ -3,6 +3,7 @@ package com.rands.couponproject.facede;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -18,6 +19,7 @@ import com.rands.couponproject.model.ClientType;
 import com.rands.couponproject.model.Coupon;
 import com.rands.couponproject.model.CouponType;
 import com.rands.couponproject.model.Customer;
+
 
 /**
  * CustomerFacade - The CustomerFacade operates on behalf of a specific Customer (the logedin Customer). <br>
@@ -154,4 +156,17 @@ public class CustomerFacade implements CouponClientFacade {
 		return coupons;
 	}
 
+	/**
+	 * 
+	 * @return all coupons that the customer can buy
+	 * @throws Exception
+	 */
+	public Collection<Coupon> getPurchableCoupons() throws Exception {
+		CouponDAO couponDAO = new CouponDBDAO();
+		
+		
+		
+		
+		return couponDAO.getAllCoupons();
+	}
 }

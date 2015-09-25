@@ -197,7 +197,7 @@ public class CompanyFacade implements CouponClientFacade {
 	 * @return the coupons of the logedin company of a specific type 
 	 * @throws Exception
 	 */
-	public Collection<Coupon> getCouponByType(CouponType type) throws Exception {
+	public Collection<Coupon> getCouponsByType(CouponType type) throws Exception {
 		Collection<Coupon> coupons = new ArrayList<Coupon>();
 
 		for (Coupon coupon : getAllCoupons()) {

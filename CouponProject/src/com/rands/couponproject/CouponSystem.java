@@ -93,5 +93,8 @@ public class CouponSystem {
 		}
 	}
 	
-	
+
+	public void setDailyTaskSleepTime(long sleepTime) {
+		dailyTask.setSleepTime(sleepTime);
+	}
 }

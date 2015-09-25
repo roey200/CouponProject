@@ -208,7 +208,7 @@ public class ConnectionPool {
 	 * deregisterDriver - deregisters the jdbc driver.
 	 * this is needed for example in a Tomcat environment in order to prevent memory leakage.
 	 * this also prevents the following type of messages (for example) :  
-	 * SEVERE: A web application registered the JBDC driver [oracle.jdbc.driver.OracleDriver] but failed to unregister 
+	 * SEVERE: A web application registered the JBDC driver [org.apache.derby.jdbc.ClientDriver40] but failed to unregister 
 	 * it when the web application was stopped. To prevent a memory leak, the JDBC Driver has been forcibly unregistered
 	 */
 	public void deregisterDriver() {

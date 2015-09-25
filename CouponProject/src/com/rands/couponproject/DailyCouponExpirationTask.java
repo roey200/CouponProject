@@ -16,7 +16,8 @@ public class DailyCouponExpirationTask extends Thread {
 
 	static Logger logger = Logger.getLogger(DailyCouponExpirationTask.class);
 	private boolean quit = false;
-
+	private long sleepTime = 15 * Utils.minute;
+	
 	public DailyCouponExpirationTask() {
 		super();
 		
@@ -56,7 +57,7 @@ public class DailyCouponExpirationTask extends Thread {
 			try {
 				//sleep(24 * Utils.houer);
 				//sleep(15 * Utils.minute);
-				sleep(1 * Utils.minute); // 1 minute so that we can see the work in testMain
+				sleep(sleepTime); 
 			} catch (InterruptedException e) {
 				logger.error("DailyCouponExpirationTask interrupted");
 			}
@@ -74,4 +75,11 @@ public class DailyCouponExpirationTask extends Thread {
 		}
 	}
 
+
+	public void setSleepTime(long sleepTime) {
+		logger.info("setSleepTime " + sleepTime);
+		this.sleepTime = sleepTime;
+	}
+
+	
 }

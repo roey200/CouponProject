@@ -105,7 +105,7 @@ public class TestCompany {
 
 	private void printCouponsByType(CouponType type) {
 		try {
-			Collection<Coupon> coupon = compFacade.getCouponByType(type);
+			Collection<Coupon> coupon = compFacade.getCouponsByType(type);
 			System.out.println("coupons of type " + type);
 			printCoupons(coupon);
 		} catch (Exception e) {

@@ -1,6 +1,5 @@
 package com.rands.couponproject.rest;
 
-import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
 import com.rands.couponproject.rest.services.AdminService;
@@ -21,6 +20,9 @@ public class CouponProjectApplication extends Application {
         classes.add(AdminService.class);
         classes.add(CompanyService.class);
         classes.add(CustomerService.class);
+        
+        // need to add ExceptionMapper class as well
+        classes.add(CouponProjectExceptionMapper.class);        
 
         return classes;
     }

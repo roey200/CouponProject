@@ -62,6 +62,16 @@ public class AdminService {
 		}
 	}
 	
+	// test
+	@Path("/exception")
+	@GET
+	//@Produces(MediaType.APPLICATION_JSON)
+	//@Produces(MediaType.TEXT_PLAIN)
+	public void testExceptionMapper() throws Exception {
+		logger.debug("exception <<<<<<<<<<<<<<<<<<<<<<");
+
+		throw new CouponProjectException("123 Testing the ExceptionMapper");
+	}	
 
 	// Handling companies
 	

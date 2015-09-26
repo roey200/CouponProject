@@ -12,6 +12,11 @@ import java.util.Set;
 //@ApplicationPath("/")
 //@ApplicationPath("") // same
 public class CouponProjectApplication extends Application {
+	
+	/**
+	 * Registers the classes that should be used by jersey.
+	 * This is needed when using deployment agnostic application model.
+	 */
     @Override
     public Set<Class<?>> getClasses() {
         final Set<Class<?>> classes = new HashSet<Class<?>>();

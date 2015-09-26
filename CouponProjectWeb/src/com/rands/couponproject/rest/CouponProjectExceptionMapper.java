@@ -4,6 +4,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
+import com.rands.couponproject.exceptions.CouponProjectException.CompanyException;
+import com.rands.couponproject.exceptions.CouponProjectException.LoginException;
+
 /**
  * CouponProjectExceptionMapper - an ExceptionMapper.<br><br>
  * 
@@ -22,6 +25,19 @@ public class CouponProjectExceptionMapper implements ExceptionMapper<Exception> 
 	@Override
 	public Response toResponse(Exception e) {
 		//return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).type("text/plain").build();
+		
+
+		if (e instanceof LoginException) {
+			return Response.status(Response.Status.UNAUTHORIZED).entity(e.toString()).type("text/plain").build();
+			
+		}
+
+		if (e instanceof CompanyException) {
+			return Response.status(Response.Status.BAD_REQUEST).entity(e.toString()).type("text/plain").build();
+			
+		}
+		
+		
 		return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.toString()).type("text/plain").build();
 	}
 }

@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.WriteListener;
@@ -40,11 +41,15 @@ public class MultiReadHttpServletResponse extends HttpServletResponseWrapper {
         super(httpServletResponse);
     }
 
-    public String getCopiedOutput() throws IOException {
+    public String getContent() {
         if (copiedOutput != null) {
-            return new String(copiedOutput.getCopy(), getCharacterEncoding());
+            try {
+				return new String(copiedOutput.getCopy(), getCharacterEncoding());
+			} catch (UnsupportedEncodingException e) {
+				return new String(copiedOutput.getCopy());
+			}
         }
-        return "";
+        return null;
     }
 
     @Override
@@ -55,6 +60,14 @@ public class MultiReadHttpServletResponse extends HttpServletResponseWrapper {
             copiedOutput.flush();
         }
     }
+    
+    @Override
+    public void reset() {
+    	super.reset();
+    	writer = null;
+    	outputStream = null;
+    }
+    
 
     @Override
     public String getCharacterEncoding() {
@@ -92,9 +105,9 @@ public class MultiReadHttpServletResponse extends HttpServletResponseWrapper {
         return copiedOutput;
     }
     
-    public String getContent() {
-    	return new String(copiedOutput.getCopy());
-    }
+//    public String getContent2() {
+//    	return new String(copiedOutput.getCopy());
+//    }
 
     private static class CachedServletOutputStream extends ServletOutputStream {
 

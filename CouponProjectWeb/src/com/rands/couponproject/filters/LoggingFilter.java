@@ -172,37 +172,24 @@ public class LoggingFilter implements Filter {
 		}		
 	}
 	
-	private String extractBody(HttpServletRequest request) {
-		String method = request.getMethod().toUpperCase();
-		if ("POST".equals(method) || "PUT".equals(method) ) {
-			try {
-				// wrap the request in order to read the inputstream multiple times
-			    MultiReadHttpServletRequest multiReadRequest = new MultiReadHttpServletRequest(request);
-
-			    //use multiReadRequest.getInputStream(); or multiReadRequest.getReader();
-				Scanner s = new Scanner(multiReadRequest.getInputStream(), "UTF-8").useDelimiter("\\A");
-				return s.hasNext() ? s.next() : "";
-			} catch (Exception e) {
-
-			}
-		}
-		return null;
-
-	}
-	
-//	private String extractBody(ServletResponse response) {
-//		String method = response.getMethod().toUpperCase();
+//	private String extractBody(HttpServletRequest request) {
+//		String method = request.getMethod().toUpperCase();
 //		if ("POST".equals(method) || "PUT".equals(method) ) {
 //			try {
-//				Scanner s = new Scanner(response.getOutputStream(), "UTF-8").useDelimiter("\\A");
+//				// wrap the request in order to read the inputstream multiple times
+//			    MultiReadHttpServletRequest multiReadRequest = new MultiReadHttpServletRequest(request);
+//
+//			    //use multiReadRequest.getInputStream(); or multiReadRequest.getReader();
+//				Scanner s = new Scanner(multiReadRequest.getInputStream(), "UTF-8").useDelimiter("\\A");
 //				return s.hasNext() ? s.next() : "";
 //			} catch (Exception e) {
 //
 //			}
 //		}
 //		return null;
-//	}	
-
+//
+//	}
+	
 	private void parseRequestOptions(String param) {
 		if (null == param || param.isEmpty())
 			return;

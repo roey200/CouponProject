@@ -59,10 +59,11 @@
 		</init-param>
 			</filter>
 	
+	 
 	<filter-mapping>
 		<filter-name>LoggingFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
-	</filter-mapping>	
+	</filter-mapping>
 
 </web-app>

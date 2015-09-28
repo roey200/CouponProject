@@ -48,14 +48,12 @@ public class MultiReadHttpServletRequest extends HttpServletRequestWrapper {
 	}
 
 	public String getContent() {
-		if (cachedBytes == null) {
-			try {
-				cacheInputStream();
-			} catch (Exception e) {
-				
-			}
+		try {
+			getInputStream();
+			return (cachedBytes.size() > 0) ? cachedBytes.toString() : null;
+		} catch (Exception e) {
+			return null;
 		}
-		return cachedBytes.toString();
 	}
 
 	/* An inputstream which reads the cached request body */

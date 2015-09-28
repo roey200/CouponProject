@@ -1,5 +1,6 @@
 package com.rands.couponproject.rest;
 
+import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
 import com.rands.couponproject.rest.services.AdminService;
@@ -11,6 +12,7 @@ import java.util.Set;
 
 //@ApplicationPath("/")
 //@ApplicationPath("") // same
+//@ApplicationPath("/rest")
 public class CouponProjectApplication extends Application {
 	
 	/**

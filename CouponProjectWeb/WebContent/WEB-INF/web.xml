@@ -4,6 +4,9 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 	<display-name>CouponProjectApplication</display-name>
+	<welcome-file-list>
+		<welcome-file>login.html</welcome-file>
+	</welcome-file-list>
 
 	<servlet>
 		<servlet-name>jersey</servlet-name>
@@ -27,20 +30,39 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>jersey</servlet-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>/rest/*</url-pattern>
 	</servlet-mapping>
 
 	<listener>
 		<listener-class>com.rands.couponproject.rest.CouponpPojectContextListener</listener-class>
 	</listener>
-	
+
 	<context-param>
 		<param-name>dailytask.sleep</param-name>
 		<param-value>10</param-value>
-	</context-param>	
+	</context-param>
 	<context-param>
 		<param-name>createDB</param-name>
 		<param-value>false</param-value>
-	</context-param>	
+	</context-param>
+
+	<filter>
+		<filter-name>LoggingFilter</filter-name>
+		<filter-class>com.rands.couponproject.filters.LoggingFilter</filter-class>
+		<init-param>
+			<param-name>logRequest</param-name>
+			<param-value>headers,parameters,cookies,body</param-value>
+		</init-param>
+		<init-param>
+			<param-name>logResponse</param-name>
+			<param-value>headers,body</param-value>
+		</init-param>
+			</filter>
+	
+	<filter-mapping>
+		<filter-name>LoggingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>	
 
 </web-app>

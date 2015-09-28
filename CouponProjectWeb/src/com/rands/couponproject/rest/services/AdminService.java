@@ -64,7 +64,7 @@ public class AdminService {
 	
 	// test
 	@Path("/exception")
-	@GET
+	@POST
 	//@Produces(MediaType.APPLICATION_JSON)
 	//@Produces(MediaType.TEXT_PLAIN)
 	public void testExceptionMapper() throws Exception {
@@ -226,7 +226,7 @@ public class AdminService {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Collection<Customer> getAllCustomers() throws Exception{
-		logger.debug("getAllCompanies" );
+		logger.debug("getAllCustomers" );
 
 		AdminFacade adminFacade = getAdminFacade();
     	return adminFacade.getAllCustomers();

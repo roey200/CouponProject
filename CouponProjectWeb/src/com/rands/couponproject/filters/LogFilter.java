@@ -19,8 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet Filter implementation class RequestLoggingFilter
  */
-//@WebFilter("/LoggingFilter")
-public class LoggingFilter implements Filter {
+//@WebFilter("/LogFilter")
+public class LogFilter implements Filter {
 
 	private ServletContext context;
 
@@ -38,7 +38,7 @@ public class LoggingFilter implements Filter {
 	@Override
 	public void init(FilterConfig fConfig) throws ServletException {
 		context = fConfig.getServletContext();
-		logIt("LoggingFilter initialized");
+		logIt("LogFilter initialized");
 
 		// Get init parameters 
 		String param;
@@ -71,7 +71,7 @@ public class LoggingFilter implements Filter {
 			if (logRequest)
 				log(requestWrapper);
 		} catch (Exception e) {
-			context.log("LoggingFilter logRequest failed", e);
+			context.log("LogFilter logRequest failed", e);
 		}
 
 		// pass the request along the filter chain
@@ -82,7 +82,7 @@ public class LoggingFilter implements Filter {
 			if (logResponse)
 				log(responseWrapper);
 		} catch (Exception e) {
-			context.log("LoggingFilter logResponse failed", e);
+			context.log("LogFilter logResponse failed", e);
 		}
 	}
 
@@ -100,7 +100,7 @@ public class LoggingFilter implements Filter {
 		HttpServletRequest r = (HttpServletRequest) request;
 
 		// the incoming direction (request)
-		logIt("<< LoggingFilter");
+		logIt("<< LogFilter");
 
 		String queryString = (null != r.getQueryString()) ? "?" + r.getQueryString() : "";
 		logIt("<< Request : " + r.getMethod() + " " + r.getRequestURL() + queryString
@@ -153,7 +153,7 @@ public class LoggingFilter implements Filter {
 		HttpServletResponse r = (HttpServletResponse) response;
 
 		// the outgoing direction (response)
-		logIt(">> LoggingFilter response");
+		logIt(">> LogFilter response");
 
 		logIt("response : " + r.getStatus() + " " + r.getContentType());
 		if (logResponseHeaders) {

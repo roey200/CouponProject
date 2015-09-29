@@ -47,8 +47,8 @@
 	</context-param>
 
 	<filter>
-		<filter-name>LoggingFilter</filter-name>
-		<filter-class>com.rands.couponproject.filters.LoggingFilter</filter-class>
+		<filter-name>LogFilter</filter-name>
+		<filter-class>com.rands.couponproject.filters.LogFilter</filter-class>
 		<init-param>
 			<param-name>logRequest</param-name>
 			<param-value>headers,parameters,cookies,body</param-value>
@@ -61,7 +61,7 @@
 	
 	 
 	<filter-mapping>
-		<filter-name>LoggingFilter</filter-name>
+		<filter-name>LogFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 	</filter-mapping>

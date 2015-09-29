@@ -95,7 +95,13 @@ public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 			PreparedStatement ps = conn.prepareStatement(sql);
 
 			ps.setLong(1, id);
-			ps.execute();
+			//ps.execute();
+			
+			int affectedRows = ps.executeUpdate();
+	        if (affectedRows == 0) {
+	            //throw new SQLException("removeCustomer id = " + id + " failed, no rows affected.");
+	            logger.error("removeCustomer id = " + id + " failed, no rows affected.");
+	        }		
 			
 			if (doTransaction)
 				conn.commit(); // end the transaction
@@ -137,7 +143,15 @@ public class CustomerDBDAO extends BaseDBDAO implements CustomerDAO {
 			ps.setString(1, customer.getCustomerName()); // we can change the name becuase the primary key is the id
 			ps.setString(2, customer.getPassword());
 			ps.setLong(3, customer.getId());
-			ps.execute();
+			//ps.execute();
+			
+			int affectedRows = ps.executeUpdate();
+	        if (affectedRows == 0) {
+	            //throw new SQLException("updateCustomer id = " + customer.getId() + " failed, no rows affected.");
+	            logger.error("updateCustomer id = " + customer.getId() + " failed, no rows affected.");
+	        }					
+
+
 		} catch (Exception e) {
 			logger.error("updateCustomer failed : " + e.toString());
 			throw e;

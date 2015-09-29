@@ -239,7 +239,14 @@ public class CouponDBDAO extends BaseDBDAO implements CouponDAO {
 
 			ps.setLong(9, coupon.getId());
 
-			ps.execute();
+			//ps.execute();
+			
+			int affectedRows = ps.executeUpdate();
+	        if (affectedRows == 0) {
+	            //throw new SQLException("updateCoupon id = " + coupon.getId() + " failed, no rows affected.");
+	            logger.error("updateCoupon id = " + coupon.getId() + " failed, no rows affected.");
+	        }			
+			
 		} catch (SQLException e) {
 			logger.error("updateCoupon failed : " + e.toString());
 			throw e;

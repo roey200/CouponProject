@@ -101,7 +101,13 @@ public class CompanyDBDAO extends BaseDBDAO implements CompanyDAO {
 			String sql = "delete from APP.company where id=?";
 			PreparedStatement ps = conn.prepareStatement(sql);//
 			ps.setLong(1, id);
-			ps.execute();
+			//ps.execute();
+			
+			int affectedRows = ps.executeUpdate();
+	        if (affectedRows == 0) {
+	            //throw new SQLException("removeCompany id = " + id + " failed, no rows affected.");
+	            logger.error("removeCompany id = " + id + " failed, no rows affected.");
+	        }				
 			
 			if (doTransaction)
 				conn.commit(); // end the transaction
@@ -143,7 +149,13 @@ public class CompanyDBDAO extends BaseDBDAO implements CompanyDAO {
 			ps.setString(2, company.getPassword());
 			ps.setString(3, company.getEmail());
 			ps.setLong(4, company.getId());
-			ps.execute();
+			//ps.execute();
+			
+			int affectedRows = ps.executeUpdate();
+	        if (affectedRows == 0) {
+	            //throw new SQLException("updateCompany id = " + company.getId() + " failed, no rows affected.");
+	            logger.error("updateCompany id = " + company.getId() + " failed, no rows affected.");
+	        }				
 
 			logger.debug("Company has been updated : " + company);
 		} catch (SQLException e) {

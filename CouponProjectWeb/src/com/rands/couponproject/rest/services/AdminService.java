@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -25,6 +26,7 @@ import com.rands.couponproject.model.Customer;
 import com.rands.couponproject.utils.Utils;
 import com.rands.couponproject.exceptions.CouponProjectException;
 import com.rands.couponproject.exceptions.CouponProjectException.AdminLoginException;
+import com.rands.couponproject.exceptions.CouponProjectException.LoginException;
 
 //Sets the path to base URL + /admin
 @Path("/admin")
@@ -37,7 +39,7 @@ public class AdminService {
 	@Context
 	HttpServletRequest request;
 
-	private AdminFacade getAdminFacade() throws CouponProjectException {
+	private AdminFacade getAdminFacade_fake() throws CouponProjectException {
 		HttpSession session = request.getSession();
 
 		try {
@@ -62,6 +64,16 @@ public class AdminService {
 		}
 	}
 	
+	private AdminFacade getAdminFacade() throws LoginException {
+		HttpSession session = request.getSession();
+
+		AdminFacade adminFacade = (AdminFacade) session.getAttribute(FACADE_KEY);
+		if (null == adminFacade) {
+			throw new AdminLoginException("not logged in yet");
+		}
+		return adminFacade;
+	}
+	
 	// test
 	@Path("/exception")
 	@POST
@@ -71,7 +83,19 @@ public class AdminService {
 		logger.debug("exception <<<<<<<<<<<<<<<<<<<<<<");
 
 		throw new CouponProjectException("123 Testing the ExceptionMapper");
-	}	
+	}
+	
+	@Path("/login")
+	@POST
+	public void login(@FormParam("UserName") String userName ,@FormParam("password") String password , @FormParam("type") ClientType clientType) throws LoginException{
+		logger.debug("login parameters " + userName + " " + password );
+		AdminFacade adminFacade = (AdminFacade) AdminFacade.login(userName, password, clientType);
+		HttpSession session = request.getSession();
+		session.setAttribute(FACADE_KEY, adminFacade);
+	}
+	
+	
+	
 
 	// Handling companies
 	

@@ -5,7 +5,9 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 import com.rands.couponproject.exceptions.CouponProjectException.CompanyException;
+import com.rands.couponproject.exceptions.CouponProjectException.CustomerException;
 import com.rands.couponproject.exceptions.CouponProjectException.LoginException;
+import com.sun.jersey.api.NotFoundException;
 
 /**
  * CouponProjectExceptionMapper - an ExceptionMapper.<br><br>
@@ -26,18 +28,34 @@ public class CouponProjectExceptionMapper implements ExceptionMapper<Exception> 
 	public Response toResponse(Exception e) {
 		//return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).type("text/plain").build();
 		
+		// default
+		Response.Status status = Response.Status.INTERNAL_SERVER_ERROR;
 
+		// CouponProject exception
 		if (e instanceof LoginException) {
-			return Response.status(Response.Status.UNAUTHORIZED).entity(e.toString()).type("text/plain").build();
-			
+			status = Response.Status.UNAUTHORIZED;
+		} 
+		else if (e instanceof CompanyException) {
+			status = Response.Status.BAD_REQUEST;
+		} 
+		else if (e instanceof CustomerException) {
+			status = Response.Status.BAD_REQUEST;
+		} 
+		// jersey exception
+		else if (e instanceof NotFoundException) {
+			status = Response.Status.NOT_FOUND;
 		}
-
-		if (e instanceof CompanyException) {
-			return Response.status(Response.Status.BAD_REQUEST).entity(e.toString()).type("text/plain").build();
-			
+		// json exceptions
+		else { // check by class name 
+			String name = e.getClass().getSimpleName();
+		    if (name.equals("JsonMappingException")) {
+		    	status = Response.Status.BAD_REQUEST;
+		    }
+		    else if (name.equals("UnrecognizedPropertyException")) {
+		    	status = Response.Status.BAD_REQUEST;
+		    }
 		}
 		
-		
-		return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.toString()).type("text/plain").build();
+		return Response.status(status).entity(e.toString()).type("text/plain").build();
 	}
 }

@@ -12,7 +12,7 @@ import java.util.Set;
 
 //@ApplicationPath("/")
 //@ApplicationPath("") // same
-//@ApplicationPath("/rest")
+@ApplicationPath("/rest")
 public class CouponProjectApplication extends Application {
 	
 	/**

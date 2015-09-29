@@ -38,6 +38,14 @@ public class CouponProjectException extends Exception {
 		
 	}
 	
+	public static class AccessForbiddenException extends LoginException {
+
+		public AccessForbiddenException(String message) {
+			super(message);
+		}
+		
+	}
+	
 	public static class AdminLoginException extends LoginException {
 
 		public AdminLoginException(String message) {

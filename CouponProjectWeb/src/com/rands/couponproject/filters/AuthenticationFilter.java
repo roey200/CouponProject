@@ -19,33 +19,33 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet Filter implementation class RequestLoggingFilter
  */
-//@WebFilter("/LoginFilter")
-public class LoginFilter implements Filter {
+//@WebFilter("/AuthenticationFilter")
+public class AuthenticationFilter implements Filter {
 
 	private ServletContext context;
 
 	@Override
 	public void init(FilterConfig fConfig) throws ServletException {
 		context = fConfig.getServletContext();
-		logIt("LoginFilter initialized");
+		logIt("AuthenticationFilter initialized");
 
 		// Get init parameters 
 		String param;
-		param = fConfig.getInitParameter("logRequest");
-		logIt("logRequest=" + param);
+		param = fConfig.getInitParameter("test-param");
+		logIt("test-param=" + param);
 	}
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
 		// the incoming direction (request)
-		logIt("<< LoginFilter");
+		logIt("<< AuthenticationFilter");
 
 		// pass the request along the filter chain
 		chain.doFilter(request, response);
 		
 		// the outgoing direction (response)
-		logIt(">> LoginFilter");
+		logIt(">> AuthenticationFilter");
 	}
 
 	@Override

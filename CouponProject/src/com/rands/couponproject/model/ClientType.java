@@ -1,5 +1,5 @@
 package com.rands.couponproject.model;
 
 public enum ClientType {
-	ADMIN,COMPANY,CUSTOMER;
+	ADMIN,admin,COMPANY,CUSTOMER;
 }

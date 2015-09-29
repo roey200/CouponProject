@@ -4,6 +4,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
+import com.rands.couponproject.exceptions.CouponProjectException.AccessForbiddenException;
 import com.rands.couponproject.exceptions.CouponProjectException.CompanyException;
 import com.rands.couponproject.exceptions.CouponProjectException.CustomerException;
 import com.rands.couponproject.exceptions.CouponProjectException.LoginException;
@@ -32,6 +33,9 @@ public class CouponProjectExceptionMapper implements ExceptionMapper<Exception> 
 		Response.Status status = Response.Status.INTERNAL_SERVER_ERROR;
 
 		// CouponProject exception
+		if (e instanceof AccessForbiddenException) {
+			status = Response.Status.FORBIDDEN;
+		} 
 		if (e instanceof LoginException) {
 			status = Response.Status.UNAUTHORIZED;
 		} 

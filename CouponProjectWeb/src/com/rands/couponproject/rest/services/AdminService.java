@@ -25,6 +25,7 @@ import com.rands.couponproject.model.Company;
 import com.rands.couponproject.model.Customer;
 import com.rands.couponproject.utils.Utils;
 import com.rands.couponproject.exceptions.CouponProjectException;
+import com.rands.couponproject.exceptions.CouponProjectException.AccessForbiddenException;
 import com.rands.couponproject.exceptions.CouponProjectException.AdminLoginException;
 import com.rands.couponproject.exceptions.CouponProjectException.LoginException;
 
@@ -67,11 +68,16 @@ public class AdminService {
 	private AdminFacade getAdminFacade() throws LoginException {
 		HttpSession session = request.getSession();
 
-		AdminFacade adminFacade = (AdminFacade) session.getAttribute(FACADE_KEY);
-		if (null == adminFacade) {
+		AdminFacade facade;
+		try {
+			facade = (AdminFacade) session.getAttribute(FACADE_KEY);
+		} catch (ClassCastException e) { // may be logged in as company or customer
+			throw new AccessForbiddenException("admin access forbidden");
+		}
+		if (null == facade) {
 			throw new AdminLoginException("not logged in yet");
 		}
-		return adminFacade;
+		return facade;
 	}
 	
 	// test

@@ -20,7 +20,11 @@ import org.apache.log4j.Logger;
 
 import com.rands.couponproject.CouponSystem;
 import com.rands.couponproject.exceptions.CouponProjectException;
+import com.rands.couponproject.exceptions.CouponProjectException.AccessForbiddenException;
+import com.rands.couponproject.exceptions.CouponProjectException.AdminLoginException;
 import com.rands.couponproject.exceptions.CouponProjectException.CompanyLoginException;
+import com.rands.couponproject.exceptions.CouponProjectException.LoginException;
+import com.rands.couponproject.facede.AdminFacade;
 import com.rands.couponproject.facede.CompanyFacade;
 import com.rands.couponproject.model.ClientType;
 import com.rands.couponproject.model.Coupon;
@@ -39,7 +43,7 @@ public class CompanyService {
 	@Context
 	HttpServletRequest request;
 
-	private CompanyFacade getCompanyFacade() throws CouponProjectException {
+	private CompanyFacade getCompanyFacade_fake() throws CouponProjectException {
 		HttpSession session = request.getSession();
 
 		try {
@@ -63,6 +67,21 @@ public class CompanyService {
 			throw new CompanyLoginException("could not get CompanyFacade object");
 		}
 	}
+	
+	private CompanyFacade getCompanyFacade() throws LoginException {
+		HttpSession session = request.getSession();
+
+		CompanyFacade facade;
+		try {
+			facade = (CompanyFacade) session.getAttribute(FACADE_KEY);
+		} catch (ClassCastException e) { // may be logged in as admin or customer
+			throw new AccessForbiddenException("company access forbidden");
+		}
+		if (null == facade) {
+			throw new AdminLoginException("not logged in yet");
+		}
+		return facade;
+	}	
 	
 	
 	// Handling companies

@@ -5,7 +5,7 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 	<display-name>CouponProjectApplication</display-name>
 	<welcome-file-list>
-		<welcome-file>login.html</welcome-file>
+		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
 
 	<servlet>
@@ -59,9 +59,20 @@
 		</init-param>
 	</filter>
 
+	<filter>
+		<filter-name>AuthenticationFilter</filter-name>
+		<filter-class>com.rands.couponproject.filters.AuthenticationFilter</filter-class>
+	</filter>
+
 
 	<filter-mapping>
 		<filter-name>LogFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>AuthenticationFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 	</filter-mapping>

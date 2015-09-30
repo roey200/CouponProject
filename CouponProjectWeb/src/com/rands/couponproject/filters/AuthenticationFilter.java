@@ -15,12 +15,25 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.log4j.Logger;
+
+import com.rands.couponproject.exceptions.CouponProjectException.AccessForbiddenException;
+import com.rands.couponproject.exceptions.CouponProjectException.AdminLoginException;
+import com.rands.couponproject.facede.AdminFacade;
+import com.rands.couponproject.facede.CouponClientFacade;
+import com.rands.couponproject.rest.services.AdminService;
 
 /**
  * Servlet Filter implementation class RequestLoggingFilter
  */
 //@WebFilter("/AuthenticationFilter")
 public class AuthenticationFilter implements Filter {
+	
+	static Logger logger = Logger.getLogger(AuthenticationFilter.class);
+
+	static final String FACADE_KEY =  "loginFacade";
 
 	private ServletContext context;
 
@@ -37,17 +50,85 @@ public class AuthenticationFilter implements Filter {
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-
+		boolean redirect = false;
+		
 		// the incoming direction (request)
 		logIt("<< AuthenticationFilter");
-
-		// pass the request along the filter chain
-		chain.doFilter(request, response);
 		
-		// the outgoing direction (response)
-		logIt(">> AuthenticationFilter");
+		HttpServletRequest httpRequest = request instanceof HttpServletRequest ? (HttpServletRequest) request : null;
+        HttpServletResponse httpResponse = response instanceof HttpServletResponse ? (HttpServletResponse) response : null;
+
+        if (httpRequest == null || httpResponse == null) { // we only handle http based requests
+			// pass the request along the filter chain
+			chain.doFilter(request, response);
+		
+			// the outgoing direction (response)
+			logIt(">> AuthenticationFilter");
+			return;
+        }
+		
+        if (isAuthenticationRequired(httpRequest)) { // authentication is required
+        	logIt("AuthenticationFilter : authentication is required");
+        	if (isRestServiceRequest(httpRequest)) { // request is for a rest web service
+            	logIt("AuthenticationFilter : aborting rest request");
+        		httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        	}
+        	else {
+            	logIt("AuthenticationFilter : redirecting to login page");
+    			String loginPage = "/login.html";
+    			
+    			httpResponse.sendRedirect(httpRequest.getContextPath() + loginPage);        		
+        	}
+		} else { // proceed with the request
+
+			// pass the request along the filter chain
+			chain.doFilter(request, response);
+		
+			// the outgoing direction (response)
+			logIt(">> AuthenticationFilter");
+		}
 	}
 
+	/**
+	 * isRestServiceRequest : checks checks if the incoming request is for a rest web service
+	 * note that all the rest web services in this web application are "under" the /rest path.
+	 * @param httpRequest
+	 * @return true if the incoming request is for a rest web service, false otherwise
+	 */
+	private boolean isRestServiceRequest(HttpServletRequest httpRequest) {
+		return httpRequest.getServletPath().equals("/rest");
+	}
+
+	/**
+	 * isAuthenticationRequired : checks if the incoming request may proceed or not.
+	 * the incoming request may proceed, if it is a request for authentication or if it was already authenticated.
+	 * @param httpRequest
+	 * @return true if authentication is required, false otherwise (the request may proceed)
+	 */
+	private boolean isAuthenticationRequired(HttpServletRequest httpRequest) {
+		
+		if (httpRequest.getRequestURI().contains("/login")){ // this is a login request
+			return false;
+		}
+		
+		HttpSession session = httpRequest.getSession(false);
+		if(null==session) // not logged in yet
+			return true;
+		
+		try {
+			CouponClientFacade	facade = (CouponClientFacade) session.getAttribute(FACADE_KEY);
+			if(null==facade){
+				return true;  // not logged in yet
+			}
+		} catch (ClassCastException e) { // may be logged in as company or customer
+			logger.error("facade key type mismatch");
+			return true;
+		}
+		
+		
+		return false;
+	}
+	
 	@Override
 	public void destroy() {
 		//we can close resources here

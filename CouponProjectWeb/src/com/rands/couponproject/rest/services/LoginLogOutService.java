@@ -17,7 +17,7 @@ import com.rands.couponproject.model.ClientType;
 @Path("/")
 public class LoginLogOutService {
 
-	static Logger logger = Logger.getLogger(AdminService.class);
+	static Logger logger = Logger.getLogger(LoginLogOutService.class);
 
 	static final String FACADE_KEY = "loginFacade";
 

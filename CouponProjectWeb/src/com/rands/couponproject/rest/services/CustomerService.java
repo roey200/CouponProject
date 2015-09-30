@@ -28,6 +28,7 @@ import com.rands.couponproject.model.Company;
 import com.rands.couponproject.model.Coupon;
 import com.rands.couponproject.model.CouponType;
 import com.rands.couponproject.model.Customer;
+import com.rands.couponproject.rest.Globals;
 import com.rands.couponproject.exceptions.CouponProjectException;
 import com.rands.couponproject.exceptions.CouponProjectException.AccessForbiddenException;
 import com.rands.couponproject.exceptions.CouponProjectException.AdminLoginException;
@@ -40,50 +41,15 @@ public class CustomerService {
 
 	static Logger logger = Logger.getLogger(CustomerService.class);
 
-	static final String FACADE_KEY =  "loginFacade";
-	
-//	static CouponSystem couponSystem;
-//	static CustomerFacade customerFacade;
-//	couponSystem = CouponSystem.getInstance();
-//
-//	customerFacade = (CustomerFacade) couponSystem.login("customer", "1234", ClientType.ADMIN);
-//	
-	
 	@Context
 	HttpServletRequest request;
 
-//	private CustomerFacade getCustomerFacade() throws CouponProjectException {
-//		HttpSession session = request.getSession();
-//
-//		try {
-//			CustomerFacade customerFacade = (CustomerFacade) session.getAttribute(FACADE_KEY);
-//			if (null == customerFacade) {
-//				logger.error("customer not logged in session = " + session.getId());
-//				//throw new CustomerLoginException("customer not logged in session = " + session.getId());
-//				
-//				CouponSystem couponSystem = CouponSystem.getInstance();
-//				customerFacade = (CustomerFacade) couponSystem.login("roey", "r1234", ClientType.CUSTOMER);
-//				
-//				session.setAttribute(FACADE_KEY, customerFacade);
-//
-//			}
-//			return customerFacade;
-//		} catch (CustomerLoginException e) {
-//			throw e;
-//
-//		} catch (Exception e) {
-//			logger.error("getCustomerFacade() failed : " + e.toString());
-//			throw new CustomerLoginException("could not get CustomerFacade object");
-//		}
-//	}
-	
-	
 	private CustomerFacade getCustomerFacade() throws LoginException {
 		HttpSession session = request.getSession();
 
 		CustomerFacade facade;
 		try {
-			facade = (CustomerFacade) session.getAttribute(FACADE_KEY);
+			facade = (CustomerFacade) session.getAttribute(Globals.FACADE_KEY);
 		} catch (ClassCastException e) { // may be logged in as admin or company
 			throw new AccessForbiddenException("customer access forbidden");
 		}

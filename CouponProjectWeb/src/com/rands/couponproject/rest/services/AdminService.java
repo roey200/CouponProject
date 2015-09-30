@@ -23,6 +23,7 @@ import com.rands.couponproject.facede.AdminFacade;
 import com.rands.couponproject.model.ClientType;
 import com.rands.couponproject.model.Company;
 import com.rands.couponproject.model.Customer;
+import com.rands.couponproject.rest.Globals;
 import com.rands.couponproject.utils.Utils;
 import com.rands.couponproject.exceptions.CouponProjectException;
 import com.rands.couponproject.exceptions.CouponProjectException.AccessForbiddenException;
@@ -35,8 +36,6 @@ public class AdminService {
 
 	static Logger logger = Logger.getLogger(AdminService.class);
 
-	static final String FACADE_KEY =  "loginFacade";
-	
 	@Context
 	HttpServletRequest request;
 
@@ -70,7 +69,7 @@ public class AdminService {
 
 		AdminFacade facade;
 		try {
-			facade = (AdminFacade) session.getAttribute(FACADE_KEY);
+			facade = (AdminFacade) session.getAttribute(Globals.FACADE_KEY);
 		} catch (ClassCastException e) { // may be logged in as company or customer
 			throw new AccessForbiddenException("admin access forbidden");
 		}
@@ -90,18 +89,6 @@ public class AdminService {
 
 		throw new CouponProjectException("123 Testing the ExceptionMapper");
 	}
-//	
-//	@Path("/login")
-//	@POST
-//	public void login(@FormParam("UserName") String userName ,@FormParam("password") String password , @FormParam("type") ClientType clientType) throws LoginException{
-//		logger.debug("login parameters " + userName + " " + password );
-//		AdminFacade adminFacade = (AdminFacade) AdminFacade.login(userName, password, clientType);
-//		HttpSession session = request.getSession();
-//		session.setAttribute(FACADE_KEY, adminFacade);
-//	}
-//	
-	
-	
 
 	// Handling companies
 	

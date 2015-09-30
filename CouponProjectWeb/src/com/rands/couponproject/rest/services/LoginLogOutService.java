@@ -13,13 +13,12 @@ import com.rands.couponproject.CouponSystem;
 import com.rands.couponproject.exceptions.CouponProjectException.LoginException;
 import com.rands.couponproject.facede.CouponClientFacade;
 import com.rands.couponproject.model.ClientType;
+import com.rands.couponproject.rest.Globals;
 
 @Path("/")
 public class LoginLogOutService {
 
 	static Logger logger = Logger.getLogger(LoginLogOutService.class);
-
-	static final String FACADE_KEY = "loginFacade";
 
 	@Context
 	HttpServletRequest request;
@@ -36,7 +35,7 @@ public class LoginLogOutService {
 			throw e;
 		}
 		HttpSession session = request.getSession();
-		session.setAttribute(FACADE_KEY, facade);
+		session.setAttribute(Globals.FACADE_KEY, facade);
 
 	}
 

@@ -23,6 +23,7 @@ import com.rands.couponproject.exceptions.CouponProjectException.AccessForbidden
 import com.rands.couponproject.exceptions.CouponProjectException.AdminLoginException;
 import com.rands.couponproject.facede.AdminFacade;
 import com.rands.couponproject.facede.CouponClientFacade;
+import com.rands.couponproject.rest.Globals;
 import com.rands.couponproject.rest.services.AdminService;
 
 /**
@@ -32,8 +33,6 @@ import com.rands.couponproject.rest.services.AdminService;
 public class AuthenticationFilter implements Filter {
 	
 	static Logger logger = Logger.getLogger(AuthenticationFilter.class);
-
-	static final String FACADE_KEY =  "loginFacade";
 
 	private ServletContext context;
 
@@ -107,7 +106,10 @@ public class AuthenticationFilter implements Filter {
 	 */
 	private boolean isAuthenticationRequired(HttpServletRequest httpRequest) {
 		
-		if (httpRequest.getRequestURI().contains("/login")){ // this is a login request
+		if (httpRequest.getRequestURI().contains("/login")){ // this is a login request, let it proceed
+			return false;
+		}
+		if (httpRequest.getRequestURI().contains("/logout")){ // this is a logout request, let it proceed
 			return false;
 		}
 		
@@ -116,17 +118,17 @@ public class AuthenticationFilter implements Filter {
 			return true;
 		
 		try {
-			CouponClientFacade	facade = (CouponClientFacade) session.getAttribute(FACADE_KEY);
+			CouponClientFacade	facade = (CouponClientFacade) session.getAttribute(Globals.FACADE_KEY);
 			if(null==facade){
 				return true;  // not logged in yet
 			}
-		} catch (ClassCastException e) { // may be logged in as company or customer
+		} catch (ClassCastException e) { 
 			logger.error("facade key type mismatch");
 			return true;
 		}
 		
 		
-		return false;
+		return false; // let it proceed
 	}
 	
 	@Override

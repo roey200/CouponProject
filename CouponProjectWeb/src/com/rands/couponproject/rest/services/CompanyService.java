@@ -29,6 +29,7 @@ import com.rands.couponproject.facede.CompanyFacade;
 import com.rands.couponproject.model.ClientType;
 import com.rands.couponproject.model.Coupon;
 import com.rands.couponproject.model.CouponType;
+import com.rands.couponproject.rest.Globals;
 import com.rands.couponproject.utils.Utils;
 
 
@@ -38,42 +39,15 @@ public class CompanyService {
 
 	static Logger logger = Logger.getLogger(CompanyService.class);
 
-	static final String FACADE_KEY =  "loginFacade";
-	
 	@Context
 	HttpServletRequest request;
 
-//	private CompanyFacade getCompanyFacade_fake() throws CouponProjectException {
-//		HttpSession session = request.getSession();
-//
-//		try {
-//			CompanyFacade companyFacade = (CompanyFacade) session.getAttribute(FACADE_KEY);
-//			if (null == companyFacade) {
-//				logger.error("company not logged in session = " + session.getId());
-//				//throw new CompanyLoginException("company not logged in session = " + session.getId());
-//				
-//				CouponSystem couponSystem = CouponSystem.getInstance();
-//				companyFacade = (CompanyFacade) couponSystem.login("RandS EveryThingGoes", "Ra9999", ClientType.COMPANY);
-//
-//				session.setAttribute(FACADE_KEY, companyFacade);
-//
-//			}
-//			return companyFacade;
-//		} catch (CompanyLoginException e) {
-//			throw e;
-//
-//		} catch (Exception e) {
-//			logger.error("getCompanyFacade() failed : " + e.toString());
-//			throw new CompanyLoginException("could not get CompanyFacade object");
-//		}
-//	}
-	
 	private CompanyFacade getCompanyFacade() throws LoginException {
 		HttpSession session = request.getSession();
 
 		CompanyFacade facade;
 		try {
-			facade = (CompanyFacade) session.getAttribute(FACADE_KEY);
+			facade = (CompanyFacade) session.getAttribute(Globals.FACADE_KEY);
 		} catch (ClassCastException e) { // may be logged in as admin or customer
 			throw new AccessForbiddenException("company access forbidden");
 		}
@@ -151,20 +125,6 @@ public class CompanyService {
 		CompanyFacade companyFacade = getCompanyFacade();
     	return companyFacade.getCouponsByPrice(couponPrice);
 	}
-
-//	// example :
-//	// http://localhost:9090/CouponProjectWeb/company/coupons/2016-12-24
-//	//
-//	@Path("/coupons/{toDate :  \\d{4}\\-\\d{2}\\-\\d{2} }") 
-//	@GET
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public Collection<Coupon> getCouponsByDate(@PathParam("toDate") DateParameter toDate) throws Exception {
-//		logger.debug("getCouponsByDate " + toDate);
-//		
-//Date toDate1 = toDate.getDate();
-//		CompanyFacade companyFacade = getCompanyFacade();
-//    	return companyFacade.getCouponsByDate(toDate1);
-//	}	
 
 	// example :
 	// http://localhost:9090/CouponProjectWeb/company/coupons/2016-12-24

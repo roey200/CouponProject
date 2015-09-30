@@ -19,9 +19,9 @@ public class Utils {
 	
 	private static final Logger logger = Logger.getLogger(Utils.class);
 	
-	public static final long second = 1000;
-	public static final long minute = 60 * second;
-	public static final long hour = 60 * minute;
+	public static final long SECOND = 1000;
+	public static final long MINUTE = 60 * SECOND;
+	public static final long HOUR = 60 * MINUTE;
 	
 	/**
 	 * expandEnvVars : replaces environment variables in string to their value.

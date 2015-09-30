@@ -167,11 +167,12 @@ public class CustomerFacade implements CouponClientFacade {
 		Collection<Coupon> purchableCoupons = new ArrayList<Coupon>();
 		Collection<Coupon> purchasedCoupons = getAllPurchasedCoupons(); //the coupons that the customer already owns
 
-		Date currentDate = new Date();
+		//Date currentDate = new Date();
 		for(Coupon coupon : allCoupons){
 			if(coupon.getAmount()<1) 
 				continue;
-			if(coupon.getEndDate().before(currentDate))
+			//if(coupon.getEndDate().before(currentDate))
+			if(coupon.isExpired())
 				continue;
 			if(purchasedCoupons.contains(coupon))   //contains uses the equals method of Coupon class that we wrote
 				continue;

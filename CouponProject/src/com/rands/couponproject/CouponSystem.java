@@ -25,9 +25,8 @@ public class CouponSystem {
 	 * getInstance - created the singleton on the 1st call.
 	 * 
 	 * @return - the singleton
-	 * @throws Exception
 	 */
-	public static /*synchronized*/ CouponSystem getInstance() throws Exception {
+	public static /*synchronized*/ CouponSystem getInstance() {
 
 		if (singleton == null)
 		{

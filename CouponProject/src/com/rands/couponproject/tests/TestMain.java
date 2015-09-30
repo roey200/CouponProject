@@ -41,6 +41,7 @@ public class TestMain {
 		
 		try {
 			couponSystem = CouponSystem.getInstance();
+			couponSystem.setDailyTaskSleepTime(1 * Utils.MINUTE);
 			
 			if (optCreateDatabase) {
 				createDataBase();
@@ -83,7 +84,7 @@ public class TestMain {
 			
 			printHeader("Shutting down");
 			System.out.println("Shutting down in 2 min, please wait");
-			Thread.sleep(2 * Utils.minute); // waiting two minutes to allow the daily task to do some work
+			Thread.sleep(2 * Utils.MINUTE); // waiting two minutes to allow the daily task to do some work
 			couponSystem.shutdown();
 			
 			printHeader("All done");

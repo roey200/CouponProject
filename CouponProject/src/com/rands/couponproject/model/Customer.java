@@ -50,16 +50,19 @@ public class Customer {
 	public String toString() {
 		return "Customer [id=" + id + ", name=" + customerName + "]";
 	}
-	public boolean equals(Object other)
-	{
+	
+	// remember : this is used in Collection.contains
+	public boolean equals(Object other) {
+		
 		if(other instanceof Customer)
 		{
 			Customer otherCustomer=((Customer)other);
-			if(this.customerName.equals(otherCustomer.customerName))
-				if(this.id==otherCustomer.id)
-					return true;
+			
+			if (this.customerName != null)
+				return this.customerName.equals(otherCustomer.customerName); // name should be unique
+			
 		}
 		return false;
-	}
+	}		
 
 }

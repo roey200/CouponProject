@@ -1,13 +1,16 @@
 package com.rands.couponproject.model;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class Coupon {
 
 	private long id;
 	private String title;
-	private Date StartDate;
-	private Date EndDate;
+	private Date startDate;
+	private Date endDate;
 	private int amount;
 	private CouponType type;
 	private String massage;
@@ -36,19 +39,19 @@ public class Coupon {
 	}
 
 	public Date getStartDate() {
-		return StartDate;
+		return startDate;
 	}
 
 	public void setStartDate(Date startDate) {
-		StartDate = startDate;
+		this.startDate = startDate;
 	}
 
 	public Date getEndDate() {
-		return EndDate;
+		return endDate;
 	}
 
 	public void setEndDate(Date endDate) {
-		EndDate = endDate;
+		this.endDate = endDate;
 	}
 
 	public int getAmount() {
@@ -91,19 +94,32 @@ public class Coupon {
 		this.image = image;
 	}
 
+	/**
+	 * checks if the coupon is expired.
+		
+	 * @return - true if endDate is before the current date
+	 */
+	public boolean isExpired() {
+		return endDate.before(new Date());
+	}
+
 	@Override
 	public String toString() {
-		return "Coupon [id=" + id + ", title=" + title + ", StartDate="
-				+ StartDate + ", EndDate=" + EndDate + ", amount=" + amount
+		return "Coupon [id=" + id + ", title=" + title + ", startDate="
+				+ startDate + ", endDate=" + endDate + ", amount=" + amount
 				+ ", type=" + type + ", massage=" + massage + ", price="
 				+ price + ", image=" + image + "]";
 	}
 	
+	// remember : this is used in Collection.contains
 	public boolean equals(Object other) {
+		
 		if (other instanceof Coupon) {
-			Coupon otherCoupon = (Coupon)other ;
-			if (otherCoupon.title.equals(this.title))
-				return true;
+			Coupon otherCoupon = (Coupon)other;
+			
+			if (this.title != null)
+				return this.title.equals(otherCoupon.title); // title should be unique
+			
 		}
 		return false;
 	}

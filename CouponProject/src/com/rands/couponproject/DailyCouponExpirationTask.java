@@ -16,7 +16,7 @@ public class DailyCouponExpirationTask extends Thread {
 
 	static Logger logger = Logger.getLogger(DailyCouponExpirationTask.class);
 	private boolean quit = false;
-	private long sleepTime = 15 * Utils.minute;
+	private long sleepTime = 15 * Utils.MINUTE;
 	
 	public DailyCouponExpirationTask() {
 		super();
@@ -35,11 +35,12 @@ public class DailyCouponExpirationTask extends Thread {
 		while (!quit) {
 			try {
 				coupons = couponDAO.getAllCoupons();
-				long millis = System.currentTimeMillis();
-				Date currentDate = new Date(millis);
+				//long millis = System.currentTimeMillis();
+				//Date currentDate = new Date(millis);
 				int nRemoved = 0;
 				for (Coupon coupon : coupons) {
-					if (coupon.getEndDate().before(currentDate)) {
+					//if (coupon.getEndDate().before(currentDate)) {
+					if (coupon.isExpired()) {
 						try {
 							logger.info("removing expierd coupon : " + coupon);
 							couponDAO.removeCoupon(coupon);
@@ -79,6 +80,7 @@ public class DailyCouponExpirationTask extends Thread {
 	public void setSleepTime(long sleepTime) {
 		logger.info("setSleepTime " + sleepTime);
 		this.sleepTime = sleepTime;
+		this.interrupt();
 	}
 
 	

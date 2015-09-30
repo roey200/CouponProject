@@ -60,16 +60,17 @@ public class Company {
 		return "Commpany [id=" + id + ", name=" + companyName + "]";
 	}
 	
-	public boolean equals(Object other)
-	{
-		if(other instanceof Company)
-		{
+	// remember : this is used in Collection.contains
+	public boolean equals(Object other) {
+		
+		if (other instanceof Company) {
 			Company otherCompany=((Company)other);
-			if(otherCompany.companyName.equals(this.companyName))
-				if(otherCompany.id==this.id)
-					return true;
+			
+			if (this.companyName != null)
+				return this.companyName.equals(otherCompany.companyName); // name should be unique
+			
 		}
 		return false;
-	}
+	}	
 
 }

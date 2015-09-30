@@ -40,30 +40,30 @@ public class AdminService {
 	@Context
 	HttpServletRequest request;
 
-	private AdminFacade getAdminFacade_fake() throws CouponProjectException {
-		HttpSession session = request.getSession();
-
-		try {
-			AdminFacade adminFacade = (AdminFacade) session.getAttribute(FACADE_KEY);
-			if (null == adminFacade) {
-				logger.error("admin not logged in session = " + session.getId());
-				//throw new AdminLoginException("admin not logged in session = " + session.getId());
-				
-				CouponSystem couponSystem = CouponSystem.getInstance();
-				adminFacade = (AdminFacade) couponSystem.login("admin", "1234", ClientType.ADMIN);
-				
-				session.setAttribute(FACADE_KEY, adminFacade);
-
-			}
-			return adminFacade;
-		} catch (AdminLoginException e) {
-			throw e;
-
-		} catch (Exception e) {
-			logger.error("getAdminFacade() failed : " + e.toString());
-			throw new AdminLoginException("could not get AdminFacade object");
-		}
-	}
+//	private AdminFacade getAdminFacade_fake() throws CouponProjectException {
+//		HttpSession session = request.getSession();
+//
+//		try {
+//			AdminFacade adminFacade = (AdminFacade) session.getAttribute(FACADE_KEY);
+//			if (null == adminFacade) {
+//				logger.error("admin not logged in session = " + session.getId());
+//				//throw new AdminLoginException("admin not logged in session = " + session.getId());
+//				
+//				CouponSystem couponSystem = CouponSystem.getInstance();
+//				adminFacade = (AdminFacade) couponSystem.login("admin", "1234", ClientType.ADMIN);
+//				
+//				session.setAttribute(FACADE_KEY, adminFacade);
+//
+//			}
+//			return adminFacade;
+//		} catch (AdminLoginException e) {
+//			throw e;
+//
+//		} catch (Exception e) {
+//			logger.error("getAdminFacade() failed : " + e.toString());
+//			throw new AdminLoginException("could not get AdminFacade object");
+//		}
+//	}
 	
 	private AdminFacade getAdminFacade() throws LoginException {
 		HttpSession session = request.getSession();
@@ -90,16 +90,16 @@ public class AdminService {
 
 		throw new CouponProjectException("123 Testing the ExceptionMapper");
 	}
-	
-	@Path("/login")
-	@POST
-	public void login(@FormParam("UserName") String userName ,@FormParam("password") String password , @FormParam("type") ClientType clientType) throws LoginException{
-		logger.debug("login parameters " + userName + " " + password );
-		AdminFacade adminFacade = (AdminFacade) AdminFacade.login(userName, password, clientType);
-		HttpSession session = request.getSession();
-		session.setAttribute(FACADE_KEY, adminFacade);
-	}
-	
+//	
+//	@Path("/login")
+//	@POST
+//	public void login(@FormParam("UserName") String userName ,@FormParam("password") String password , @FormParam("type") ClientType clientType) throws LoginException{
+//		logger.debug("login parameters " + userName + " " + password );
+//		AdminFacade adminFacade = (AdminFacade) AdminFacade.login(userName, password, clientType);
+//		HttpSession session = request.getSession();
+//		session.setAttribute(FACADE_KEY, adminFacade);
+//	}
+//	
 	
 	
 

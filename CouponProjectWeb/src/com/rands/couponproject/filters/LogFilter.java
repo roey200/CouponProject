@@ -120,6 +120,12 @@ public class LogFilter implements Filter {
 
 		//logIt("<< " + "getPathTranslated()=" + r.getPathTranslated());
 
+		logIt("<< *** " + "getContextPath=" + r.getContextPath());
+		logIt("<< *** " + "getPathInfo=" + r.getPathInfo());
+		logIt("<< *** " + "getRequestURI=" + r.getRequestURI());
+		logIt("<< *** " + "getServletPath=" + r.getServletPath());
+
+		
 		if (logRequestParameters) {
 			Enumeration<String> params = r.getParameterNames();
 			while (params.hasMoreElements()) {

@@ -21,6 +21,7 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.log4j.Logger;
 
 import com.rands.couponproject.CouponSystem;
+import com.rands.couponproject.facede.AdminFacade;
 import com.rands.couponproject.facede.CustomerFacade;
 import com.rands.couponproject.model.ClientType;
 import com.rands.couponproject.model.Company;
@@ -28,7 +29,10 @@ import com.rands.couponproject.model.Coupon;
 import com.rands.couponproject.model.CouponType;
 import com.rands.couponproject.model.Customer;
 import com.rands.couponproject.exceptions.CouponProjectException;
+import com.rands.couponproject.exceptions.CouponProjectException.AccessForbiddenException;
+import com.rands.couponproject.exceptions.CouponProjectException.AdminLoginException;
 import com.rands.couponproject.exceptions.CouponProjectException.CustomerLoginException;
+import com.rands.couponproject.exceptions.CouponProjectException.LoginException;
 
 //Sets the path to base URL + /customer
 @Path("/customer")
@@ -48,30 +52,47 @@ public class CustomerService {
 	@Context
 	HttpServletRequest request;
 
-	private CustomerFacade getCustomerFacade() throws CouponProjectException {
+//	private CustomerFacade getCustomerFacade() throws CouponProjectException {
+//		HttpSession session = request.getSession();
+//
+//		try {
+//			CustomerFacade customerFacade = (CustomerFacade) session.getAttribute(FACADE_KEY);
+//			if (null == customerFacade) {
+//				logger.error("customer not logged in session = " + session.getId());
+//				//throw new CustomerLoginException("customer not logged in session = " + session.getId());
+//				
+//				CouponSystem couponSystem = CouponSystem.getInstance();
+//				customerFacade = (CustomerFacade) couponSystem.login("roey", "r1234", ClientType.CUSTOMER);
+//				
+//				session.setAttribute(FACADE_KEY, customerFacade);
+//
+//			}
+//			return customerFacade;
+//		} catch (CustomerLoginException e) {
+//			throw e;
+//
+//		} catch (Exception e) {
+//			logger.error("getCustomerFacade() failed : " + e.toString());
+//			throw new CustomerLoginException("could not get CustomerFacade object");
+//		}
+//	}
+	
+	
+	private CustomerFacade getCustomerFacade() throws LoginException {
 		HttpSession session = request.getSession();
 
+		CustomerFacade facade;
 		try {
-			CustomerFacade customerFacade = (CustomerFacade) session.getAttribute(FACADE_KEY);
-			if (null == customerFacade) {
-				logger.error("customer not logged in session = " + session.getId());
-				//throw new CustomerLoginException("customer not logged in session = " + session.getId());
-				
-				CouponSystem couponSystem = CouponSystem.getInstance();
-				customerFacade = (CustomerFacade) couponSystem.login("roey", "r1234", ClientType.CUSTOMER);
-				
-				session.setAttribute(FACADE_KEY, customerFacade);
-
-			}
-			return customerFacade;
-		} catch (CustomerLoginException e) {
-			throw e;
-
-		} catch (Exception e) {
-			logger.error("getCustomerFacade() failed : " + e.toString());
-			throw new CustomerLoginException("could not get CustomerFacade object");
+			facade = (CustomerFacade) session.getAttribute(FACADE_KEY);
+		} catch (ClassCastException e) { // may be logged in as admin or company
+			throw new AccessForbiddenException("customer access forbidden");
 		}
+		if (null == facade) {
+			throw new CustomerLoginException("not logged in yet");
+		}
+		return facade;
 	}
+	
 	
 
 	// example :
@@ -96,25 +117,6 @@ public class CustomerService {
 	public Collection<Coupon> getAllPurchasedCouponsByType(@PathParam("CouponType") CouponType couponType) throws Exception {
 		logger.debug("getAllPurchasedCouponsByType " + couponType);
 		
-		
-		if (CouponType.FOOD == couponType) {
-			throw new CouponProjectException("123 Exception");
-//			throw new WebApplicationException(
-//			        Response
-//			          .status(Status.BAD_REQUEST)
-//			          .entity("bad coupon type: " + couponType) // + " (" + e.getMessage() + ")")
-//			          .build()
-//			      );
-
-		}
-		
-		
-		logger.debug("123");
-		logger.debug("37");
-		
-		
-		
-
 		CustomerFacade customerFacade = getCustomerFacade();
     	return customerFacade.getAllPurchasedCouponsByType(couponType);
 	}

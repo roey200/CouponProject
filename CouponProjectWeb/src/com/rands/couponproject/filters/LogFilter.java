@@ -49,38 +49,47 @@ public class LogFilter implements Filter {
 
 		param = fConfig.getInitParameter("logResponse");
 		logIt("logResponse=" + param);
+		
 		parseResponseOptions(param);
 	}
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-		ServletRequest requestWrapper = request;
-		ServletResponse responseWrapper = response;
-
-		if (logRequestBody) {
-			requestWrapper = new MultiReadHttpServletRequest((HttpServletRequest) request);
-		}
+//		ServletRequest requestWrapper = request;
+//		ServletResponse responseWrapper = response;
+//
+//		if (logRequestBody) {
+//			requestWrapper = new MultiReadHttpServletRequest((HttpServletRequest) request);
+//		}
+//		
+//		if (logResponseBody) {
+//			responseWrapper = new MultiReadHttpServletResponse((HttpServletResponse) response);
+//		}
 		
-		if (logResponseBody) {
-			responseWrapper = new MultiReadHttpServletResponse((HttpServletResponse) response);
+		if (logRequestBody) {
+			request = new MultiReadHttpServletRequest((HttpServletRequest) request);
 		}
+
+		if (logResponseBody) {
+			response = new MultiReadHttpServletResponse((HttpServletResponse) response);
+		}		
 
 		// the incoming direction (request)
 		try {
 			if (logRequest)
-				log(requestWrapper);
+				log(request);
 		} catch (Exception e) {
 			context.log("LogFilter logRequest failed", e);
 		}
 
 		// pass the request along the filter chain
-		chain.doFilter(requestWrapper, responseWrapper);
+		chain.doFilter(request, response);
 		
 		// the outgoing direction (response)
 		try {
 			if (logResponse)
-				log(responseWrapper);
+				log(response);
 		} catch (Exception e) {
 			context.log("LogFilter logResponse failed", e);
 		}

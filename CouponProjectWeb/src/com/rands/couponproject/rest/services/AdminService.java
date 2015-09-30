@@ -347,7 +347,7 @@ public class AdminService {
 		logger.debug("setDailyTaskSleepTime " + sleepTime);
 
 		CouponSystem couponSystem = CouponSystem.getInstance();
-		couponSystem.setDailyTaskSleepTime(sleepTime * Utils.minute);
+		couponSystem.setDailyTaskSleepTime(sleepTime * Utils.MINUTE);
 	}
 	
 }

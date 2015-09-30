@@ -33,7 +33,7 @@ public class CouponpPojectContextListener implements ServletContextListener
 			
 			long sleep = getLongParam(servletContextEvent, "dailytask.sleep");
 			if (sleep > 0) 
-				couponSystem.setDailyTaskSleepTime(sleep * Utils.minute);
+				couponSystem.setDailyTaskSleepTime(sleep * Utils.MINUTE);
 			
 //			boolean createDb = getBooleanParam(servletContextEvent, "createDb");
 //			if (createDb)

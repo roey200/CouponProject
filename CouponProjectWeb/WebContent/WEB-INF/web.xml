@@ -57,9 +57,9 @@
 			<param-name>logResponse</param-name>
 			<param-value>headers,body</param-value>
 		</init-param>
-			</filter>
-	
-	 
+	</filter>
+
+
 	<filter-mapping>
 		<filter-name>LogFilter</filter-name>
 		<url-pattern>/*</url-pattern>

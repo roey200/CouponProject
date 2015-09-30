@@ -27,7 +27,7 @@
     <div class="container">
       <form class="login-form" ng-submit="postCtrl.postForm()">
         <h2>Please sign in</h2>
-		<select id="inputLoginType" class="form-control" placeholder="loginType" required autofocus ng-model="postCtrl.inputData.loginType">
+		<select id="inputClientType" class="form-control" placeholder="ClientType" required autofocus ng-model="postCtrl.inputData.clientType">
 			<option value="" disabled  selected>select login type</option>
 			<option value="ADMIN">Admin</option>
 			<option value="CUSTOMER">Customer</option>
@@ -49,15 +49,15 @@
 		
 		this.postForm = function() {
 		
-			var encodedString = 'type=' + encodeURIComponent(this.inputData.loginType)
+			var encodedString = 'type=' + encodeURIComponent(this.inputData.clientType)
 			                  + '&UserName=' + encodeURIComponent(this.inputData.UserName)
 							  +	'&password=' + encodeURIComponent(this.inputData.password)
 							  ;
-			var type = this.inputData.loginType.toLowerCase();
+			var client = this.inputData.clientType.toLowerCase();
 			//alert(encodedString);
 			$http({
 				method: 'POST',
-				url: '/CouponProjectWeb/rest/' + type + '/login',
+				url: '/CouponProjectWeb/rest/' + client + '/login',
 				data: encodedString,
 				headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 			})

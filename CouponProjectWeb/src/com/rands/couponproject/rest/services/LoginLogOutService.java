@@ -10,10 +10,10 @@ import javax.ws.rs.core.Context;
 import org.apache.log4j.Logger;
 
 import com.rands.couponproject.CouponSystem;
+import com.rands.couponproject.auth.AuthUtils;
 import com.rands.couponproject.exceptions.CouponProjectException.LoginException;
 import com.rands.couponproject.facede.CouponClientFacade;
 import com.rands.couponproject.model.ClientType;
-import com.rands.couponproject.rest.Globals;
 
 @Path("/")
 public class LoginLogOutService {
@@ -34,8 +34,9 @@ public class LoginLogOutService {
 			logger.error("login failed : " + e.toString());
 			throw e;
 		}
-		HttpSession session = request.getSession();
-		session.setAttribute(Globals.FACADE_KEY, facade);
+//		HttpSession session = request.getSession();
+//		session.setAttribute(Globals.FACADE_KEY, facade);
+		AuthUtils.setCredentials(facade, request);
 
 	}
 

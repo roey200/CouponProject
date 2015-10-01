@@ -19,11 +19,11 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
+import com.rands.couponproject.auth.AuthUtils;
 import com.rands.couponproject.exceptions.CouponProjectException.AccessForbiddenException;
 import com.rands.couponproject.exceptions.CouponProjectException.AdminLoginException;
 import com.rands.couponproject.facede.AdminFacade;
 import com.rands.couponproject.facede.CouponClientFacade;
-import com.rands.couponproject.rest.Globals;
 import com.rands.couponproject.rest.services.AdminService;
 
 /**
@@ -113,20 +113,26 @@ public class AuthenticationFilter implements Filter {
 			return false;
 		}
 		
-		HttpSession session = httpRequest.getSession(false);
-		if(null==session) // not logged in yet
-			return true;
+//		HttpSession session = httpRequest.getSession(false);
+//		if(null==session) // not logged in yet
+//			return true;
+//		
+//		try {
+//			CouponClientFacade	facade = (CouponClientFacade) session.getAttribute(Globals.FACADE_KEY);
+//			if(null==facade){
+//				return true;  // not logged in yet
+//			}
+//		} catch (ClassCastException e) { 
+//			logger.error("facade key type mismatch");
+//			return true;
+//		}
 		
+		// check if it was already authenticated
 		try {
-			CouponClientFacade	facade = (CouponClientFacade) session.getAttribute(Globals.FACADE_KEY);
-			if(null==facade){
-				return true;  // not logged in yet
-			}
-		} catch (ClassCastException e) { 
-			logger.error("facade key type mismatch");
+			AuthUtils.getCredentials(CouponClientFacade.class, httpRequest);
+		} catch (Exception e) {
 			return true;
 		}
-		
 		
 		return false; // let it proceed
 	}

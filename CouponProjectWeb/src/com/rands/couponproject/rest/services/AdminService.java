@@ -3,10 +3,8 @@ package com.rands.couponproject.rest.services;
 import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -20,14 +18,11 @@ import org.apache.log4j.Logger;
 
 import com.rands.couponproject.CouponSystem;
 import com.rands.couponproject.facede.AdminFacade;
-import com.rands.couponproject.model.ClientType;
 import com.rands.couponproject.model.Company;
 import com.rands.couponproject.model.Customer;
-import com.rands.couponproject.rest.Globals;
 import com.rands.couponproject.utils.Utils;
+import com.rands.couponproject.auth.AuthUtils;
 import com.rands.couponproject.exceptions.CouponProjectException;
-import com.rands.couponproject.exceptions.CouponProjectException.AccessForbiddenException;
-import com.rands.couponproject.exceptions.CouponProjectException.AdminLoginException;
 import com.rands.couponproject.exceptions.CouponProjectException.LoginException;
 
 //Sets the path to base URL + /admin
@@ -64,19 +59,23 @@ public class AdminService {
 //		}
 //	}
 	
+//	private AdminFacade getAdminFacade() throws LoginException {
+//		HttpSession session = request.getSession();
+//		
+//		AdminFacade facade;
+//		try {
+//			facade = (AdminFacade) session.getAttribute(Globals.FACADE_KEY);
+//		} catch (ClassCastException e) { // may be logged in as company or customer
+//			throw new AccessForbiddenException("admin access forbidden");
+//		}
+//		if (null == facade) {
+//			throw new AdminLoginException("not logged in yet");
+//		}
+//		return facade;
+//	}
+	
 	private AdminFacade getAdminFacade() throws LoginException {
-		HttpSession session = request.getSession();
-
-		AdminFacade facade;
-		try {
-			facade = (AdminFacade) session.getAttribute(Globals.FACADE_KEY);
-		} catch (ClassCastException e) { // may be logged in as company or customer
-			throw new AccessForbiddenException("admin access forbidden");
-		}
-		if (null == facade) {
-			throw new AdminLoginException("not logged in yet");
-		}
-		return facade;
+		return AuthUtils.getCredentials(AdminFacade.class, request);
 	}
 	
 	// test

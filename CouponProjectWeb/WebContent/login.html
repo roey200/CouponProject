@@ -45,7 +45,7 @@
     </div> 
 	<script>
 	angular.module('postExample', [])
-	.controller('PostController', ['$scope', '$http', function($scope, $http) {
+	.controller('PostController', ['$scope', '$http', '$window', function($scope, $http,$window) {
 		
 		this.postForm = function() {
 		
@@ -54,7 +54,8 @@
 							  +	'&password=' + encodeURIComponent(this.inputData.password)
 							  ;
 			
-			//alert(encodedString);
+			var location = this.inputData.clientType.toLowerCase();
+
 			$http({
 				method: 'POST',
 				url: '/CouponProjectWeb/rest/login',
@@ -71,6 +72,9 @@
 					$scope.errorMsg = "Login not correct";
 				}
 				*/
+			//	 $window.location.href = 'index.html';
+				 $window.location.href = location +'.html';
+
 			})
 			.error(function(data, status, headers, config) {
 				console.log("data=" + data + " status=" + status);

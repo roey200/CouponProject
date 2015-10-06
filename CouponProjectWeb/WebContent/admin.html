@@ -12,6 +12,7 @@
   <thead>
     <tr>
       <th class="col-sm-1">Edit</th>
+      <th class="col-sm-1">Remove</th>
       <th class="col-md-1" ng-show="false">Index</th>
       <th class="col-md-1">ID</th>
       <th class="col-sm-4">Customer Name</th>
@@ -22,10 +23,14 @@
     <tr ng-repeat="customer in adminCtrl.customers">
       <td>
         <button class="btn" ng-click="adminCtrl.editCustomer($index)">
-          <!-- <span class="glyphicon glyphicon-pencil"></span>  Edit  -->
-          <span class="glyphicon glyphicon-edit"></span>  Edit
+           <span class="glyphicon glyphicon-edit"></span>  Edit
         </button>
       </td>
+      <td>
+        <button class="btn" ng-click="adminCtrl.removeCustomer($index)">
+           <span class="glyphicon glyphicon-remove"></span>
+        </button>
+      </td>      
       <td ng-show="false">{{$index}}</td>
       <td>{{ customer.id }}</td>
       <td>{{ customer.customerName }}</td>

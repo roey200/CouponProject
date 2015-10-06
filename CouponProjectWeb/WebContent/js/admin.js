@@ -65,7 +65,13 @@ app.controller('AdminCtrl',['AdminService', function(AdminService) {
 		} else {
 			AdminService.updateCustomer(this,customer);
 		}
-	};	
+	};
+	
+	this.removeCustomer = function(indx){
+		var id = this.customers[indx].id;
+		AdminService.removeCustomer(this , id);
+		
+	}
 
 	/* refresh : refreshes the customer list (by calling getCustomers). this function should be called after every 
 	 * change that was made by the rest services.
@@ -151,5 +157,23 @@ app.service('AdminService', ['$http' ,function($http) {
 		})
 
 	};
+	
+	// removeCustomer : remove a customer
+	this.removeCustomer = function(adminCtrl,id) {
+		
+		$http({
+			method: 'DELETE',
+			url: '/CouponProjectWeb/rest/admin/customer/'+ id
+		})
+		.success(function(data, status, headers, config) {
+			console.log("data=" + data + " status=" + status);
+			adminCtrl.refresh();
+		})
+		.error(function(data, status, headers, config) {
+			alert("removeCustomer failed status=" + status);
+		})
+
+	};
+	
 	
 }]);

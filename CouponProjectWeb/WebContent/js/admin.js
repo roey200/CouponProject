@@ -3,7 +3,6 @@ app.controller('AdminCtrl',['AdminService', function(AdminService) {
 	
 	this.id = 0;
 	this.customerName = '';
-	//this.password = '***';
 	this.passw1 = '';
 	this.passw2 = '';
 	this.customers = [];
@@ -66,17 +65,17 @@ this.$watch('lName', function() {this.test();});
 		
 		var customer = {'id':this.id,'customerName': this.customerName,'password':this.passw1,'coupons':[]};
 		if (this.create) {
-			AdminService.createCustomer(customer);
+			AdminService.createCustomer(customer,this);
 		} else {
-			AdminService.updateCustomer(customer);
+			AdminService.updateCustomer(customer,this);
 		}
 	};	
 
-this.getCustomers = function() {
+this.refresh = function() {
 	AdminService.getCustomers(this);
-};
+}
 
-this.getCustomers();
+this.refresh();
 
 }]);
 
@@ -109,7 +108,7 @@ app.service('AdminService', ['$http' ,function($http) {
 
 	};
 
-	this.createCustomer = function(customer) {
+	this.createCustomer = function(customer,adminCtrl) {
 		
 		$http({
 			method: 'POST',
@@ -119,7 +118,7 @@ app.service('AdminService', ['$http' ,function($http) {
 		})
 		.success(function(data, status, headers, config) {
 			console.log("data=" + data + " status=" + status);
-			alert("createCustomer status=" + status);
+			adminCtrl.refresh();
 		})
 		.error(function(data, status, headers, config) {
 			alert("createCustomer failed status=" + status);
@@ -135,7 +134,7 @@ app.service('AdminService', ['$http' ,function($http) {
 
 	};
 
-	this.updateCustomer = function(customer) {
+	this.updateCustomer = function(customer,adminCtrl) {
 		
 		$http({
 			method: 'PUT',
@@ -145,10 +144,10 @@ app.service('AdminService', ['$http' ,function($http) {
 		})
 		.success(function(data, status, headers, config) {
 			console.log("data=" + data + " status=" + status);
-			alert("createCustomer status=" + status);
+			adminCtrl.refresh();
 		})
 		.error(function(data, status, headers, config) {
-			alert("createCustomer failed status=" + status);
+			alert("updateCustomer failed status=" + status);
 			/*
 			console.log("data=" + data + " status=" + status);
 			if (status == 401)

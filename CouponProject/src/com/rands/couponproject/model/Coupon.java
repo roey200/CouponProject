@@ -113,6 +113,8 @@ public class Coupon {
 	
 	// remember : this is used in Collection.contains
 	public boolean equals(Object other) {
+		if (this == other) // same reference
+			return true;
 		
 		if (other instanceof Coupon) {
 			Coupon otherCoupon = (Coupon)other;

@@ -12,8 +12,13 @@ app.controller('AdminCtrl',['AdminService', function(AdminService) {
 	this.error = false;
 	this.incomplete = false; 
 
+	/* editCustomer : handles the id,customerName,passw1,passw2 and create fields.
+	 * when the Create new Customer button is clicked we call this function with 'new' as the parameter.
+	 * when the Edit button is clicked we call this function with the row index ($index) of the customer.
+	 * the create field marks the requested operation (create/update).
+	 */
 	this.editCustomer = function(indx) {
-		if ( indx == 'new') {
+		if ( indx == 'new') { // the Create new Customer button was clicked
 			this.create = true;
 			this.edit = true;
 			this.incomplete = true;
@@ -22,7 +27,7 @@ app.controller('AdminCtrl',['AdminService', function(AdminService) {
 			this.customerName = '';
 			this.passw1 = '';
 			this.passw2 = '';			
-		} else {
+		} else { // the edit (customer row) button was clicked
 			this.create = false;
 			this.edit = false;
 			
@@ -34,6 +39,9 @@ app.controller('AdminCtrl',['AdminService', function(AdminService) {
 		}
 	};
 
+	/* watch : checks if the save changes button may by clicked. it checks that : customerName is not empty,
+	 * passw1 and passw2 are equal and not empty.
+	 */
 	this.watch = function() {
 		if (!this.customerName.length)
 			return false;
@@ -42,9 +50,15 @@ app.controller('AdminCtrl',['AdminService', function(AdminService) {
 		return true;
 	};
 	
+	/*
+	 * saveChanges : performs the create/update customer.
+	 * note that we pass this to the AdminService functions so that when can refresh the customers list after the
+	 * $http (asynchronous) call finishes. 
+	 */
 	this.saveChanges = function() {
 		//this.test();
 		
+		// create a customer object from the fields in the form
 		var customer = {'id':this.id,'customerName': this.customerName,'password':this.passw1,'coupons':[]};
 		if (this.create) {
 			AdminService.createCustomer(this,customer);
@@ -53,17 +67,27 @@ app.controller('AdminCtrl',['AdminService', function(AdminService) {
 		}
 	};	
 
-this.refresh = function() {
-	AdminService.getCustomers(this);
-}
+	/* refresh : refreshes the customer list (by calling getCustomers). this function should be called after every 
+	 * change that was made by the rest services.
+	 */
+	this.refresh = function() {
+		AdminService.getCustomers(this);
+	}
 
-this.refresh();
+	// refresh the customers list
+	this.refresh();
 
 }]);
 
 // services
 
+/* AdminService : a collection of functions that call the rest services.
+ * note that since the $http call is an asynchronous call. we pass a adminCtrl to each of thees functions so that
+ * we can refresh the customers list in the adminCtrl.
+ */
 app.service('AdminService', ['$http' ,function($http) {
+	
+	// getCustomers : gets all the customers. (this function is also used to refresh the list).
 	this.getCustomers = function(adminCtrl) {
 		
 		$http({
@@ -90,6 +114,7 @@ app.service('AdminService', ['$http' ,function($http) {
 
 	};
 
+	// createCustomer : creates a customer
 	this.createCustomer = function(adminCtrl,customer) {
 		
 		$http({
@@ -104,18 +129,11 @@ app.service('AdminService', ['$http' ,function($http) {
 		})
 		.error(function(data, status, headers, config) {
 			alert("createCustomer failed status=" + status);
-			/*
-			console.log("data=" + data + " status=" + status);
-			if (status == 401)
-				$scope.errorMsg = "Login not correct";
-			else
-				$scope.errorMsg = 'Unable to submit form';
-				*/
-			
 		})
 
 	};
 
+	// updateCustomer : updates a customer
 	this.updateCustomer = function(adminCtrl,customer) {
 		
 		$http({
@@ -130,14 +148,6 @@ app.service('AdminService', ['$http' ,function($http) {
 		})
 		.error(function(data, status, headers, config) {
 			alert("updateCustomer failed status=" + status);
-			/*
-			console.log("data=" + data + " status=" + status);
-			if (status == 401)
-				$scope.errorMsg = "Login not correct";
-			else
-				$scope.errorMsg = 'Unable to submit form';
-				*/
-			
 		})
 
 	};

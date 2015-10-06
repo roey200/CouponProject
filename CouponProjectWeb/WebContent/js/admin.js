@@ -65,9 +65,9 @@ this.$watch('lName', function() {this.test();});
 		
 		var customer = {'id':this.id,'customerName': this.customerName,'password':this.passw1,'coupons':[]};
 		if (this.create) {
-			AdminService.createCustomer(customer,this);
+			AdminService.createCustomer(this,customer);
 		} else {
-			AdminService.updateCustomer(customer,this);
+			AdminService.updateCustomer(this,customer);
 		}
 	};	
 
@@ -108,7 +108,7 @@ app.service('AdminService', ['$http' ,function($http) {
 
 	};
 
-	this.createCustomer = function(customer,adminCtrl) {
+	this.createCustomer = function(adminCtrl,customer) {
 		
 		$http({
 			method: 'POST',
@@ -134,7 +134,7 @@ app.service('AdminService', ['$http' ,function($http) {
 
 	};
 
-	this.updateCustomer = function(customer,adminCtrl) {
+	this.updateCustomer = function(adminCtrl,customer) {
 		
 		$http({
 			method: 'PUT',

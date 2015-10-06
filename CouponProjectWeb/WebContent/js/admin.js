@@ -1,25 +1,37 @@
 var app = angular.module('adminApp', []);
 app.controller('AdminCtrl',['AdminService', function(AdminService) {
 	
-	this.customerName = 'AAAA';
+	this.id = 0;
+	this.customerName = '';
 	//this.password = '***';
 	this.passw1 = '';
 	this.passw2 = '';
 	this.customers = [];
 
+	this.create = false;
 	this.edit = true;
 	this.error = false;
 	this.incomplete = false; 
 
 	this.editCustomer = function(indx) {
 		if ( indx == 'new') {
+			this.create = true;
 			this.edit = true;
 			this.incomplete = true;
+			
+			this.id = 0;
 			this.customerName = '';
-			this.lName = '';
+			this.passw1 = '';
+			this.passw2 = '';			
 		} else {
+			this.create = false;
 			this.edit = false;
-			this.customerName = this.customers[indx].customerName;
+			
+			var customer = this.customers[indx];
+			this.id = customer.id;
+			this.customerName = customer.customerName;
+			this.passw1 = customer.password;
+			this.passw2 = customer.password;
 		}
 	};
 
@@ -33,22 +45,31 @@ this.$watch('lName', function() {this.test();});
 */
 
 	this.test = function() {
-		if (this.passw1 !== this.passw2) {
-			this.error = true;
-		} else {
-			this.error = false;
-		}
-		this.incomplete = false;
-		if (this.edit && (!this.fName.length ||	!this.lName.length || !this.passw1.length || !this.passw2.length)) {
-			this.incomplete = true;
-		}
+		if (!this.customerName.length)
+			return false;
+		if (!this.passw1.length || this.passw1 !== this.passw2)
+			return false;
+		return true;
+//		if (this.passw1 !== this.passw2) {
+//			this.error = true;
+//		} else {
+//			this.error = false;
+//		}
+//		this.incomplete = false;
+//		if (this.edit && (!this.customerName ||	!this.passw1.length || !this.passw2.length)) {
+//			this.incomplete = true;
+//		}
 	};
 	
 	this.saveChanges = function() {
 		//this.test();
 		
-		var customer = {'customerName': this.customerName,'password':this.passw1,'coupons':[]};
-		this.customers.push(customer);
+		var customer = {'id':this.id,'customerName': this.customerName,'password':this.passw1,'coupons':[]};
+		if (this.create) {
+			AdminService.createCustomer(customer);
+		} else {
+			AdminService.updateCustomer(customer);
+		}
 	};	
 
 this.getCustomers = function() {
@@ -76,6 +97,58 @@ app.service('AdminService', ['$http' ,function($http) {
 			adminCtrl.customers = data;
 		})
 		.error(function(data, status, headers, config) {
+			/*
+			console.log("data=" + data + " status=" + status);
+			if (status == 401)
+				$scope.errorMsg = "Login not correct";
+			else
+				$scope.errorMsg = 'Unable to submit form';
+				*/
+			
+		})
+
+	};
+
+	this.createCustomer = function(customer) {
+		
+		$http({
+			method: 'POST',
+			url: '/CouponProjectWeb/rest/admin/customer',
+			data: customer,
+		//	headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+		})
+		.success(function(data, status, headers, config) {
+			console.log("data=" + data + " status=" + status);
+			alert("createCustomer status=" + status);
+		})
+		.error(function(data, status, headers, config) {
+			alert("createCustomer failed status=" + status);
+			/*
+			console.log("data=" + data + " status=" + status);
+			if (status == 401)
+				$scope.errorMsg = "Login not correct";
+			else
+				$scope.errorMsg = 'Unable to submit form';
+				*/
+			
+		})
+
+	};
+
+	this.updateCustomer = function(customer) {
+		
+		$http({
+			method: 'PUT',
+			url: '/CouponProjectWeb/rest/admin/customer',
+			data: customer,
+		//	headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+		})
+		.success(function(data, status, headers, config) {
+			console.log("data=" + data + " status=" + status);
+			alert("createCustomer status=" + status);
+		})
+		.error(function(data, status, headers, config) {
+			alert("createCustomer failed status=" + status);
 			/*
 			console.log("data=" + data + " status=" + status);
 			if (status == 401)

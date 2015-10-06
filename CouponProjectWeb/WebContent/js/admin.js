@@ -34,30 +34,12 @@ app.controller('AdminCtrl',['AdminService', function(AdminService) {
 		}
 	};
 
-/*
-alert("111");
-$scope.$watch('passw1',function() {this.test();});
-alert("222");
-this.$watch('passw2',function() {this.test();});
- this.$watch('fName', function() {this.test();});
-this.$watch('lName', function() {this.test();});
-*/
-
-	this.test = function() {
+	this.watch = function() {
 		if (!this.customerName.length)
 			return false;
 		if (!this.passw1.length || this.passw1 !== this.passw2)
 			return false;
 		return true;
-//		if (this.passw1 !== this.passw2) {
-//			this.error = true;
-//		} else {
-//			this.error = false;
-//		}
-//		this.incomplete = false;
-//		if (this.edit && (!this.customerName ||	!this.passw1.length || !this.passw2.length)) {
-//			this.incomplete = true;
-//		}
 	};
 	
 	this.saveChanges = function() {

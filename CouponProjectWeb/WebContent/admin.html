@@ -11,11 +11,11 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <!-- <th>Edit</th> -->
-      <th>Index</th>
-      <th>ID</th>
-      <th>Customer Name</th>
-      <th>Password</th>
+      <th class="col-sm-1">Edit</th>
+      <th class="col-md-1" ng-show="false">Index</th>
+      <th class="col-md-1">ID</th>
+      <th class="col-sm-4">Customer Name</th>
+      <th class="col-sm-2">Password</th>
     </tr>
   </thead>
   <tbody>
@@ -25,7 +25,7 @@
           <span class="glyphicon glyphicon-pencil"></span>  Edit
         </button>
       </td>
-      <!-- <td>{{$index}}</td>  -->
+      <td ng-show="false">{{$index}}</td>
       <td>{{ customer.id }}</td>
       <td>{{ customer.customerName }}</td>
       <td>{{ customer.password }}</td>
@@ -68,7 +68,7 @@
 
 <hr>
 <!-- <button class="btn btn-success" ng-disabled="adminCtrl.error || adminCtrl.incomplete" ng-click="adminCtrl.saveChanges()">  -->
-<button class="btn btn-success" ng-disabled="!adminCtrl.test()" ng-click="adminCtrl.saveChanges()">
+<button class="btn btn-success" ng-disabled="!adminCtrl.watch()" ng-click="adminCtrl.saveChanges()">
 <span class="glyphicon glyphicon-save"></span>  Save Changes
 </button>
 

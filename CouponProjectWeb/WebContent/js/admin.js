@@ -29,8 +29,8 @@ app.config(['$routeProvider' ,function($routeProvider) {
 //	$scope.message = '123 Testing';
 //});
 
-//create the controller and inject Angular's $scope
-app.controller('headerController', function($scope,$location) {
+//create the controller for the nav bar and inject Angular's $scope and $location
+app.controller('navController', function($scope,$location) {
     $scope.isActive = function (viewLocation) { 
         return viewLocation === $location.path();
     };

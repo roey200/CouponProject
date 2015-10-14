@@ -15,16 +15,15 @@
 <!-- define angular controller -->
 <!-- <body ng-controller="mainController"> -->
 <body>
-
   <nav class="navbar navbar-default">
     <div class="container">
       <div class="navbar-header">
         <a class="navbar-brand" href="/">CouponProject</a>
       </div>
 
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="#customers">Customers</a></li>
-        <li><a href="#companies">Companies</a></li>
+      <ul class="nav navbar-nav navbar-right" ng-controller="headerController">
+        <li ng-class="{ active: isActive('/customers')}"><a href="#customers">Customers</a></li>
+        <li ng-class="{ active: isActive('/companies')}"><a href="#companies">Companies</a></li>
         <li><a href="login.html">Logout</a></li>
       </ul>
     </div>

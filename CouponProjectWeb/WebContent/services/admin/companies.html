@@ -2,7 +2,7 @@
 
 <h3>Companies
 <span class="btn-group pull-right">
-<button class="btn btn-default" ng-click="companyController.getCustomers()">
+<button class="btn btn-default" ng-click="companyController.getCompanies()">
 <span class="glyphicon glyphicon-refresh"></span>  Refresh
 </button>
 <button class="btn btn-default" ng-click="companyController.scrollTo('bottom')">
@@ -26,12 +26,12 @@
   <tbody>
     <tr ng-repeat="company in companyController.companies">
       <td>
-        <button class="btn" ng-click="companyController.editCustomer($index)">
+        <button class="btn" ng-click="companyController.editCompany($index)">
            <span class="glyphicon glyphicon-edit"></span>  Edit
         </button>
       </td>
       <td>
-        <button class="btn" ng-click="companyController.removeCustomer($index)">
+        <button class="btn" ng-click="companyController.removeCompany($index)">
            <span class="glyphicon glyphicon-remove"></span>
         </button>
       </td>      
@@ -45,8 +45,8 @@
 </table>
 
 <hr>
-<button class="btn btn-primary" ng-click="companyController.editCustomer('new')">
-<span class="glyphicon glyphicon-user"></span>  Create New Customer
+<button class="btn btn-primary" ng-click="companyController.editCompany('new')">
+<span class="glyphicon glyphicon-user"></span>  Create New Company
 </button>
 <hr>
 
@@ -55,9 +55,9 @@
 
 <form class="form-horizontal">
   <div class="form-group">
-    <label class="col-sm-2 control-label">Customer Name:</label>
+    <label class="col-sm-2 control-label">Company Name:</label>
     <div class="col-sm-10">
-    <input type="text" ng-model="companyController.companyName" ng-disabled="!companyController.create" placeholder="Customer Name">
+    <input type="text" ng-model="companyController.companyName" ng-disabled="!companyController.create" placeholder="Company Name">
     </div>
   </div> 
   <div class="form-group">

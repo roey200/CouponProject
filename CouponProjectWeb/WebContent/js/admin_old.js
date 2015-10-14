@@ -1,33 +1,4 @@
-var app = angular.module('adminApp', ['ngRoute']);
-
-// configure our routes
-app.config(['$routeProvider' ,function($routeProvider) {
-	$routeProvider
-
-		// route for the home page
-		.when('/', {
-			templateUrl : 'services/admin/customers.html',
-			controller  : 'CustomerController as customerController'
-		})
-
-		// route for the about page
-		.when('/customers', {
-			templateUrl : 'services/admin/customers.html',
-			controller  : 'CustomerController as customerController'
-		})
-
-		// route for the contact page
-		.when('/companies', {
-			templateUrl : 'services/admin/companies.html',
-			controller  : 'CompanyController as companyController'
-		});
-}]);
-
-// create the controller and inject Angular's $scope
-//app.controller('mainController', function($scope) {
-//	// create a message to display in our view
-//	$scope.message = '123 Testing';
-//});
+var app = angular.module('adminApp', []);
 
 app.controller('CustomerController',['AdminService','$window', function(AdminService,$window) {
 	
@@ -67,7 +38,6 @@ app.controller('CustomerController',['AdminService','$window', function(AdminSer
 			this.passw1 = customer.password;
 			this.passw2 = customer.password;
 		}
-		this.scrollTo('bottom');		
 	};
 
 	/* watch : checks if the save changes button may by clicked. it checks that : customerName is not empty,
@@ -142,7 +112,7 @@ app.controller('CompanyController',['AdminService','$window', function(AdminServ
 	 * when the Edit button is clicked we call this function with the row index ($index) of the company.
 	 * the create field marks the requested operation (create/update).
 	 */
-	this.editCompany = function(indx) {
+	this.editCustomer = function(indx) {
 		if ( indx == 'new') { // the Create new Customer button was clicked
 			this.create = true;
 			this.edit = true;
@@ -164,7 +134,6 @@ app.controller('CompanyController',['AdminService','$window', function(AdminServ
 			this.passw1 = company.password;
 			this.passw2 = company.password;
 		}
-		this.scrollTo('bottom');
 	};
 
 	/* watch : checks if the save changes button may by clicked. it checks that : companyName and email are not empty,
@@ -197,9 +166,9 @@ app.controller('CompanyController',['AdminService','$window', function(AdminServ
 		}
 	};
 	
-	this.removeCompany = function(indx){
+	this.removeCustomer = function(indx){
 		var id = this.companies[indx].id;
-		AdminService.removeCompany(this , id);
+		AdminService.removeCustomer(this , id);
 		
 	}
 

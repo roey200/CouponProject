@@ -1,12 +1,31 @@
 <!DOCTYPE html>
+<!-- 
 <html>
 <link rel="stylesheet" href = "http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 <script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+ -->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CouponProject Admin</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+</head>
 <body ng-app="adminApp" ng-controller="AdminCtrl as adminCtrl">
 
 <div class="container">
 
-<h3>Customers</h3>
+<h3>Customers
+<span class="btn-group pull-right">
+<button class="btn btn-default" ng-click="adminCtrl.getCustomers()">
+<span class="glyphicon glyphicon-refresh"></span>  Refresh
+</button>
+<button class="btn btn-default" ng-click="adminCtrl.scrollTo('bottom')">
+<span class="glyphicon glyphicon-triangle-bottom"></span>
+</button>
+</span>
+</h3>
 
 <table class="table table-striped">
   <thead>
@@ -40,7 +59,7 @@
 </table>
 
 <hr>
-<button class="btn btn-success" ng-click="adminCtrl.editCustomer('new')">
+<button class="btn btn-primary" ng-click="adminCtrl.editCustomer('new')">
 <span class="glyphicon glyphicon-user"></span>  Create New Customer
 </button>
 <hr>
@@ -71,18 +90,14 @@
   </div>
 </form>
 
-
 <hr>
-<!-- <button class="btn btn-success" ng-disabled="adminCtrl.error || adminCtrl.incomplete" ng-click="adminCtrl.saveChanges()">  -->
-<button class="btn btn-success" ng-disabled="!adminCtrl.watch()" ng-click="adminCtrl.saveChanges()">
+<!-- <button class="btn btn-primary" ng-disabled="adminCtrl.error || adminCtrl.incomplete" ng-click="adminCtrl.saveChanges()">  -->
+<button class="btn btn-primary" ng-disabled="!adminCtrl.watch()" ng-click="adminCtrl.saveChanges()">
 <span class="glyphicon glyphicon-save"></span>  Save Changes
 </button>
-
-<hr>
-<button class="btn btn-success" ng-click="adminCtrl.getCustomers()">
-<span class="glyphicon glyphicon-user"></span>  Refresh
+<button class="btn btn-default pull-right" ng-click="adminCtrl.scrollTo('top')">
+<span class="glyphicon glyphicon-triangle-top"></span>
 </button>
-
 </div>
 
 <script src= "js/admin.js"></script>

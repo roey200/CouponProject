@@ -1,5 +1,5 @@
 var app = angular.module('adminApp', []);
-app.controller('AdminCtrl',['AdminService', function(AdminService) {
+app.controller('AdminCtrl',['AdminService','$window', function(AdminService,$window) {
 	
 	this.id = 0;
 	this.customerName = '';
@@ -78,6 +78,13 @@ app.controller('AdminCtrl',['AdminService', function(AdminService) {
 	 */
 	this.refresh = function() {
 		AdminService.getCustomers(this);
+	}
+	
+	this.scrollTo = function(where) {
+		if ('top' == where)
+			$window.scrollTo(0,0);
+		else if ('bottom' == where)
+			$window.scrollTo(0,document.body.scrollHeight);
 	}
 
 	// refresh the customers list

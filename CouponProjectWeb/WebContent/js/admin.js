@@ -30,9 +30,13 @@ app.config(['$routeProvider' ,function($routeProvider) {
 //});
 
 //create the controller for the nav bar and inject Angular's $scope and $location
-app.controller('navController', function($scope,$location) {
+app.controller('navController', function($scope,$location,AuthService) {
     $scope.isActive = function (viewLocation) { 
         return viewLocation === $location.path();
+    };
+    
+    $scope.logout = function () { 
+        AuthService.logout();
     };
 });
 
@@ -231,6 +235,27 @@ app.controller('CompanyController',['AdminService','$window', function(AdminServ
 
 
 // services
+
+/* AuthService : a collection of functions that call the rest services.
+ * note that since the $http call is an asynchronous call. we pass a adminCtrl to each of thees functions so that
+ * we can refresh the customers list in the adminCtrl.
+ */
+app.service('AuthService', ['$http' ,function($http) {
+	
+	// logout : terminates the session
+	this.logout = function() {
+		$http({
+			method: 'POST',
+			url: '/CouponProjectWeb/rest/logout',
+		})
+		.success(function(data, status, headers, config) {
+		})
+		.error(function(data, status, headers, config) {
+			alert("logout NNNNNNNNNNNNNNNNNNNNOT ok");
+		})
+
+	};
+}]);
 
 /* AdminService : a collection of functions that call the rest services.
  * note that since the $http call is an asynchronous call. we pass a adminCtrl to each of thees functions so that

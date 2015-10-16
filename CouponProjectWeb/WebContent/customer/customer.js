@@ -6,8 +6,8 @@ app.config(['$routeProvider' ,function($routeProvider) {
 	
 	// route for the coupons list
 	.when('/', {
-		templateUrl : 'customers.html',
-		controller  : 'CustomerController as customerController'
+		templateUrl : 'coupons.html',
+		controller  : 'CouponController as couponController'
 	})	
 
 	// route for the customer coupons list 
@@ -154,7 +154,6 @@ app.controller('CouponController',['CustomerService','$window', function(Custome
 	/* refresh : refreshes the coupons list (by calling getAllPurchasedCoupons).
 	 */
 	this.refresh = function() {
-		alert("refresh");
 		CustomerService.getAllPurchasedCoupons(this);
 	}
 	
@@ -208,7 +207,6 @@ app.service('CustomerService', ['$http' ,function($http) {
 	
 	// getAllPurchasedCoupons : gets all the coupons that the customer bought. 
 	this.getAllPurchasedCoupons = function(customerCtrl) {
-		alert("getAllPurchasedCoupons");
 		$http({
 			method: 'GET',
 			url: '/CouponProjectWeb/rest/customer/coupons',

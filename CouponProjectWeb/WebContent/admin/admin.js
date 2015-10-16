@@ -4,19 +4,19 @@ var app = angular.module('adminApp', ['ngRoute']);
 app.config(['$routeProvider' ,function($routeProvider) {
 	$routeProvider
 
-		// route for the home page 
-//		.when('/', {
-//			templateUrl : 'admin/customers.html',
-//			controller  : 'CustomerController as customerController'
-//		})
+		// route for the customers list
+		.when('/', {
+			templateUrl : 'customers.html',
+			controller  : 'CustomerController as customerController'
+		})
 
-		// route for the customer 
+		// route for the customers list 
 		.when('/customers', {
 			templateUrl : 'customers.html',
 			controller  : 'CustomerController as customerController'
 		})
 
-		// route for the company 
+		// route for the companies list 
 		.when('/companies', {
 			templateUrl : 'companies.html',
 			controller  : 'CompanyController as companyController'

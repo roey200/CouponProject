@@ -86,7 +86,18 @@ public class CustomerService {
     	return customerFacade.getAllPurchasedCouponsByPrice(couponPrice);
 	}
 
+	// example :
+	// http://localhost:9090/CouponProjectWeb/customer/coupons
+	//
+	@Path("/buylist")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Coupon> getPurchableCoupons() throws Exception {
+		logger.debug("getPurchableCoupons");
 
+		CustomerFacade customerFacade = getCustomerFacade();
+    	return customerFacade.getPurchableCoupons();
+	}
 	
 	
 	@Path("/buy") 

@@ -16,11 +16,11 @@
 
 				<th class="col-md-1" ng-show="false">Index</th>
 				<th class="col-md-1">ID</th>
-				<th class="col-sm-4">Title</th>
-				<th class="col-sm-2">StartDate</th>
-				<th class="col-sm-2">EndDate</th>
-				<th class="col-sm-2">Image</th>
-				<th class="col-sm-6">Message</th>
+				<th class="col-md-4">Title</th>
+				<th class="col-md-2">StartDate</th>
+				<th class="col-md-2">EndDate</th>
+				<th class="col-md-2">Image</th>
+				<th class="col-md-6">Message</th>
 
 			</tr>
 		</thead>
@@ -30,8 +30,8 @@
 				<td ng-show="false">{{$index}}</td>
 				<td>{{ coupon.id }}</td>
 				<td>{{ coupon.title }}</td>
-				<td>{{ coupon.startDate }}</td>
-				<td>{{ coupon.endDate }}</td>
+				<td>{{ coupon.startDate | date:'yyyy-MM-dd HH:mm' }}</td>
+				<td>{{ coupon.endDate | date:'yyyy-MM-dd HH:mm' }}</td>
 				<td>{{ coupon.image }}</td>
 				<td>{{ coupon.massage }}</td>
 

@@ -23,20 +23,20 @@
 		}
 	</style>
   </head>
-  <body ng-app="postExample" ng-controller="PostController as postCtrl">
+  <body ng-app="appLoggin" ng-controller="LogginController as loginCtrl">
     <div class="container">
-      <form class="login-form" ng-submit="postCtrl.postForm()">
+      <form class="login-form" ng-submit="loginCtrl.postForm()">
         <h2>Please sign in</h2>
-		<select id="inputClientType" class="form-control" placeholder="ClientType" required autofocus ng-model="postCtrl.inputData.clientType">
+		<select id="inputClientType" class="form-control" placeholder="ClientType" required autofocus ng-model="loginCtrl.inputData.clientType">
 			<option value="" disabled  selected>select login type</option>
 			<option value="ADMIN">Admin</option>
 			<option value="CUSTOMER">Customer</option>
 			<option value="COMPANY">Company</option>
 	    </select> 
         <label for="inputUserName" class="sr-only">UserName</label>
-        <input type="text" id="inputUserName" class="form-control" placeholder="UserName" required autofocus ng-model="postCtrl.inputData.UserName">
+        <input type="text" id="inputUserName" class="form-control" placeholder="UserName" required autofocus ng-model="loginCtrl.inputData.UserName">
         <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required ng-model="postCtrl.inputData.password">
+        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required ng-model="loginCtrl.inputData.password">
 		<br>
 		<div class="alert alert-danger" role="alert" ng-show="errorMsg">{{errorMsg}}</div>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
@@ -44,8 +44,8 @@
       </form>
     </div> 
 	<script>
-	angular.module('postExample', [])
-	.controller('PostController', ['$scope', '$http', '$window', function($scope, $http,$window) {
+	angular.module('appLoggin', [])
+	.controller('LogginController', ['$scope', '$http', '$window', function($scope, $http,$window) {
 		
 		this.postForm = function() {
 		
@@ -54,7 +54,8 @@
 							  +	'&password=' + encodeURIComponent(this.inputData.password)
 							  ;
 			
-			var location = this.inputData.clientType.toLowerCase();
+			var clientType = this.inputData.clientType.toLowerCase();
+			var location = clientType + "/" + clientType +  ".html";
 
 			$http({
 				method: 'POST',
@@ -73,7 +74,7 @@
 				}
 				*/
 			//	 $window.location.href = 'index.html';
-				 $window.location.href = location +'.html';
+				 $window.location.href = location;
 
 			})
 			.error(function(data, status, headers, config) {

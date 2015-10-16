@@ -1,0 +1,86 @@
+<div class="container">
+
+<h3>Customers
+<span class="btn-group pull-right">
+<button class="btn btn-default" ng-click="customerController.getCustomers()">
+<span class="glyphicon glyphicon-refresh"></span>  Refresh
+</button>
+<button class="btn btn-default" ng-click="customerController.scrollTo('bottom')">
+<span class="glyphicon glyphicon-triangle-bottom"></span>
+</button>
+</span>
+</h3>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th class="col-sm-1">Edit</th>
+      <th class="col-sm-1">Remove</th>
+      <th class="col-md-1" ng-show="false">Index</th>
+      <th class="col-md-1">ID</th>
+      <th class="col-sm-4">Customer Name</th>
+      <th class="col-sm-2">Password</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="customer in customerController.customers">
+      <td>
+        <button class="btn" ng-click="customerController.editCustomer($index)">
+           <span class="glyphicon glyphicon-edit"></span>  Edit
+        </button>
+      </td>
+      <td>
+        <button class="btn" ng-click="customerController.removeCustomer($index)">
+           <span class="glyphicon glyphicon-remove"></span>
+        </button>
+      </td>      
+      <td ng-show="false">{{$index}}</td>
+      <td>{{ customer.id }}</td>
+      <td>{{ customer.customerName }}</td>
+      <td>{{ customer.password }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+<button class="btn btn-primary" ng-click="customerController.editCustomer('new')">
+<span class="glyphicon glyphicon-user"></span>  Create New Customer
+</button>
+<hr>
+
+<h3 ng-show="customerController.edit">Create New User:</h3>
+<h3 ng-hide="customerController.edit">Edit User:</h3>
+
+<form class="form-horizontal">
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Customer Name:</label>
+    <div class="col-sm-10">
+    <input type="text" ng-model="customerController.customerName" ng-disabled="!customerController.create" placeholder="Customer Name">
+    </div>
+  </div> 
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Password:</label>
+    <div class="col-sm-10">
+    <!-- <input type="password" ng-model="customerController.passw1" placeholder="Password">  -->
+    <input type="text" ng-model="customerController.passw1" placeholder="Password">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Repeat:</label>
+    <div class="col-sm-10">
+    <!--  <input type="password" ng-model="customerController.passw2" placeholder="Repeat Password"> -->
+    <input type="text" ng-model="customerController.passw2" placeholder="Repeat Password">
+    </div>
+  </div>
+</form>
+
+<hr>
+<!-- <button class="btn btn-primary" ng-disabled="customerController.error || customerController.incomplete" ng-click="customerController.saveChanges()">  -->
+<button class="btn btn-primary" ng-disabled="!customerController.watch()" ng-click="customerController.saveChanges()">
+<span class="glyphicon glyphicon-save"></span>  Save Changes
+</button>
+<button class="btn btn-default pull-right" ng-click="customerController.scrollTo('top')">
+<span class="glyphicon glyphicon-triangle-top"></span>
+</button>
+</div>
+

@@ -1,0 +1,94 @@
+<div class="container">
+
+<h3>Companies
+<span class="btn-group pull-right">
+<button class="btn btn-default" ng-click="companyController.getCompanies()">
+<span class="glyphicon glyphicon-refresh"></span>  Refresh
+</button>
+<button class="btn btn-default" ng-click="companyController.scrollTo('bottom')">
+<span class="glyphicon glyphicon-triangle-bottom"></span>
+</button>
+</span>
+</h3>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th class="col-sm-1">Edit</th>
+      <th class="col-sm-1">Remove</th>
+      <th class="col-md-1" ng-show="false">Index</th>
+      <th class="col-md-1">ID</th>
+      <th class="col-sm-4">Company Name</th>
+      <th class="col-sm-4">Email</th>
+      <th class="col-sm-2">Password</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="company in companyController.companies">
+      <td>
+        <button class="btn" ng-click="companyController.editCompany($index)">
+           <span class="glyphicon glyphicon-edit"></span>  Edit
+        </button>
+      </td>
+      <td>
+        <button class="btn" ng-click="companyController.removeCompany($index)">
+           <span class="glyphicon glyphicon-remove"></span>
+        </button>
+      </td>      
+      <td ng-show="false">{{$index}}</td>
+      <td>{{ company.id }}</td>
+      <td>{{ company.companyName }}</td>
+      <td>{{ company.email }}</td>
+      <td>{{ company.password }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+<button class="btn btn-primary" ng-click="companyController.editCompany('new')">
+<span class="glyphicon glyphicon-user"></span>  Create New Company
+</button>
+<hr>
+
+<h3 ng-show="companyController.edit">Create New User:</h3>
+<h3 ng-hide="companyController.edit">Edit User:</h3>
+
+<form class="form-horizontal">
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Company Name:</label>
+    <div class="col-sm-10">
+    <input type="text" ng-model="companyController.companyName" ng-disabled="!companyController.create" placeholder="Company Name">
+    </div>
+  </div> 
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Email:</label>
+    <div class="col-sm-10">
+    <input type="text" ng-model="companyController.email" placeholder="email">
+    </div>
+  </div> 
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Password:</label>
+    <div class="col-sm-10">
+    <!-- <input type="password" ng-model="companyController.passw1" placeholder="Password">  -->
+    <input type="text" ng-model="companyController.passw1" placeholder="Password">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Repeat:</label>
+    <div class="col-sm-10">
+    <!--  <input type="password" ng-model="companyController.passw2" placeholder="Repeat Password"> -->
+    <input type="text" ng-model="companyController.passw2" placeholder="Repeat Password">
+    </div>
+  </div>
+</form>
+
+<hr>
+<!-- <button class="btn btn-primary" ng-disabled="companyController.error || companyController.incomplete" ng-click="companyController.saveChanges()">  -->
+<button class="btn btn-primary" ng-disabled="!companyController.watch()" ng-click="companyController.saveChanges()">
+<span class="glyphicon glyphicon-save"></span>  Save Changes
+</button>
+<button class="btn btn-default pull-right" ng-click="companyController.scrollTo('top')">
+<span class="glyphicon glyphicon-triangle-top"></span>
+</button>
+</div>
+

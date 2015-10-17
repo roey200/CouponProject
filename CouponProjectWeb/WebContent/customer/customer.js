@@ -1,4 +1,4 @@
-var app = angular.module('customerApp', ['ngRoute']);
+var app = angular.module('customerApp', ['ngRoute','ngFileUpload']);
 
 // configure our routes
 app.config(['$routeProvider' ,function($routeProvider) {
@@ -142,27 +142,73 @@ app.controller('CustomerController',['CustomerService','$window', function(Custo
 
 }]);
 
-app.controller('CouponController',['CustomerService','$window', function(CustomerService,$window) {
-	this.id = 0;
-	this.title = '';
-	this.startDate = '';
-	this.endDate = '';
-	this.image = '';
-	this.massage = '';
+app.controller('CouponController',['CustomerService','$window','Upload', function(CustomerService,$window,Upload) {
+//app.controller('CouponController',['CustomerService','$window', function(CustomerService,$window) {
+//	this.id = 0;
+//	this.title = '';
+//	this.type = '';
+//	this.startDate = '';
+//	this.endDate = '';
+//	this.image = '';
+//	this.massage = '';
+//	this.price = '';
 	this.coupons = [];
+	this.couponTypes = ['FOOD','SPORTS','ZZZ'];
+	this.couponType = '';
+	this.couponPrice = '';
 
-	/* refresh : refreshes the coupons list (by calling getAllPurchasedCoupons).
+	/* refresh : refreshes the coupons list (by calling getAllPurchasedCoupons... ).
 	 */
 	this.refresh = function() {
-		CustomerService.getAllPurchasedCoupons(this);
+		if (this.couponType.length) {
+			CustomerService.getAllPurchasedCouponsByType(this,couponType);
+		}
+		else if (this.couponPrice.length) {
+			CustomerService.getAllPurchasedCouponsByPrice(this,couponPrice);
+		}
+		else {
+			CustomerService.getAllPurchasedCoupons(this);
+		}
 	}
 	
+	this.searchByType = function(couponType) {
+		alert('type=' + couponType);
+		this.couponType = couponType;
+		this.couponPrice = '';
+		CustomerService.getAllPurchasedCouponsByType(this,couponType);
+	}
+
+	this.searchByPrice = function(couponPrice) {
+		alert('price=' + couponPrice);
+		this.couponType = '';
+		this.couponPrice = couponPrice;
+		CustomerService.getAllPurchasedCouponsByType(this,couponType);
+	}
+
 	this.scrollTo = function(where) {
 		if ('top' == where)
 			$window.scrollTo(0,0);
 		else if ('bottom' == where)
 			$window.scrollTo(0,document.body.scrollHeight);
 	}
+	
+	this.onFileSelect = function($files) {
+		alert('onFileSelect $files = ' + $files);
+		//$files: an array of files selected, each file has name, size, and type.
+		for (var i = 0; i < $files.length; i++) {
+			var $file = $files[i];
+			alert('file=' + $file.name);
+			Upload.upload({
+				url : 'my/upload/url',
+				file : $file,
+				progress : function(e) {
+				}
+			}).then(function(data, status, headers, config) {
+				// file is uploaded successfully
+				console.log(data);
+			});
+		}
+	}	
 
 	// refresh the companies list
 	this.refresh();
@@ -207,6 +253,7 @@ app.service('CustomerService', ['$http' ,function($http) {
 	
 	// getAllPurchasedCoupons : gets all the coupons that the customer bought. 
 	this.getAllPurchasedCoupons = function(customerCtrl) {
+		//alert('getAllPurchasedCoupons');
 		$http({
 			method: 'GET',
 			url: '/CouponProjectWeb/rest/customer/coupons',
@@ -223,7 +270,8 @@ app.service('CustomerService', ['$http' ,function($http) {
 	
 	// getAllPurchasedCouponsByType : gets all the coupons that the customer bought by type. 
 	this.getAllPurchasedCouponsByType = function(customerCtrl , couponType) {
-		
+		alert('getAllPurchasedCouponsByType=' + couponType);
+
 		$http({
 			method: 'GET',
 			url: '/CouponProjectWeb/rest/customer/coupons/' + couponType,
@@ -314,6 +362,26 @@ app.service('CustomerService', ['$http' ,function($http) {
 
 	};
 	
-	
-	
 }]);
+
+
+app.controller('MyCtrl', [ '$scope', 'Upload', function($scope, Upload) {
+	$scope.onFileSelect = function($files) {
+		alert('onFileSelect');
+		//$files: an array of files selected, each file has name, size, and type.
+		for (var i = 0; i < $files.length; i++) {
+			var $file = $files[i];
+			alert('file=' + $file);
+			Upload.upload({
+				url : 'my/upload/url',
+				file : $file,
+				progress : function(e) {
+				}
+			}).then(function(data, status, headers, config) {
+				// file is uploaded successfully
+				console.log(data);
+			});
+		}
+	}
+}]);
+

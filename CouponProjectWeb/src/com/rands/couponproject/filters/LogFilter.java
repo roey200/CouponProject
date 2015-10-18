@@ -66,7 +66,7 @@ public class LogFilter implements Filter {
 //		if (logResponseBody) {
 //			responseWrapper = new MultiReadHttpServletResponse((HttpServletResponse) response);
 //		}
-		
+
 		if (logRequestBody) {
 			request = new MultiReadHttpServletRequest((HttpServletRequest) request);
 		}

@@ -112,6 +112,12 @@ public class AuthenticationFilter implements Filter {
 		if (httpRequest.getRequestURI().contains("/logout")){ // this is a logout request, let it proceed
 			return false;
 		}
+		if (httpRequest.getRequestURI().contains("/upload")){ // for testing
+			return false;
+		}
+		if (httpRequest.getRequestURI().contains("/rest/file")){ // for testing
+			return false;
+		}
 		
 //		HttpSession session = httpRequest.getSession(false);
 //		if(null==session) // not logged in yet

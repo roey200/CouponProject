@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 //@WebFilter("/LogFilter")
 public class LogFilter implements Filter {
 
+	private static final int MAX_CONTENT_LEN_TO_LOG = (8 * 1024); // 8K
 	private ServletContext context;
 
 	private boolean logRequest = false;
@@ -56,16 +57,19 @@ public class LogFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-//		ServletRequest requestWrapper = request;
-//		ServletResponse responseWrapper = response;
-//
-//		if (logRequestBody) {
-//			requestWrapper = new MultiReadHttpServletRequest((HttpServletRequest) request);
-//		}
-//		
-//		if (logResponseBody) {
-//			responseWrapper = new MultiReadHttpServletResponse((HttpServletResponse) response);
-//		}
+		boolean logRequestBody = this.logRequestBody;
+		boolean logResponseBody = this.logResponseBody;
+		
+		HttpServletRequest r = (HttpServletRequest) request;
+		
+		String contentType = r.getContentType();
+		int contentLength = r.getContentLength();
+		
+		//if (contentType.contains("multipart/form-data")) // probably an upload request
+		//	logRequestBody = false;
+		
+		if (contentLength > MAX_CONTENT_LEN_TO_LOG)
+			logRequestBody = false; // MultiReadHttpServletRequest can't handle long requests
 
 		if (logRequestBody) {
 			request = new MultiReadHttpServletRequest((HttpServletRequest) request);
@@ -156,7 +160,8 @@ public class LogFilter implements Filter {
 			}
 		}
 
-		if (logRequestBody) {
+		//if (logRequestBody) {
+		if (r instanceof MultiReadHttpServletRequest) {
 			String body = ((MultiReadHttpServletRequest)r).getContent();
 			
 			if (null != body)
@@ -179,7 +184,8 @@ public class LogFilter implements Filter {
 			}
 		}
 		
-		if (logResponseBody) {
+		//if (logResponseBody) {
+		if (r instanceof MultiReadHttpServletResponse) {
 			String body = ((MultiReadHttpServletResponse)r).getContent();
 
 			if (null != body)

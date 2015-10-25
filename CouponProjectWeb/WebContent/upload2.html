@@ -7,22 +7,17 @@
 <body>
 <h1>Upload a File</h1>
 
-	<form action="xxrest/files/upload" method="post" enctype="multipart/form-data">
+	<form action="rest/files/upload" method="post" enctype="multipart/form-data">
 
 	   <p>
 		Select a file : <input type="file" name="file" size="50" />
 	   </p>
+	   <p>
+		save as : <input type="text" name="saveas" size="50" />
+	   </p>	   
 
 	   <input type="submit" value="REST Upload It" />
 	</form>
 
-	<form action="upload" method="post" enctype="multipart/form-data">
-
-	   <p>
-		Select a file : <input type="file" name="file" size="50" />
-	   </p>
-
-	   <input type="submit" value="Upload" />
-	</form>
 </body>
 </html>

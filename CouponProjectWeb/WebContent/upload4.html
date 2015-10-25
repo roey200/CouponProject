@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>
+
+function uploadFile(file,saveAs)
+{
+
+	alert('uploadFile : ' + file.name + ' size = ' + file.size + ' saveas = ' + saveAs); 
+	// Create a formdata object and add the files
+    var data = new FormData();
+    data.append('file', file);
+    data.append('saveas',saveAs)
+
+    $.ajax({
+        url: 'files/upload',
+        type: 'POST',
+        data: data,
+        cache: false,
+        dataType: 'html', // return type
+        processData: false, // Don't process the files
+        contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+        success: function(data, textStatus, jqXHR)
+        {
+        	alert('uploadFile done : ' + data); 
+            if(typeof data.error === 'undefined')
+            {
+                console.log('undefined: ' + data);
+            }
+            else
+            {
+                // Handle errors here
+                console.log('ERRORS: ' + data.error);
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown)
+        {
+        	alert('uploadFile err : ' + jqXHR); 
+        	alert('uploadFile err : ' + textStatus); 
+        	alert('uploadFile err : ' + errorThrown); 
+            // Handle errors here
+            console.log('ERRORS: ' + textStatus);
+            // STOP LOADING SPINNER
+        }
+    });
+}
+
+function doUpload() {
+	var files = document.getElementById("theFile").files;
+	var file = files[0];
+	
+	var saveas = document.getElementById("saveAs").value;
+	uploadFile(file,saveas);
+	
+}
+
+function refreshImage(fileName) {
+	alert("fileName = " + fileName)
+	document.getElementById("theImage").src='uploads/' + fileName;
+}
+
+</script>
+<title>Form Page</title>
+</head>
+<body>
+<h1>Upload a File</h1>
+
+	<form action="files/upload" method="post" enctype="multipart/form-data" name="myForm">
+
+	   <p>
+		Select a file : <input type="file" name="file" size="50" id="theFile"/>
+	   </p>
+	   <p>
+		save as : <input type="text" name="saveas" size="50" id="saveAs"/>
+	   </p>
+
+	   <input type="submit" value="SERVLET Upload It" />
+	</form>
+	
+	
+	<button onclick="doUpload()">OK</button>
+	
+	<button onclick="refreshImage(document.getElementById('saveAs').value)">Refresh Image</button>
+	
+	<h2>The image</h2>
+	<img id="theImage" src="uploads/image.jpg" alt="Missing image" style="width:200px;height:300px;">
+	
+
+</body>
+</html>

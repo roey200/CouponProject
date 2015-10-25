@@ -1,6 +1,9 @@
 package com.rands.couponproject.filters;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Scanner;
 
@@ -15,6 +18,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
 /**
  * Servlet Filter implementation class RequestLoggingFilter
@@ -128,17 +132,7 @@ public class LogFilter implements Filter {
 		logIt("<< *** " + "getPathInfo=" + r.getPathInfo());
 		logIt("<< *** " + "getRequestURI=" + r.getRequestURI());
 		logIt("<< *** " + "getServletPath=" + r.getServletPath());
-
 		
-		if (logRequestParameters) {
-			Enumeration<String> params = r.getParameterNames();
-			while (params.hasMoreElements()) {
-				String name = params.nextElement();
-				String value = request.getParameter(name);
-				this.logIt("<< Params {" + name + "=" + value + "}");
-			}
-		}
-
 		if (logRequestCookies) {
 			Cookie[] cookies = r.getCookies();
 			if (cookies != null) {
@@ -159,6 +153,19 @@ public class LogFilter implements Filter {
 				}
 			}
 		}
+		
+		if (logRequestParameters) {
+			if (isMultiPart(r)) {
+				logParts(r);
+			} else { // parameters are not supported with multipart/form-data content
+				Enumeration<String> params = r.getParameterNames();
+				while (params.hasMoreElements()) {
+					String name = params.nextElement();
+					String value = request.getParameter(name);
+					this.logIt("<< Params {" + name + "=" + value + "}");
+				}
+			}
+		}
 
 		//if (logRequestBody) {
 		if (r instanceof MultiReadHttpServletRequest) {
@@ -168,6 +175,41 @@ public class LogFilter implements Filter {
 				logIt("<< Body {" + body + "}");
 		}
 	}
+
+	private void logParts(HttpServletRequest r) {
+		Collection<Part> parts = null;
+		try {
+			parts = r.getParts();
+		} catch (Exception e) {
+			logIt("** ERROR ** getParts() failed : " + e.toString());
+		}
+		if (null == parts)
+			return;
+		for (Part part:parts) {
+			String name = part.getName();
+			String contentType = part.getContentType();
+			long size = part.getSize();
+			String fileName = part.getSubmittedFileName();
+			if (null != fileName) {
+				logIt("<< Part name=" + name + ", Submitted filename=" + fileName + ", size = " + size + ", content type = " + contentType);
+			} else {
+				logIt("<< Part name=" + name + ", data=" + getPartData(part) + ", size = " + size);
+			}
+		}
+	}
+	
+	private String getPartData(Part part) {
+		if (null == part)
+			return "";
+		try {
+			InputStream is = part.getInputStream();
+			java.util.Scanner scanner = new java.util.Scanner(is,"UTF-8").useDelimiter("\\A");
+			String data = scanner.hasNext() ? scanner.next() : "";
+			return data;
+		} catch (Exception e) {
+			return e.toString();
+		}
+	}	
 
 	private void log(ServletResponse response) {
 		HttpServletResponse r = (HttpServletResponse) response;
@@ -211,6 +253,12 @@ public class LogFilter implements Filter {
 //
 //	}
 	
+	private boolean isMultiPart(HttpServletRequest request) {
+		String contentType = request.getContentType();
+
+		return (null != contentType && contentType.toLowerCase().contains("multipart/form-data"));
+	}
+
 	private void parseRequestOptions(String param) {
 		if (null == param || param.isEmpty())
 			return;
@@ -244,5 +292,5 @@ public class LogFilter implements Filter {
 			}
 		}
 	}
-
+	
 }

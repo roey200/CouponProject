@@ -154,35 +154,52 @@ app.controller('CouponController',['CustomerService','$window','Upload', functio
 //	this.price = '';
 	this.coupons = [];
 	this.couponTypes = ['FOOD','SPORTS','ZZZ'];
+	
+	Object.defineProperty(this,'couponType', { // clear price when type is set
+		  get: function() {
+		    return this._couponType;
+		  },
+		  set: function(value) {
+			  this._couponType = value;
+			  this._couponPrice = ''; 
+		  }
+		});
+	Object.defineProperty(this,'couponPrice', { // clear type when price is set
+		  get: function() {
+		    return this._couponPrice;
+		  },
+		  set: function(value) {
+			  this._couponPrice = value;
+			  this._couponType = '';
+		  }
+		});
+	
+	
 	this.couponType = '';
 	this.couponPrice = '';
 
 	/* refresh : refreshes the coupons list (by calling getAllPurchasedCoupons... ).
 	 */
 	this.refresh = function() {
+//		if (angular.isUndefined(this.couponType))
+//			this.couponType = '';
+
 		if (this.couponType.length) {
-			CustomerService.getAllPurchasedCouponsByType(this,couponType);
+			//alert('serach by type ' + this.couponType);
+			CustomerService.getAllPurchasedCouponsByType(this,this.couponType);
 		}
-		else if (this.couponPrice.length) {
-			CustomerService.getAllPurchasedCouponsByPrice(this,couponPrice);
+		else if (angular.isNumber(this.couponPrice)) {
+			//alert('serach by price ' + this.couponPrice);
+			CustomerService.getAllPurchasedCouponsByPrice(this,this.couponPrice);
 		}
 		else {
+			//alert('serach all');
 			CustomerService.getAllPurchasedCoupons(this);
 		}
 	}
 	
-	this.searchByType = function(couponType) {
-		alert('type=' + couponType);
-		this.couponType = couponType;
-		this.couponPrice = '';
-		CustomerService.getAllPurchasedCouponsByType(this,couponType);
-	}
-
-	this.searchByPrice = function(couponPrice) {
-		alert('price=' + couponPrice);
-		this.couponType = '';
-		this.couponPrice = couponPrice;
-		CustomerService.getAllPurchasedCouponsByType(this,couponType);
+	this.search = function() {
+		this.refresh(this);
 	}
 
 	this.scrollTo = function(where) {
@@ -270,7 +287,7 @@ app.service('CustomerService', ['$http' ,function($http) {
 	
 	// getAllPurchasedCouponsByType : gets all the coupons that the customer bought by type. 
 	this.getAllPurchasedCouponsByType = function(customerCtrl , couponType) {
-		alert('getAllPurchasedCouponsByType=' + couponType);
+		//alert('getAllPurchasedCouponsByType=' + couponType);
 
 		$http({
 			method: 'GET',

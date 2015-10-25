@@ -28,11 +28,32 @@
 		<load-on-startup>1</load-on-startup>
 
 	</servlet>
+
 	<servlet-mapping>
 		<servlet-name>jersey</servlet-name>
 		<url-pattern>/rest/*</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>UploadServlet</servlet-name>
+		<servlet-class>com.rands.couponproject.upload.UploadServlet</servlet-class>
+
+		<init-param>
+			<param-name>uploadDir</param-name>
+			<param-value>uploads</param-value>
+		</init-param>
+		
+		<load-on-startup>1</load-on-startup>
+
+	</servlet>
+
+	<!-- 	    
+	<servlet-mapping>
+		<servlet-name>FileUploadServletNew</servlet-name>
+		<url-pattern>/files/*</url-pattern>
+	</servlet-mapping>
+	-->	
+	    
 	<listener>
 		<listener-class>com.rands.couponproject.rest.CouponpPojectContextListener</listener-class>
 	</listener>

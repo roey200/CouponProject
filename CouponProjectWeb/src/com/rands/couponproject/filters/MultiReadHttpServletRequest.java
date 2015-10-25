@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
@@ -44,7 +45,13 @@ public class MultiReadHttpServletRequest extends HttpServletRequestWrapper {
 
 	private void cacheInputStream() throws IOException {
 		cachedBytes = new ByteArrayOutputStream();
-		IOUtils.copy(super.getInputStream(), cachedBytes);
+		//IOUtils.copy(super.getInputStream(), cachedBytes);
+		InputStream is = super.getInputStream();
+		int a = is.available();
+		int b;
+		while (-1 != (b = is.read())) {
+			cachedBytes.write(b);
+		}
 	}
 
 	public String getContent() {

@@ -33,6 +33,11 @@ public class CustomerFacade implements CouponClientFacade {
 	private CustomerFacade() {
 	}
 
+	@Override
+	public String getClientType() {
+		return "customer";
+	}
+	
 	public static CouponClientFacade login(String name, String password, ClientType clientType) throws LoginException {
 
 		if (clientType != ClientType.CUSTOMER) {

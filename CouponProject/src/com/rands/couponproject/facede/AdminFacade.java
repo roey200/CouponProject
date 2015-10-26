@@ -29,6 +29,10 @@ public class AdminFacade implements CouponClientFacade {
 //		couponDAO = new CouponDBDAO();
 	}
 	
+	@Override
+	public String getClientType() {
+		return "admin";
+	}	
 
 	public static CouponClientFacade login(String name, String password, ClientType clientType) throws LoginException {
 		String rightPassword = "1234";
@@ -46,7 +50,7 @@ public class AdminFacade implements CouponClientFacade {
 		logger.error("admin login failed name = " + name);
 		throw new AdminLoginException(name);		
 	}
-	
+
 	// Handling companies
 	
 	public void createCompany(Company c) throws Exception

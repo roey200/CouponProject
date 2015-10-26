@@ -34,6 +34,11 @@ public class CompanyFacade implements CouponClientFacade {
 
 	private CompanyFacade() {
 	}
+	
+	@Override
+	public String getClientType() {
+		return "company";
+	}		
 
 	public static CouponClientFacade login(String name, String password, ClientType clientType) throws LoginException {
 
@@ -189,6 +194,10 @@ public class CompanyFacade implements CouponClientFacade {
 	{
 		Company company = getCompany();
 		return company.getCoupons();
+	}
+	
+	public CouponType[] getCouponTypes() {
+		return CouponType.values();
 	}
 
 	/**

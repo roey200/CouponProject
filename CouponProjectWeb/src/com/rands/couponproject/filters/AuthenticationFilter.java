@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import com.rands.couponproject.auth.AuthUtils;
 import com.rands.couponproject.exceptions.CouponProjectException.AccessForbiddenException;
 import com.rands.couponproject.exceptions.CouponProjectException.AdminLoginException;
+import com.rands.couponproject.exceptions.CouponProjectException.LoginException;
 import com.rands.couponproject.facede.AdminFacade;
 import com.rands.couponproject.facede.CouponClientFacade;
 import com.rands.couponproject.rest.services.AdminService;
@@ -68,24 +69,26 @@ public class AuthenticationFilter implements Filter {
 		
         if (isAuthenticationRequired(httpRequest)) { // authentication is required
         	logIt("AuthenticationFilter : authentication is required");
+        	
         	if (isRestServiceRequest(httpRequest)) { // request is for a rest web service
             	logIt("AuthenticationFilter : aborting rest request");
         		httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        		return;
         	}
-        	else {
-            	logIt("AuthenticationFilter : redirecting to login page");
-    			String loginPage = "/login.html";
+        	
+           	logIt("AuthenticationFilter : redirecting to login page");
+   			String loginPage = "/login.html";
     			
-    			httpResponse.sendRedirect(httpRequest.getContextPath() + loginPage);        		
-        	}
-		} else { // proceed with the request
+   			httpResponse.sendRedirect(httpRequest.getContextPath() + loginPage);
+   			return;
+        }
+		// proceed with the request
 
-			// pass the request along the filter chain
-			chain.doFilter(request, response);
+		// pass the request along the filter chain
+		chain.doFilter(request, response);
 		
-			// the outgoing direction (response)
-			logIt(">> AuthenticationFilter");
-		}
+		// the outgoing direction (response)
+		logIt(">> AuthenticationFilter");
 	}
 
 	/**

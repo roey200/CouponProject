@@ -3,8 +3,10 @@ package com.rands.couponproject.rest.services;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 
 import org.apache.log4j.Logger;
@@ -52,5 +54,14 @@ public class LoginLogOutService {
 
 	}
 	
-	
+	@Path("/clientType")
+	@GET
+	@Produces("text/plain")
+	public String getClientType(@Context HttpServletRequest request) throws LoginException {
+		logger.debug("clientType");
+   		CouponClientFacade facede = AuthUtils.getCredentials(CouponClientFacade.class, request);
+   		String clientType = facede.getClientType();
+		logger.debug("clientType = " + clientType);
+   		return clientType;
+	}	
 }

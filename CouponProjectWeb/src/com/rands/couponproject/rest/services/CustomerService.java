@@ -121,5 +121,17 @@ public class CustomerService {
     	customerFacade.purchaseCoupon(Coupon);
 	}
 	
+	// example :
+	// http://localhost:9090/CouponProjectWeb/customer/coupons
+	//
+	@Path("/coupontypes")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public CouponType[] getCouponTypes() throws Exception {
+		logger.debug("getCouponTypes");
+		
+		return CouponType.values();
+	}	
+	
 	
 }

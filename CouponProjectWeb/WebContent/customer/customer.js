@@ -227,6 +227,7 @@ app.controller('CouponController',['CustomerService','$window','Upload', functio
 		}
 	}	
 
+	CustomerService.getCouponTypes(this);
 	// refresh the companies list
 	this.refresh();
 
@@ -235,27 +236,25 @@ app.controller('CouponController',['CustomerService','$window','Upload', functio
 
 // services
 
-/* AuthService : a collection of functions that call the rest services.
- * note that since the $http call is an asynchronous call. we pass a customerCtrl to each of thees functions so that
- * we can refresh the customers list in the customerCtrl.
+/* AuthService : a collection of functions that uses the rest authentication services.
  */
-app.service('AuthService', ['$http','$location' ,function($http,$location) {
+app.service('AuthService', ['$http','$window' ,function($http,$window) {
 	
-	// logout : terminates the session
+	// logout : terminates the session and redirects to the login page
 	this.logout = function() {
-    	alert('logout req');
+    	//alert('logout req');
 
 		$http({
 			method: 'POST',
 			url: '/CouponProjectWeb/rest/logout',
 		})
-		.success(function(data, status, headers, config) {
-	    	alert('logout OKKKKK');
-	        $location.path('/login.html');
-
+		.success(function(data, status, headers, config) { // redirect to login page
+			//alert('logout OK ' + $window);
+	    	$window.location.href = '/CouponProjectWeb/login.html';
 		})
 		.error(function(data, status, headers, config) {
-			alert("logout NNNNNNNNNNNNNNNNNNNNOT ok");
+			//alert('logout NOTTTTTTTTTTT OK ' + $window);
+	    	$window.location.href = '/CouponProjectWeb/login.html';
 		})
 
 	};
@@ -267,6 +266,24 @@ app.service('AuthService', ['$http','$location' ,function($http,$location) {
  */
 app.service('CustomerService', ['$http' ,function($http) {
 	// customers
+	
+	// getCouponTypes : gets the types of coupons that are defined in the system. 	
+	this.getCouponTypes = function(customerCtrl) {
+		$http({
+			method: 'GET',
+			url: '/CouponProjectWeb/rest/customer/coupontypes',
+
+		})
+		.success(function(data, status, headers, config) {
+			console.log("data=" + data + " status=" + status);
+			//alert("data=" + data);
+			customerCtrl.couponTypes = data;
+			//customerCtrl.refresh();
+		})
+		.error(function(data, status, headers, config) {
+		})		
+		
+	}
 	
 	// getAllPurchasedCoupons : gets all the coupons that the customer bought. 
 	this.getAllPurchasedCoupons = function(customerCtrl) {

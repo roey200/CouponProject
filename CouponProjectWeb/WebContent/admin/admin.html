@@ -24,15 +24,9 @@
       <ul class="nav navbar-nav navbar-right" ng-controller="navController">
         <li ng-class="{ active: isActive('/customers')}"><a href="#customers">Customers</a></li>
         <li ng-class="{ active: isActive('/companies')}"><a href="#companies">Companies</a></li>
-        <li><a href="../login.html">Logout</a></li>
-        <li>
-    	<form action="#">
-        	<button class="btn btn-default navbar-btn" ng-click="logout()">Link</button>
-    	</form>
-		</li>
-	<li>
-       <a href="" ng-click="logout()">Logout2</a>
-    </li>
+
+        <!-- <li><a href="../login.html" >Logout</a></li> -->
+        <li><a href="" ng-click="logout()">Logout</a></li>
 		
       </ul>
     </div>

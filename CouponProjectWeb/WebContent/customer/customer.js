@@ -155,21 +155,33 @@ app.controller('CouponController',['CustomerService','$window','Upload', functio
 	this.coupons = [];
 	this.couponTypes = ['FOOD','SPORTS','ZZZ'];
 	
-	Object.defineProperty(this,'couponType', { // clear price when type is set
+	Object.defineProperty(this,'couponType', { // clear price and endDate when type is set
 		  get: function() {
 		    return this._couponType;
 		  },
 		  set: function(value) {
 			  this._couponType = value;
-			  this._couponPrice = ''; 
+			  this._couponPrice = '';
+			  this._endDate = '';
 		  }
 		});
-	Object.defineProperty(this,'couponPrice', { // clear type when price is set
+	Object.defineProperty(this,'couponPrice', { // clear type and endDate when price is set
 		  get: function() {
 		    return this._couponPrice;
 		  },
 		  set: function(value) {
 			  this._couponPrice = value;
+			  this._couponType = '';
+			  this._endDate = '';
+		  }
+		});
+	Object.defineProperty(this,'endDate', { // clear type and price when date is set
+		  get: function() {
+		    return this._endDate;
+		  },
+		  set: function(value) {
+			  this._endDate = value;
+			  this._couponPrice = '';
 			  this._couponType = '';
 		  }
 		});
@@ -177,13 +189,40 @@ app.controller('CouponController',['CustomerService','$window','Upload', functio
 	
 	this.couponType = '';
 	this.couponPrice = '';
+	this.endDate = '';
 
 	/* refresh : refreshes the coupons list (by calling getAllPurchasedCoupons... ).
 	 */
 	this.refresh = function() {
-//		if (angular.isUndefined(this.couponType))
-//			this.couponType = '';
+		this.couponType = '';
+		this.couponPrice = '';
+		this.endDate = '';
+		
+		this.search();
 
+//		if (this.couponType.length) {
+//			//alert('serach by type ' + this.couponType);
+//			CustomerService.getAllPurchasedCouponsByType(this,this.couponType);
+//		}
+//		else if (angular.isNumber(this.couponPrice)) {
+//			//alert('serach by price ' + this.couponPrice);
+//			CustomerService.getAllPurchasedCouponsByPrice(this,this.couponPrice);
+//		} else if (this.endDate) {
+//			//alert('serach by date ' + this.endDate);
+//			CustomerService.getAllPurchasedCouponsByDate(this,this.endDate);
+//		}
+//		else {
+//			//alert('serach all');
+//			CustomerService.getAllPurchasedCoupons(this);
+//		}
+	}
+	
+//	this.search = function() {
+//		this.refresh(this);
+//	}
+	
+	this.search = function() {
+		
 		if (this.couponType.length) {
 			//alert('serach by type ' + this.couponType);
 			CustomerService.getAllPurchasedCouponsByType(this,this.couponType);
@@ -191,16 +230,15 @@ app.controller('CouponController',['CustomerService','$window','Upload', functio
 		else if (angular.isNumber(this.couponPrice)) {
 			//alert('serach by price ' + this.couponPrice);
 			CustomerService.getAllPurchasedCouponsByPrice(this,this.couponPrice);
+		} else if (this.endDate) {
+			//alert('serach by date ' + this.endDate);
+			CustomerService.getAllPurchasedCouponsByDate(this,this.endDate);
 		}
 		else {
 			//alert('serach all');
 			CustomerService.getAllPurchasedCoupons(this);
 		}
-	}
-	
-	this.search = function() {
-		this.refresh(this);
-	}
+	}	
 
 	this.scrollTo = function(where) {
 		if ('top' == where)
@@ -261,14 +299,14 @@ app.service('AuthService', ['$http','$window' ,function($http,$window) {
 }]);
 
 /* CustomerService : a collection of functions that call the rest services.
- * note that since the $http call is an asynchronous call. we pass a customerCtrl to each of thees functions so that
- * we can refresh the customers list in the customerCtrl.
+ * note that since the $http call is an asynchronous call. we pass a ctrl to each of thees functions so that
+ * we can refresh the customers list in the ctrl.
  */
 app.service('CustomerService', ['$http' ,function($http) {
 	// customers
 	
 	// getCouponTypes : gets the types of coupons that are defined in the system. 	
-	this.getCouponTypes = function(customerCtrl) {
+	this.getCouponTypes = function(ctrl) {
 		$http({
 			method: 'GET',
 			url: '/CouponProjectWeb/rest/customer/coupontypes',
@@ -277,8 +315,8 @@ app.service('CustomerService', ['$http' ,function($http) {
 		.success(function(data, status, headers, config) {
 			console.log("data=" + data + " status=" + status);
 			//alert("data=" + data);
-			customerCtrl.couponTypes = data;
-			//customerCtrl.refresh();
+			ctrl.couponTypes = data;
+			//ctrl.refresh();
 		})
 		.error(function(data, status, headers, config) {
 		})		
@@ -286,7 +324,7 @@ app.service('CustomerService', ['$http' ,function($http) {
 	}
 	
 	// getAllPurchasedCoupons : gets all the coupons that the customer bought. 
-	this.getAllPurchasedCoupons = function(customerCtrl) {
+	this.getAllPurchasedCoupons = function(ctrl) {
 		//alert('getAllPurchasedCoupons');
 		$http({
 			method: 'GET',
@@ -296,14 +334,14 @@ app.service('CustomerService', ['$http' ,function($http) {
 		.success(function(data, status, headers, config) {
 			console.log("data=" + data + " status=" + status);
 			//alert("data=" + data);
-			customerCtrl.coupons = data;
+			ctrl.coupons = data;
 		})
 		.error(function(data, status, headers, config) {
 		})
 	};
 	
 	// getAllPurchasedCouponsByType : gets all the coupons that the customer bought by type. 
-	this.getAllPurchasedCouponsByType = function(customerCtrl , couponType) {
+	this.getAllPurchasedCouponsByType = function(ctrl , couponType) {
 		//alert('getAllPurchasedCouponsByType=' + couponType);
 
 		$http({
@@ -313,8 +351,7 @@ app.service('CustomerService', ['$http' ,function($http) {
 		})
 		.success(function(data, status, headers, config) {
 			console.log("data=" + data + " status=" + status);
-			//alert("data=" + data);
-			customerCtrl.coupons = data;
+			ctrl.coupons = data;
 		})
 		.error(function(data, status, headers, config) {
 		})
@@ -322,7 +359,7 @@ app.service('CustomerService', ['$http' ,function($http) {
 	};
 	
 	// getAllPurchasedCouponsByPrice : gets all the coupons that the customer bought by price. 
-	this.getAllPurchasedCouponsByPrice = function(customerCtrl , price) {
+	this.getAllPurchasedCouponsByPrice = function(ctrl , price) {
 		
 		$http({
 			method: 'GET',
@@ -332,15 +369,36 @@ app.service('CustomerService', ['$http' ,function($http) {
 		.success(function(data, status, headers, config) {
 			console.log("data=" + data + " status=" + status);
 			//alert("data=" + data);
-			customerCtrl.coupons = data;
+			ctrl.coupons = data;
 		})
 		.error(function(data, status, headers, config) {
 		})
 
 	};
 	
+	// getAllPurchasedCouponsByDate : gets all the coupons that the customer bought by price. 
+	this.getAllPurchasedCouponsByDate = function(ctrl , date) {
+		//alert("getAllPurchasedCouponsByDate=" + date);
+		dt = formattedDate(date);
+		
+		$http({
+			method: 'GET',
+			url: '/CouponProjectWeb/rest/customer/coupons/date/' + dt,
+
+		})
+		.success(function(data, status, headers, config) {
+			console.log("data=" + data + " status=" + status);
+			//alert("data=" + data);
+			ctrl.coupons = data;
+		})
+		.error(function(data, status, headers, config) {
+		})
+
+	};
+	
+	
 	// getPurchableCoupons : gets all the coupons that the customer can buy. 
-	this.getPurchableCoupons = function(customerCtrl) {
+	this.getPurchableCoupons = function(ctrl) {
 		
 		$http({
 			method: 'GET',
@@ -350,14 +408,14 @@ app.service('CustomerService', ['$http' ,function($http) {
 		.success(function(data, status, headers, config) {
 			console.log("data=" + data + " status=" + status);
 			//alert("data=" + data);
-			customerCtrl.coupons = data;
+			ctrl.coupons = data;
 		})
 		.error(function(data, status, headers, config) {
 		})
 	};
 	
 	
-	this.purchaseCoupon = function(couponCtrl,id) {
+	this.purchaseCoupon = function(ctrl,id) {
 		
 		$http({
 			method: 'POST',
@@ -365,7 +423,7 @@ app.service('CustomerService', ['$http' ,function($http) {
 		})
 		.success(function(data, status, headers, config) {
 			console.log("data=" + data + " status=" + status);
-			couponCtrl.refresh();
+			ctrl.refresh();
 		})
 		.error(function(data, status, headers, config) {
 			alert("purchaseCoupon failed status=" + status);
@@ -373,12 +431,10 @@ app.service('CustomerService', ['$http' ,function($http) {
 
 	};
 	
-	
-	
 //////////////not implemented yet
 
 	// updateCustomer : updates a customer
-	this.updateCustomer = function(customerCtrl,customer) {
+	this.updateCustomer = function(ctrl,customer) {
 		
 		$http({
 			method: 'PUT',
@@ -388,7 +444,7 @@ app.service('CustomerService', ['$http' ,function($http) {
 		})
 		.success(function(data, status, headers, config) {
 			console.log("data=" + data + " status=" + status);
-			customerCtrl.refresh();
+			ctrl.refresh();
 		})
 		.error(function(data, status, headers, config) {
 			alert("updateCustomer failed status=" + status);
@@ -418,4 +474,18 @@ app.controller('MyCtrl', [ '$scope', 'Upload', function($scope, Upload) {
 		}
 	}
 }]);
+
+function formattedDate(date) {
+	if (!date)
+		return '';
+	
+    var month = date.getMonth() + 1;
+    var    day = date.getDate();
+    var    year = date.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-'); // + ' 00:00:00';
+}
 

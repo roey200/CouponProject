@@ -20,6 +20,10 @@
         <input type="number" class="form-control" style="width: 100px;" placeholder="Price" ng-model="couponController.couponPrice">
         </span>
         <span class="input-group-btn">
+	    <!-- <input type="date" class="form-control" placeholder="yyyy-MM-dd" title="start date" min="1970-01-01" ng-model="couponController.startDate" /> -->
+	    <input type="date" class="form-control" placeholder="yyyy-MM-dd" title="end date" max="2079-12-31"  ng-model="couponController.endDate" />
+        </span>
+        <span class="input-group-btn">
 			<button class="btn btn-default"	ng-click="couponController.refresh()">
 				<span class="glyphicon glyphicon-refresh"></span> Refresh
 			</button>

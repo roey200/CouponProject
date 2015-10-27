@@ -86,11 +86,11 @@ public class CustomerFacade implements CouponClientFacade {
 			throw new CouponException("coupon sold out " + coupon.toString());
 		}
 
-		Date currentDate = new Date();
-		if (currentDate.before(coupon.getStartDate())) {
-			throw new CouponException("not availabe yet " + coupon.toString());
-		}
-		if (currentDate.after(coupon.getEndDate())) {
+//		Date currentDate = new Date();
+//		if (currentDate.before(coupon.getStartDate())) {
+//			throw new CouponException("not availabe yet " + coupon.toString());
+//		}
+		if(coupon.isExpired()) {
 			throw new CouponException("not availabe anymore " + coupon.toString());
 		}
 

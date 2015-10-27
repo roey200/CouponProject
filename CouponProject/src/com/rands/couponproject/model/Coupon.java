@@ -102,6 +102,10 @@ public class Coupon {
 	public boolean isExpired() {
 		return endDate.before(new Date());
 	}
+	
+	public void setExpired(boolean expired) {
+		
+	}
 
 	@Override
 	public String toString() {

@@ -1,0 +1,164 @@
+<div class="container">
+<h3>Your Coupons
+<div class="form-inline pull-right">
+	<div class="input-group">
+		<span class="input-group-btn">
+    		<button type="button" class="btn btn-default" ng-click="couponController.search()">
+    			<span class="glyphicon glyphicon-search"></span> search
+    			<!-- <span class="caret"></span> -->
+    		</button>
+  		</span>
+		<!-- <select id="inputClientType" class="form-control" placeholder="CouponType" required autofocus ng-model="couponController.searchBy.type"> -->
+		<select id="inputClientType" class="form-control" ng-init="" ng-model="couponController.couponType">
+			<option value=""  selected>CouponType</option>
+			<!-- <option value='ALL' >All</option> -->
+			<option ng-selected="{{t == couponController.couponType}}"
+            	ng-repeat="t in couponController.couponTypes" value="{{t}}">{{t}}
+            </option>
+	    </select>
+        <span class="input-group-btn">
+        <input type="number" class="form-control" style="width: 100px;" placeholder="Price" ng-model="couponController.couponPrice">
+        </span>
+        <span class="input-group-btn">
+	    <!-- <input type="date" class="form-control" placeholder="yyyy-MM-dd" title="start date" min="1970-01-01" ng-model="couponController.startDate" /> -->
+	    <input type="date" class="form-control" placeholder="yyyy-MM-dd" title="end date" max="2079-12-31"  ng-model="couponController.endDate" />
+        </span>
+        <span class="input-group-btn">
+			<button class="btn btn-default"	ng-click="couponController.refresh()">
+				<span class="glyphicon glyphicon-refresh"></span> Refresh
+			</button>
+			<button class="btn btn-default"	ng-click="couponController.scrollTo('bottom')">
+				<span class="glyphicon glyphicon-triangle-bottom"></span> bot
+			</button>	
+		</span>
+	</div>    
+</div>
+</h3>
+<table class="table table-striped">
+		<thead>
+			<tr>
+ 			    <th class="col-sm-1">Edit</th>
+  			    <th class="col-sm-1">Remove</th>			
+				<th ng-show="false">Index</th>
+				<th>ID</th>
+				<th>Title</th>
+				<th>Type</th>
+				<th>StartDate</th>
+				<th>EndDate</th>
+				<th>Image</th>
+				<th>Message</th>
+				<th>Price</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="coupon in couponController.coupons">
+ 				<td>
+     			   <button class="btn" ng-click="couponController.editCoupon($index)">
+    		       		<span class="glyphicon glyphicon-edit"></span>  Edit
+   			     	</button>
+      			</td>
+      			<td>
+        			<button class="btn" ng-click="couponController.removeCoupon($index)">
+           				<span class="glyphicon glyphicon-remove"></span>
+        			</button>
+      			</td>      				
+				<td ng-show="false">{{$index}}</td>
+				<td>{{ coupon.id }}</td>
+				<td title="{{ coupon.massage }}">{{ coupon.title }}</td>
+				<td>{{ coupon.type }}</td>
+				<td>{{ coupon.startDate | date:'yyyy-MM-dd HH:mm' }}</td>
+				<td>{{ coupon.endDate | date:'yyyy-MM-dd HH:mm' }}</td>
+				<!-- <td><img id="theImage" src="{{'../uploads/' + coupon.image}}" alt="no image" title="{{ coupon.image }}" style="width:50px;height:30px;"></td> -->
+				<td><img id="theImage" src="{{'../uploads/' + coupon.image}}" alt="no image" title="{{ coupon.image }}" onError="this.onerror=null;this.src='/CouponProjectWeb/no_image.png';" style="width:50px;height:30px;"></td>
+				<td>{{ coupon.massage }}</td>
+				<td>{{ coupon.price }}</td>
+
+
+			</tr>
+		</tbody>
+	</table>
+	
+	
+<hr>
+<button class="btn btn-primary" ng-click="couponController.editCoupon('new')">
+<span class="glyphicon glyphicon-user"></span>  Create New Coupon
+</button>
+<hr>
+
+<h3 ng-show="couponController.edit">Create New Coupon:</h3>
+<h3 ng-hide="couponController.edit">Edit Coupon:</h3>
+
+<form class="form-horizontal">
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Coupon Title:</label>
+    <div class="col-sm-10">
+    <input type="text" ng-model="couponController.title" ng-disabled="!couponController.create" placeholder="Coupon Title">
+    </div>
+  </div> 
+  <div class="form-group">
+    <label class="col-sm-2 control-label">type:</label>
+    <div class="col-sm-10">
+    <input type="text" ng-model="couponController.type" placeholder="type">
+    </div>
+  </div> 
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Message:</label>
+    <div class="col-sm-10">
+    <input type="text" ng-model="couponController.massage" placeholder="message">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Price:</label>
+    <div class="col-sm-10">
+    <input type="text" ng-model="couponController.price" placeholder="price">
+    </div>
+  </div>
+   <div class="form-group">
+    <label class="col-sm-2 control-label">Amount:</label>
+    <div class="col-sm-10">
+    <input type="text" ng-model="couponController.amount" placeholder="amount">
+    </div>
+  </div>
+   <div class="form-group">
+    <label class="col-sm-2 control-label">Image:</label>
+    <div class="col-sm-10">
+    <input type="text" ng-model="couponController.image" placeholder="image">
+    </div>
+  </div>
+   <div class="form-group">
+    <label class="col-sm-2 control-label">Start Date:</label>
+    <div class="col-sm-10">
+    <input type="text" ng-model="couponController.startDate" placeholder="start date">
+    </div>
+  </div>
+   <div class="form-group">
+    <label class="col-sm-2 control-label">End Date:</label>
+    <div class="col-sm-10">
+    <input type="text" ng-model="couponController.endDate" placeholder="end date">
+    </div>
+  </div>
+</form>
+
+<hr>
+<!-- <button class="btn btn-primary" ng-disabled="couponController.error || couponController.incomplete" ng-click="couponController.saveChanges()">  -->
+<button class="btn btn-primary" ng-disabled="!couponController.watch()" ng-click="couponController.saveChanges()">
+<span class="glyphicon glyphicon-save"></span>  Save Changes
+</button>
+<button class="btn btn-default pull-right" ng-click="couponController.scrollTo('top')">
+<span class="glyphicon glyphicon-triangle-top"></span> top
+</button>
+</div>
+
+	
+	
+	
+	<button class="btn btn-default pull-right" ng-click="couponController.scrollTo('top')">
+		<span class="glyphicon glyphicon-triangle-top"></span> top
+	</button>
+	
+	<div>
+  		<input type="file" ngf-select="couponController.onFileSelect($files)" multiple>
+	</div>
+	
+</div>
+

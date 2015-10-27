@@ -216,5 +216,17 @@ public class CompanyService {
 		}
 
 	}
+	
+	// example :
+	// http://localhost:9090/CouponProjectWeb/company/coupontypes
+	//
+	@Path("/coupontypes")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public CouponType[] getCouponTypes() throws Exception {
+		logger.debug("getCouponTypes");
+		
+		return CouponType.values();
+	}	
 
 } 

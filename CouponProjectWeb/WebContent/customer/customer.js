@@ -19,7 +19,7 @@ app.config(['$routeProvider' ,function($routeProvider) {
 	// route for the customer available coupons to buy 
 	.when('/buy', {
 		templateUrl : 'buy.html',
-		controller  : 'CouponController as couponController'
+		controller  : 'PurchaseController as purchaseController'
 	})	
 	// route for the customer settings 
 	.when('/settings', {
@@ -272,6 +272,98 @@ app.controller('CouponController',['CustomerService','$window','Upload', functio
 }]);
 
 
+
+app.controller('PurchaseController',['CustomerService','$window','Upload', function(CustomerService,$window,Upload) {
+
+	this.coupons = [];
+	this.couponTypes = ['FOOD','SPORTS','ZZZ'];
+	
+	Object.defineProperty(this,'couponType', { // clear price and endDate when type is set
+		  get: function() {
+		    return this._couponType;
+		  },
+		  set: function(value) {
+			  this._couponType = value;
+			  this._couponPrice = '';
+			  this._endDate = '';
+		  }
+		});
+	Object.defineProperty(this,'couponPrice', { // clear type and endDate when price is set
+		  get: function() {
+		    return this._couponPrice;
+		  },
+		  set: function(value) {
+			  this._couponPrice = value;
+			  this._couponType = '';
+			  this._endDate = '';
+		  }
+		});
+	Object.defineProperty(this,'endDate', { // clear type and price when date is set
+		  get: function() {
+		    return this._endDate;
+		  },
+		  set: function(value) {
+			  this._endDate = value;
+			  this._couponPrice = '';
+			  this._couponType = '';
+		  }
+		});
+	
+	
+	this.couponType = '';
+	this.couponPrice = '';
+	this.endDate = '';
+
+	/* refresh : refreshes the coupons list (by calling getAllPurchasedCoupons... ).
+	 */
+	this.refresh = function() {
+		this.couponType = '';
+		this.couponPrice = '';
+		this.endDate = '';
+		
+		this.search();
+
+	}
+	
+	this.search = function() {
+		
+		if (this.couponType.length) {
+			//alert('serach by type ' + this.couponType);
+			CustomerService.getAllPurchasedCouponsByType(this,this.couponType);
+		}
+		else if (angular.isNumber(this.couponPrice)) {
+			//alert('serach by price ' + this.couponPrice);
+			CustomerService.getAllPurchasedCouponsByPrice(this,this.couponPrice);
+		} else if (this.endDate) {
+			//alert('serach by date ' + this.endDate);
+			CustomerService.getAllPurchasedCouponsByDate(this,this.endDate);
+		}
+		else {
+			//alert('serach all');
+			CustomerService.getPurchableCoupons(this);
+		}
+	}	
+
+	this.scrollTo = function(where) {
+		if ('top' == where)
+			$window.scrollTo(0,0);
+		else if ('bottom' == where)
+			$window.scrollTo(0,document.body.scrollHeight);
+	}	
+
+	this.purchaseCoupon = function(indx){
+		var coupon = this.coupons[indx];
+		CustomerService.purchaseCoupon(this , coupon);
+		
+	}
+
+	
+	CustomerService.getCouponTypes(this);
+	// refresh the companies list
+	this.refresh();
+
+}]);
+
 // services
 
 /* AuthService : a collection of functions that uses the rest authentication services.
@@ -415,11 +507,15 @@ app.service('CustomerService', ['$http' ,function($http) {
 	};
 	
 	
-	this.purchaseCoupon = function(ctrl,id) {
+	
+	
+	
+	this.purchaseCoupon = function(ctrl,coupon) {
 		
 		$http({
 			method: 'POST',
-			url: '/CouponProjectWeb/rest/customer/buy/'+ id
+			url: '/CouponProjectWeb/rest/customer/buy',
+			data : coupon
 		})
 		.success(function(data, status, headers, config) {
 			console.log("data=" + data + " status=" + status);

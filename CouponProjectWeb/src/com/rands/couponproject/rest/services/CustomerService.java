@@ -147,7 +147,7 @@ public class CustomerService {
 	}
 	
 	// example :
-	// http://localhost:9090/CouponProjectWeb/customer/coupons
+	// http://localhost:9090/CouponProjectWeb/customer/coupontypes
 	//
 	@Path("/coupontypes")
 	@GET
@@ -156,7 +156,9 @@ public class CustomerService {
 		logger.debug("getCouponTypes");
 		
 		return CouponType.values();
-	}	
+	}
+
+
 	
 	
 }

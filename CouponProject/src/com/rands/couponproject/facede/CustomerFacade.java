@@ -160,6 +160,23 @@ public class CustomerFacade implements CouponClientFacade {
 
 		return coupons;
 	}
+	
+	/**
+	 * 
+	 * @param toDate
+	 * @return the coupons of the logedin customer where endDate < toDate
+	 * @throws Exception
+	 */
+	public Collection<Coupon> getAllPurchasedCouponsByDate(Date toDate) throws Exception {
+		Collection<Coupon> coupons = new ArrayList<Coupon>();
+
+		for (Coupon coupon : getAllPurchasedCoupons()) {
+			if (coupon.getEndDate().before(toDate))
+				coupons.add(coupon);
+		}
+
+		return coupons;
+	}	
 
 	/**
 	 * 

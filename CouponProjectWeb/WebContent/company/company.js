@@ -1,5 +1,17 @@
 var app = angular.module('companyApp', ['ngRoute','ngFileUpload']);
 
+// disable http get caching (for internet explorer)
+app.config(function($httpProvider){
+	  $httpProvider.defaults.headers.common['Cache-Control'] = 'no-cache';
+	  $httpProvider.defaults.cache = false;
+
+	  if (!$httpProvider.defaults.headers.get) {
+	      $httpProvider.defaults.headers.get = {};
+	  }
+	  $httpProvider.defaults.headers.get['If-Modified-Since'] = '0';
+	});
+
+
 // configure our routes
 app.config(['$routeProvider' ,function($routeProvider) {
 	$routeProvider
@@ -121,7 +133,7 @@ app.controller('CompanyController',['CompanyService','$window', function(Company
 	/* refresh : refreshes the coupons list (by calling getCoupons).
 	 */
 	this.refresh = function() {
-		alert("refresh");
+		//alert("refresh");
 		CompanyService.getCoupons(this);
 	}
 	
@@ -217,7 +229,7 @@ app.controller('CouponController',['CompanyService','$window','Upload', function
 			CompanyService.getCouponsByDate(this,this.couponEndDate);
 		}
 		else {
-			alert('serach all');
+			//alert('serach all');
 			CompanyService.getCoupons(this);
 		}
 	}	
@@ -293,7 +305,7 @@ app.controller('CouponController',['CompanyService','$window','Upload', function
 	 * $http (asynchronous) call finishes. 
 	 */
 	this.saveChanges = function() {
-		alert('saveChanges');
+		//alert('saveChanges');
 
 		var coupon = {'id':this.id,'title': this.title,'type':this.type
 				     ,'startDate':this.startDate,'endDate':this.endDate
@@ -302,15 +314,16 @@ app.controller('CouponController',['CompanyService','$window','Upload', function
 				     };
 		
 		if (this.create) {
-			alert('creating coupon');
+			//alert('creating coupon');
 			CompanyService.createCoupon(this,coupon);
 		} else {
-			alert('updating coupon');
+			//alert('updating coupon');
 			CompanyService.updateCoupon(this,coupon);
 		}
 	};
 	
 	this.removeCoupon = function(indx){
+		alert('removeCoupon indx=' + indx);
 		//var id = this.coupon[indx].id;
 		var coupon = this.coupon[indx];
 		CompanyService.removeCoupon(this , coupon);
@@ -395,15 +408,17 @@ app.service('CompanyService', ['$http' ,function($http) {
 	
 	// getCoupons : gets all the coupons that the company bought. 
 	this.getCoupons = function(ctrl) {
-		alert('getCoupons');
+		//alert('getCoupons');
 		$http({
 			method: 'GET',
 			url: '/CouponProjectWeb/rest/company/coupons',
+			 //params: { 'foobar': new Date().getTime() }
+
 
 		})
 		.success(function(data, status, headers, config) {
 			console.log("data=" + data + " status=" + status);
-			alert("data=" + data);
+			//alert("data=" + data);
 			ctrl.coupons = data;
 		})
 		.error(function(data, status, headers, config) {
@@ -508,7 +523,7 @@ app.service('CompanyService', ['$http' ,function($http) {
 
 	// removeCoupon : remove a company coupon
 	this.removeCoupon = function(ctrl,coupon) {
-		
+		alert('removeCoupon');
 		$http({
 			method: 'DELETE',
 			url: '/CouponProjectWeb/rest/company/coupon',

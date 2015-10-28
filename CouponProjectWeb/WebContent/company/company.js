@@ -9,8 +9,7 @@ app.config(function($httpProvider){
 	      $httpProvider.defaults.headers.get = {};
 	  }
 	  $httpProvider.defaults.headers.get['If-Modified-Since'] = '0';
-	});
-
+});
 
 // configure our routes
 app.config(['$routeProvider' ,function($routeProvider) {
@@ -261,13 +260,13 @@ app.controller('CouponController',['CompanyService','$window','Upload', function
 			
 			this.id = 0;
 			this.title = '';
-			this.type = '';
-			this.startDate = '';
-			this.endDate = '';
-			this.image = '';
-			this.massage = '';
-			this.price = '';
-			this.amount = '';		
+//			this.type = '';
+//			this.startDate = '';
+//			this.endDate = '';
+//			this.image = '';
+//			this.massage = '';
+//			this.price = '';
+//			this.amount = '';		
 		} else { // the edit (coupon row) button was clicked
 			this.create = false;
 			this.edit = false;
@@ -285,6 +284,10 @@ app.controller('CouponController',['CompanyService','$window','Upload', function
 		}
 		this.scrollTo('bottom');		
 	};
+	
+	isNumber = function(o) {
+	    return typeof o === 'number' && isFinite(o);
+	}	
 
 	/* watch : checks if the save changes button may by clicked. it checks that : customerName is not empty,
 	 * passw1 and passw2 are equal and not empty.
@@ -294,7 +297,9 @@ app.controller('CouponController',['CompanyService','$window','Upload', function
 			return false;
 		if (!this.startDate || !this.endDate)
 			return false;
-		if (!this.price || !this.amount)
+		if (!isNumber(this.price))
+			return false;
+		if (!isNumber(this.amount))
 			return false;
 		return true;
 	};
@@ -323,10 +328,9 @@ app.controller('CouponController',['CompanyService','$window','Upload', function
 	};
 	
 	this.removeCoupon = function(indx){
-		alert('removeCoupon indx=' + indx);
-		//var id = this.coupon[indx].id;
-		var coupon = this.coupon[indx];
-		CompanyService.removeCoupon(this , coupon);
+		//alert('removeCoupon indx=' + indx);
+		var id = this.coupons[indx].id;
+		CompanyService.removeCoupon(this , id);
 		
 	}
 	
@@ -412,7 +416,7 @@ app.service('CompanyService', ['$http' ,function($http) {
 		$http({
 			method: 'GET',
 			url: '/CouponProjectWeb/rest/company/coupons',
-			 //params: { 'foobar': new Date().getTime() }
+			 //params: { 'preventCaching': new Date().getTime() }
 
 
 		})
@@ -483,7 +487,7 @@ app.service('CompanyService', ['$http' ,function($http) {
 	
 	// createCoupon : creates a company coupon
 	this.createCoupon = function(ctrl,coupon) {
-		alert('createCoupon ' + coupon);
+		//alert('createCoupon ' + coupon);
 		$http({
 			method: 'POST',
 			url: '/CouponProjectWeb/rest/company/coupon',
@@ -503,7 +507,7 @@ app.service('CompanyService', ['$http' ,function($http) {
 
 	// updateCoupon : updates a company coupon
 	this.updateCoupon = function(ctrl,coupon) {
-		alert('updateCoupon ' + coupon);
+		//alert('updateCoupon ' + coupon);
 
 		$http({
 			method: 'PUT',
@@ -522,12 +526,11 @@ app.service('CompanyService', ['$http' ,function($http) {
 	};
 
 	// removeCoupon : remove a company coupon
-	this.removeCoupon = function(ctrl,coupon) {
-		alert('removeCoupon');
+	this.removeCoupon = function(ctrl,id) {
+		//alert('removeCoupon');
 		$http({
 			method: 'DELETE',
-			url: '/CouponProjectWeb/rest/company/coupon',
-			data: coupon,
+			url: '/CouponProjectWeb/rest/company/coupon/' + id,
 		//	headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 		})
 		.success(function(data, status, headers, config) {

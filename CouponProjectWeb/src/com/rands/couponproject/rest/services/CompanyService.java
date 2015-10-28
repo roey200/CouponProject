@@ -200,22 +200,22 @@ public class CompanyService {
 		companyFacade.removeCoupon(couponId);
 	}
 	
-	@DELETE
-	@Path("/coupon")
-	@Consumes(MediaType.APPLICATION_JSON)
-	//@Produces(MediaType.APPLICATION_JSON)
-	public void removeCoupon(Coupon coupon) throws Exception {
-		logger.debug("removeCoupon " + coupon);
-
-		CompanyFacade companyFacade = getCompanyFacade();
-		try {
-			companyFacade.removeCoupon(coupon);
-		} catch (Exception e) {
-			logger.error("removeCoupon failed : " + e.toString());
-			throw e;
-		}
-
-	}
+//	@DELETE
+//	@Path("/coupon")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	//@Produces(MediaType.APPLICATION_JSON)
+//	public void removeCoupon(Coupon coupon) throws Exception {
+//		logger.debug("removeCoupon " + coupon);
+//
+//		CompanyFacade companyFacade = getCompanyFacade();
+//		try {
+//			companyFacade.removeCoupon(coupon);
+//		} catch (Exception e) {
+//			logger.error("removeCoupon failed : " + e.toString());
+//			throw e;
+//		}
+//
+//	}
 	
 	// example :
 	// http://localhost:9090/CouponProjectWeb/company/coupontypes

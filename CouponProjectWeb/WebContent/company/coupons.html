@@ -28,7 +28,7 @@
 				<span class="glyphicon glyphicon-refresh"></span> Refresh
 			</button>
 			<button class="btn btn-default"	ng-click="couponController.scrollTo('bottom')">
-				<span class="glyphicon glyphicon-triangle-bottom"></span> bot
+				<span class="glyphicon glyphicon-triangle-bottom"></span> down
 			</button>	
 		</span>
 	</div>    
@@ -48,6 +48,7 @@
 				<th>Image</th>
 				<th>Message</th>
 				<th>Price</th>
+				<th>Amount</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -66,14 +67,17 @@
 				<td>{{ coupon.id }}</td>
 				<td title="{{ coupon.massage }}">{{ coupon.title }}</td>
 				<td>{{ coupon.type }}</td>
+				<!-- 
 				<td>{{ coupon.startDate | date:'yyyy-MM-dd HH:mm' }}</td>
 				<td>{{ coupon.endDate | date:'yyyy-MM-dd HH:mm' }}</td>
-				<!-- <td><img id="theImage" src="{{'../uploads/' + coupon.image}}" alt="no image" title="{{ coupon.image }}" onError="this.onerror=null;this.src='/CouponProjectWeb/no_image.png';" style="width:50px;height:30px;"></td> -->
-				<td>{{ coupon.image }}</td>
+				-->
+				<td style="white-space:nowrap;">{{ coupon.startDate | date:'yyyy-MM-dd' }}</td>
+				<td style="white-space:nowrap;">{{ coupon.endDate | date:'yyyy-MM-dd' }}</td>
+				<td><img id="theImage" src="{{'../uploads/' + coupon.image}}" alt="no image" title="{{ coupon.image }}" onError="this.onerror=null;this.src='/CouponProjectWeb/no_image.png';" style="width:50px;height:30px;"></td>
+				<!-- <td>{{ coupon.image }}</td>  -->
 				<td>{{ coupon.massage }}</td>
 				<td>{{ coupon.price }}</td>
-
-
+				<td>{{ coupon.amount }}</td>
 			</tr>
 		</tbody>
 	</table>
@@ -92,19 +96,13 @@
   <div class="form-group">
     <label class="col-sm-2 control-label">Coupon Title:</label>
     <div class="col-sm-10">
-    <input type="text" ng-model="couponController.title" ng-disabled="!couponController.create" placeholder="Coupon Title">
+    <input class="form-control" type="text" ng-model="couponController.title" ng-disabled="!couponController.create" placeholder="Coupon Title">
     </div>
   </div> 
   <div class="form-group">
-    <label class="col-sm-2 control-label">type:</label>
-    <div class="col-sm-10">
-    <input type="text" ng-model="couponController.type" placeholder="type">
-    </div>
-  </div>
-  <div class="form-group">
   	<label class="col-sm-2 control-label">type:</label>
-    	<div class="col-sm-10">
-			<select ng-init="" ng-model="couponController.type">
+    	<div class="col-sm-2">
+			<select class="form-control" ng-init="" ng-model="couponController.type">
 				<option value=""  selected>CouponType</option>
 				<!-- <option value='ALL' >All</option> -->
 				<option ng-selected="{{t == couponController.couponType}}"
@@ -116,37 +114,37 @@
   <div class="form-group">
     <label class="col-sm-2 control-label">Message:</label>
     <div class="col-md-10">
-    <input type="text" ng-model="couponController.massage" placeholder="message">
+    <input class="form-control" type="text" ng-model="couponController.massage" placeholder="message">
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label">Price:</label>
-    <div class="col-sm-10">
-    <input type="number" ng-model="couponController.price" placeholder="price">
+    <div class="col-sm-2">
+    <input class="form-control" type="number" min="0" ng-model="couponController.price" placeholder="price">
     </div>
   </div>
    <div class="form-group">
     <label class="col-sm-2 control-label">Amount:</label>
-    <div class="col-sm-10">
-    <input type="number" ng-model="couponController.amount" placeholder="amount">
+    <div class="col-sm-2">
+    <input class="form-control" type="number" min="0" ng-model="couponController.amount" placeholder="amount">
     </div>
   </div>
    <div class="form-group">
     <label class="col-sm-2 control-label">Image:</label>
     <div class="col-sm-10">
-    <input type="text" ng-model="couponController.image" placeholder="image">
+    <input class="form-control" type="text" ng-model="couponController.image" placeholder="image">
     </div>
   </div>
    <div class="form-group">
     <label class="col-sm-2 control-label">Start Date:</label>
-    <div class="col-sm-10">
-    <input type="date" ng-model="couponController.startDate" placeholder="start date">
+    <div class="col-sm-2">
+    <input class="form-control" type="date" ng-model="couponController.startDate" placeholder="start date">
     </div>
   </div>
    <div class="form-group">
     <label class="col-sm-2 control-label">End Date:</label>
-    <div class="col-sm-10">
-    <input type="date" ng-model="couponController.endDate" placeholder="end date">
+    <div class="col-sm-2">
+    <input class="form-control" type="date" ng-model="couponController.endDate" placeholder="end date">
     </div>
   </div>
 </form>
@@ -157,7 +155,7 @@
 <span class="glyphicon glyphicon-save"></span>  Save Changes
 </button>
 <button class="btn btn-default pull-right" ng-click="couponController.scrollTo('top')">
-<span class="glyphicon glyphicon-triangle-top"></span> top
+<span class="glyphicon glyphicon-triangle-top"></span> up
 </button>
 </div>
 	

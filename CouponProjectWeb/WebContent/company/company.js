@@ -152,7 +152,7 @@ app.controller('CouponController',['CompanyService','$window','Upload', function
 	this.amount = '';
 	
 	this.coupons = [];
-	this.couponTypes = ['FOOD','SPORTS','ZZZ'];
+	this.couponTypes = [];
 	
 	Object.defineProperty(this,'couponType', { // clear price and couponEndDate when type is set
 		  get: function() {
@@ -197,6 +197,8 @@ app.controller('CouponController',['CompanyService','$window','Upload', function
 		this.couponPrice = '';
 		this.couponEndDate = '';
 		
+		this.coupons = [];
+		
 		this.search();
 
 	}
@@ -215,7 +217,7 @@ app.controller('CouponController',['CompanyService','$window','Upload', function
 			CompanyService.getCouponsByDate(this,this.couponEndDate);
 		}
 		else {
-			//alert('serach all');
+			alert('serach all');
 			CompanyService.getCoupons(this);
 		}
 	}	
@@ -262,47 +264,56 @@ app.controller('CouponController',['CompanyService','$window','Upload', function
 			this.id = coupon.id;
 			this.title = coupon.title;
 			this.type = coupon.type;
-			this.startDate = coupon.startDate;
-			this.endDate = coupon.endDate;
+			this.startDate = new Date(coupon.startDate);
+			this.endDate = new Date(coupon.endDate);
 			this.image = coupon.image;
 			this.massage = coupon.massage;
 			this.price = coupon.price;
-			this.amount = coupon.amount;		
+			this.amount = coupon.amount;
 		}
 		this.scrollTo('bottom');		
 	};
 
-//	/* watch : checks if the save changes button may by clicked. it checks that : customerName is not empty,
-//	 * passw1 and passw2 are equal and not empty.
-//	 */
-//	this.watch = function() {
-//		if (!this.customerName.length)
-//			return false;
-//		if (!this.passw1.length || this.passw1 !== this.passw2)
-//			return false;
-//		return true;
-//	};
+	/* watch : checks if the save changes button may by clicked. it checks that : customerName is not empty,
+	 * passw1 and passw2 are equal and not empty.
+	 */
+	this.watch = function() {
+		if (!this.title.length || !this.massage.length || !this.image.length)
+			return false;
+		if (!this.startDate || !this.endDate)
+			return false;
+		if (!this.price || !this.amount)
+			return false;
+		return true;
+	};
 	
 	/*
-	 * saveChanges : performs the create/update customer.
-	 * note that we pass this to the AdminService functions so that when can refresh the customers list after the
+	 * saveChanges : performs the create/update coupon.
+	 * note that we pass this to the CouponService functions so that when can refresh the customers list after the
 	 * $http (asynchronous) call finishes. 
 	 */
 	this.saveChanges = function() {
-		//this.test();
+		alert('saveChanges');
+
+		var coupon = {'id':this.id,'title': this.title,'type':this.type
+				     ,'startDate':this.startDate,'endDate':this.endDate
+				     ,'image':this.image,'massage':this.massage
+				     ,'price':this.price,'amount':this.amount
+				     };
 		
-		// create a customer object from the fields in the form
-		var customer = {'id':this.id,'customerName': this.customerName,'password':this.passw1,'coupons':[]};
 		if (this.create) {
-			AdminService.createCustomer(this,customer);
+			alert('creating coupon');
+			CompanyService.createCoupon(this,coupon);
 		} else {
-			AdminService.updateCustomer(this,customer);
+			alert('updating coupon');
+			CompanyService.updateCoupon(this,coupon);
 		}
 	};
 	
-	this.removeCustomer = function(indx){
-		var id = this.customers[indx].id;
-		AdminService.removeCustomer(this , id);
+	this.removeCoupon = function(indx){
+		//var id = this.coupon[indx].id;
+		var coupon = this.coupon[indx];
+		CompanyService.removeCoupon(this , coupon);
 		
 	}
 	
@@ -325,7 +336,6 @@ app.controller('CouponController',['CompanyService','$window','Upload', function
 		}
 	}	
 
-	alert('zzzzzzzzzzzzzzzzz');
 	CompanyService.getCouponTypes(this);
 	// refresh the companies list
 	this.refresh();
@@ -385,7 +395,7 @@ app.service('CompanyService', ['$http' ,function($http) {
 	
 	// getCoupons : gets all the coupons that the company bought. 
 	this.getCoupons = function(ctrl) {
-		//alert('getCoupons');
+		alert('getCoupons');
 		$http({
 			method: 'GET',
 			url: '/CouponProjectWeb/rest/company/coupons',
@@ -393,7 +403,7 @@ app.service('CompanyService', ['$http' ,function($http) {
 		})
 		.success(function(data, status, headers, config) {
 			console.log("data=" + data + " status=" + status);
-			//alert("data=" + data);
+			alert("data=" + data);
 			ctrl.coupons = data;
 		})
 		.error(function(data, status, headers, config) {
@@ -455,10 +465,31 @@ app.service('CompanyService', ['$http' ,function($http) {
 		})
 
 	};
+	
+	// createCoupon : creates a company coupon
+	this.createCoupon = function(ctrl,coupon) {
+		alert('createCoupon ' + coupon);
+		$http({
+			method: 'POST',
+			url: '/CouponProjectWeb/rest/company/coupon',
+			data: coupon,
+		//	headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+		})
+		.success(function(data, status, headers, config) {
+			console.log("data=" + data + " status=" + status);
+			ctrl.refresh();
+		})
+		.error(function(data, status, headers, config) {
+			alert("createCoupon failed status=" + status);
+		})
+
+	};
+	
 
 	// updateCoupon : updates a company coupon
 	this.updateCoupon = function(ctrl,coupon) {
-		
+		alert('updateCoupon ' + coupon);
+
 		$http({
 			method: 'PUT',
 			url: '/CouponProjectWeb/rest/company/coupon',

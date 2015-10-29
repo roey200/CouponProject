@@ -21,8 +21,11 @@ import com.rands.couponproject.auth.AuthUtils;
 import com.rands.couponproject.exceptions.CouponProjectException;
 import com.rands.couponproject.exceptions.CouponProjectException.LoginException;
 import com.rands.couponproject.facede.CompanyFacade;
+import com.rands.couponproject.facede.CustomerFacade;
+import com.rands.couponproject.model.Company;
 import com.rands.couponproject.model.Coupon;
 import com.rands.couponproject.model.CouponType;
+import com.rands.couponproject.model.Customer;
 import com.rands.couponproject.utils.Utils;
 
 
@@ -55,6 +58,30 @@ public class CompanyService {
 	}	
 	
 	// Handling companies
+	
+	// example :
+	// http://localhost:9090/CouponProjectWeb/company/current
+	//
+	@Path("/current")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Company getCurrentCompany() throws Exception {
+		logger.debug("getCurrentCompany");
+
+		CompanyFacade companyFacade = getCompanyFacade();
+    	return companyFacade.getCompany();
+	}
+	
+	@Path("/current") 
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void updateCurrentCompany(Company company) throws Exception {
+		logger.debug("updateCurrentCompany " + company);		
+
+		CompanyFacade companyFacade = getCompanyFacade();
+    	companyFacade.updateCompany(company);
+	}	
+	
 	
 	// example :
 	// http://localhost:9090/CouponProjectWeb/company/coupon/5

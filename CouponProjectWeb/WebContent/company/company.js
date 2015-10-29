@@ -58,48 +58,20 @@ app.controller('CompanyController',['CompanyService','$window', function(Company
 	
 	this.id = 0;
 	this.companyName = '';
+	this.email = '';
 	this.passw1 = '';
 	this.passw2 = '';
 	this.companys = [];
 
-	this.create = false;
-	this.edit = true;
 	this.error = false;
 	this.incomplete = false; 
 
-	/* editCustomer : handles the id,companyName,passw1,passw2 and create fields.
-	 * when the Create new Customer button is clicked we call this function with 'new' as the parameter.
-	 * when the Edit button is clicked we call this function with the row index ($index) of the company.
-	 * the create field marks the requested operation (create/update).
-	 */
-	this.editCustomer = function(indx) {
-		if ( indx == 'new') { // the Create new Customer button was clicked
-			this.create = true;
-			this.edit = true;
-			this.incomplete = true;
-			
-			this.id = 0;
-			this.companyName = '';
-			this.passw1 = '';
-			this.passw2 = '';			
-		} else { // the edit (company row) button was clicked
-			this.create = false;
-			this.edit = false;
-			
-			var company = this.companys[indx];
-			this.id = company.id;
-			this.companyName = company.companyName;
-			this.passw1 = company.password;
-			this.passw2 = company.password;
-		}
-		this.scrollTo('bottom');		
-	};
-
+	
 	/* watch : checks if the save changes button may by clicked. it checks that : companyName is not empty,
 	 * passw1 and passw2 are equal and not empty.
 	 */
 	this.watch = function() {
-		if (!this.companyName.length)
+		if (!this.companyName.length || !this.email.length)
 			return false;
 		if (!this.passw1.length || this.passw1 !== this.passw2)
 			return false;
@@ -114,26 +86,17 @@ app.controller('CompanyController',['CompanyService','$window', function(Company
 	this.saveChanges = function() {
 		//this.test();
 		
-		// create a company object from the fields in the form
-		var company = {'id':this.id,'companyName': this.companyName,'password':this.passw1,'coupons':[]};
-		if (this.create) {
-			CompanyService.createCustomer(this,company);
-		} else {
-			CompanyService.updateCustomer(this,company);
-		}
+		// update a company object from the fields in the form
+		var company = {'id':this.id,'companyName': this.companyName,'email':this.email,'password':this.passw1,'coupons':[]};
+		CompanyService.updateCurrentCompany(this,company);
+		
 	};
 	
-	this.removeCustomer = function(indx){
-		var id = this.companys[indx].id;
-		CompanyService.removeCustomer(this , id);
-		
-	}
-
 	/* refresh : refreshes the coupons list (by calling getCoupons).
 	 */
 	this.refresh = function() {
 		//alert("refresh");
-		CompanyService.getCoupons(this);
+		CompanyService.getCurrentCompany(this);
 	}
 	
 	this.scrollTo = function(where) {
@@ -409,6 +372,47 @@ app.service('CompanyService', ['$http' ,function($http) {
 		})		
 		
 	}
+	
+	// getCurrentCompany : gets the current company. 
+	this.getCurrentCompany = function(ctrl) {
+		//alert('getCurrentCompany');
+		$http({
+			method: 'GET',
+			url: '/CouponProjectWeb/rest/company/current',
+
+		})
+		.success(function(data, status, headers, config) {
+			console.log("data=" + data + " status=" + status);
+			//alert("data=" + data);
+			//ctrl.company = data;
+			ctrl.id = data.id;
+			ctrl.companyName = data.companyName;
+			ctrl.email = data.email;
+			ctrl.passw1 = data.password;
+			ctrl.passw2 = data.password;
+		})
+		.error(function(data, status, headers, config) {
+		})
+	};
+
+	// updateCompany : updates a company
+	this.updateCurrentCompany = function(ctrl,company) {
+		
+		$http({
+			method: 'PUT',
+			url: '/CouponProjectWeb/rest/company/current',
+			data: company,
+		//	headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+		})
+		.success(function(data, status, headers, config) {
+			console.log("data=" + data + " status=" + status);
+			ctrl.refresh();
+		})
+		.error(function(data, status, headers, config) {
+			alert("updateCompany failed status=" + status);
+		})
+
+	};		
 	
 	// getCoupons : gets all the coupons that the company bought. 
 	this.getCoupons = function(ctrl) {

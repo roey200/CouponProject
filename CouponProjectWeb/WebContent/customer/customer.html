@@ -21,10 +21,11 @@
 <!-- define angular controller -->
 <!-- <body ng-controller="mainController"> -->
 <body>
-  <nav class="navbar navbar-default">
+  <nav class="navbar navbar-default" ng-controller="navController">
     <div class="container">
       <div class="navbar-header">
-        <a class="navbar-brand" href="#coupons">CouponProject</a>
+        <!-- <a class="navbar-brand" href="#coupons">CouponProject</a> -->
+        <a class="navbar-brand" href="#coupons">hello {{customerName}}</a>
       </div>
 
       <ul class="nav navbar-nav navbar-right" ng-controller="navController">

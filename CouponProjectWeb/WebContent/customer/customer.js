@@ -47,7 +47,7 @@ app.config(['$routeProvider' ,function($routeProvider) {
 //});
 
 //create the controller for the nav bar and inject Angular's $scope and $location
-app.controller('navController', function($scope,$location,AuthService) {
+app.controller('navController', function($scope,$location,AuthService,CustomerService) {
 	// highlight the selected item from the navbar
     $scope.isActive = function (viewLocation) { 
         return viewLocation === $location.path();
@@ -56,6 +56,9 @@ app.controller('navController', function($scope,$location,AuthService) {
     $scope.logout = function () {
         AuthService.logout();
     };
+    
+    CustomerService.getCurrentCustomer($scope);
+    //$scope.myid = 'me me me';
 });
 
 // the controller for the customer template
@@ -91,7 +94,7 @@ app.controller('CustomerController',['CustomerService','$window', function(Custo
 		// create a customer object from the fields in the form
 		var customer = {'id':this.id,'customerName': this.customerName,'password':this.passw1,'coupons':[]};
 
-		CustomerService.updateCustomer(this,customer);
+		CustomerService.updateCurrentCustomer(this,customer);
 	};
 	
 	/* refresh : refreshes the coupons list (by calling getAllPurchasedCoupons).
@@ -402,7 +405,7 @@ app.service('CustomerService', ['$http' ,function($http) {
 	};
 
 	// updateCustomer : updates a customer
-	this.updateCustomer = function(ctrl,customer) {
+	this.updateCurrentCustomer = function(ctrl,customer) {
 		
 		$http({
 			method: 'PUT',

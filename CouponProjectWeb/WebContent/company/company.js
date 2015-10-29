@@ -369,6 +369,7 @@ app.service('CompanyService', ['$http' ,function($http) {
 			//ctrl.refresh();
 		})
 		.error(function(data, status, headers, config) {
+			alert("getCouponTypes failed status=" + status + " : " + data);
 		})		
 		
 	}
@@ -392,6 +393,7 @@ app.service('CompanyService', ['$http' ,function($http) {
 			ctrl.passw2 = data.password;
 		})
 		.error(function(data, status, headers, config) {
+			alert("getCurrentCompany failed status=" + status + " : " + data);
 		})
 	};
 
@@ -409,7 +411,7 @@ app.service('CompanyService', ['$http' ,function($http) {
 			ctrl.refresh();
 		})
 		.error(function(data, status, headers, config) {
-			alert("updateCompany failed status=" + status);
+			alert("updateCurrentCompany failed status=" + status + " : " + data);
 		})
 
 	};		
@@ -430,6 +432,7 @@ app.service('CompanyService', ['$http' ,function($http) {
 			ctrl.coupons = data;
 		})
 		.error(function(data, status, headers, config) {
+			alert("getCoupons failed status=" + status + " : " + data);
 		})
 	};
 	
@@ -447,6 +450,7 @@ app.service('CompanyService', ['$http' ,function($http) {
 			ctrl.coupons = data;
 		})
 		.error(function(data, status, headers, config) {
+			alert("getCouponsByType failed status=" + status + " : " + data);
 		})
 
 	};
@@ -465,6 +469,7 @@ app.service('CompanyService', ['$http' ,function($http) {
 			ctrl.coupons = data;
 		})
 		.error(function(data, status, headers, config) {
+			alert("getCouponsByPrice failed status=" + status + " : " + data);
 		})
 
 	};
@@ -485,6 +490,7 @@ app.service('CompanyService', ['$http' ,function($http) {
 			ctrl.coupons = data;
 		})
 		.error(function(data, status, headers, config) {
+			alert("getCouponsByDate failed status=" + status + " : " + data);
 		})
 
 	};
@@ -503,7 +509,7 @@ app.service('CompanyService', ['$http' ,function($http) {
 			ctrl.refresh();
 		})
 		.error(function(data, status, headers, config) {
-			alert("createCoupon failed status=" + status);
+			alert("createCoupon failed status=" + status + " : " + data);
 		})
 
 	};
@@ -524,7 +530,7 @@ app.service('CompanyService', ['$http' ,function($http) {
 			ctrl.refresh();
 		})
 		.error(function(data, status, headers, config) {
-			alert("updateCoupon failed status=" + status);
+			alert("updateCoupon failed status=" + status + " : " + data);
 		})
 
 	};
@@ -542,31 +548,11 @@ app.service('CompanyService', ['$http' ,function($http) {
 			ctrl.refresh();
 		})
 		.error(function(data, status, headers, config) {
-			alert("removeCoupon failed status=" + status);
+			alert("removeCoupon failed status=" + status + " : " + data);
 		})
 
 	};
 	
-}]);
-
-app.controller('MyCtrl', [ '$scope', 'Upload', function($scope, Upload) {
-	$scope.onFileSelect = function($files) {
-		alert('onFileSelect');
-		//$files: an array of files selected, each file has name, size, and type.
-		for (var i = 0; i < $files.length; i++) {
-			var $file = $files[i];
-			alert('file=' + $file);
-			Upload.upload({
-				url : 'my/upload/url',
-				file : $file,
-				progress : function(e) {
-				}
-			}).then(function(data, status, headers, config) {
-				// file is uploaded successfully
-				console.log(data);
-			});
-		}
-	}
 }]);
 
 function formattedDate(date) {

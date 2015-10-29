@@ -40,12 +40,6 @@ app.config(['$routeProvider' ,function($routeProvider) {
 	
 }]);
 
-//// create the controller and inject Angular's $scope
-//app.controller('mainController', function($scope) {
-//	// create a message to display in our view
-//	$scope.message = '123 Testing';
-//});
-
 //create the controller for the nav bar and inject Angular's $scope and $location
 app.controller('navController', function($scope,$location,AuthService,CustomerService) {
 	// highlight the selected item from the navbar
@@ -378,6 +372,7 @@ app.service('CustomerService', ['$http' ,function($http) {
 			//ctrl.refresh();
 		})
 		.error(function(data, status, headers, config) {
+			alert("getCouponTypes failed status=" + status + " : " + data);
 		})		
 		
 	}
@@ -402,6 +397,7 @@ app.service('CustomerService', ['$http' ,function($http) {
 			ctrl.passw2 = data.password;
 		})
 		.error(function(data, status, headers, config) {
+			alert("getCurrentCustomer failed status=" + status + " : " + data);
 		})
 	};
 
@@ -419,7 +415,7 @@ app.service('CustomerService', ['$http' ,function($http) {
 			ctrl.refresh();
 		})
 		.error(function(data, status, headers, config) {
-			alert("updateCustomer failed status=" + status);
+			alert("updateCustomer failed status=" + status + " : " + data);
 		})
 
 	};	
@@ -438,6 +434,7 @@ app.service('CustomerService', ['$http' ,function($http) {
 			ctrl.coupons = data;
 		})
 		.error(function(data, status, headers, config) {
+			alert("getAllPurchasedCoupons failed status=" + status + " : " + data);
 		})
 	};
 	
@@ -455,6 +452,7 @@ app.service('CustomerService', ['$http' ,function($http) {
 			ctrl.coupons = data;
 		})
 		.error(function(data, status, headers, config) {
+			alert("getAllPurchasedCouponsByType failed status=" + status + " : " + data);
 		})
 
 	};
@@ -473,6 +471,7 @@ app.service('CustomerService', ['$http' ,function($http) {
 			ctrl.coupons = data;
 		})
 		.error(function(data, status, headers, config) {
+			alert("getAllPurchasedCouponsByPrice failed status=" + status + " : " + data);
 		})
 
 	};
@@ -493,6 +492,7 @@ app.service('CustomerService', ['$http' ,function($http) {
 			ctrl.coupons = data;
 		})
 		.error(function(data, status, headers, config) {
+			alert("getAllPurchasedCouponsByDate failed status=" + status + " : " + data);
 		})
 
 	};
@@ -512,6 +512,7 @@ app.service('CustomerService', ['$http' ,function($http) {
 			ctrl.coupons = data;
 		})
 		.error(function(data, status, headers, config) {
+			alert("getPurchableCoupons failed status=" + status + " : " + data);
 		})
 	};
 	
@@ -530,6 +531,7 @@ app.service('CustomerService', ['$http' ,function($http) {
 			ctrl.coupons = data;
 		})
 		.error(function(data, status, headers, config) {
+			alert("getPurchableCouponsByType failed status=" + status + " : " + data);
 		})
 	};
 	
@@ -547,6 +549,7 @@ app.service('CustomerService', ['$http' ,function($http) {
 			ctrl.coupons = data;
 		})
 		.error(function(data, status, headers, config) {
+			alert("getPurchableCouponsByPrice failed status=" + status + " : " + data);
 		})
 	};
 
@@ -564,9 +567,9 @@ app.service('CustomerService', ['$http' ,function($http) {
 			ctrl.coupons = data;
 		})
 		.error(function(data, status, headers, config) {
+			alert("getPurchableCouponsByDate failed status=" + status + " : " + data);
 		})
 	};
-/////	
 	
 	this.purchaseCoupon = function(ctrl,coupon) {
 		
@@ -580,33 +583,12 @@ app.service('CustomerService', ['$http' ,function($http) {
 			ctrl.refresh();
 		})
 		.error(function(data, status, headers, config) {
-			alert("purchaseCoupon failed status=" + status);
+			alert("purchaseCoupon failed status=" + status + " : " + data);
 		})
 
 	};
 
 
-}]);
-
-
-app.controller('MyCtrl', [ '$scope', 'Upload', function($scope, Upload) {
-	$scope.onFileSelect = function($files) {
-		alert('onFileSelect');
-		//$files: an array of files selected, each file has name, size, and type.
-		for (var i = 0; i < $files.length; i++) {
-			var $file = $files[i];
-			alert('file=' + $file);
-			Upload.upload({
-				url : 'my/upload/url',
-				file : $file,
-				progress : function(e) {
-				}
-			}).then(function(data, status, headers, config) {
-				// file is uploaded successfully
-				console.log(data);
-			});
-		}
-	}
 }]);
 
 function formattedDate(date) {

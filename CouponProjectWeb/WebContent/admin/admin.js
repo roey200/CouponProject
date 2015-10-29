@@ -34,12 +34,6 @@ app.config(['$routeProvider' ,function($routeProvider) {
 		});
 }]);
 
-//// create the controller and inject Angular's $scope
-//app.controller('mainController', function($scope) {
-//	// create a message to display in our view
-//	$scope.message = '123 Testing';
-//});
-
 //create the controller for the nav bar and inject Angular's $scope and $location
 app.controller('navController', function($scope,$location,AuthService) {
 	// highlight the selected item from the navbar
@@ -295,6 +289,8 @@ app.service('AdminService', ['$http' ,function($http) {
 			adminCtrl.customers = data;
 		})
 		.error(function(data, status, headers, config) {
+			console.log("getCustomers failed data=" + data + " status=" + status);
+			alert("getCustomers failed status=" + status + " : " + data);
 			/*
 			console.log("data=" + data + " status=" + status);
 			if (status == 401)
@@ -321,7 +317,8 @@ app.service('AdminService', ['$http' ,function($http) {
 			adminCtrl.refresh();
 		})
 		.error(function(data, status, headers, config) {
-			alert("createCustomer failed status=" + status);
+			alert("createCustomer failed status=" + status + " : " + data);
+			
 		})
 
 	};
@@ -340,7 +337,7 @@ app.service('AdminService', ['$http' ,function($http) {
 			adminCtrl.refresh();
 		})
 		.error(function(data, status, headers, config) {
-			alert("updateCustomer failed status=" + status);
+			alert("updateCustomer failed status=" + status + " : " + data);
 		})
 
 	};
@@ -357,7 +354,7 @@ app.service('AdminService', ['$http' ,function($http) {
 			adminCtrl.refresh();
 		})
 		.error(function(data, status, headers, config) {
-			alert("removeCustomer failed status=" + status);
+			alert("removeCustomer failed status=" + status + " : " + data);
 		})
 
 	};
@@ -380,6 +377,7 @@ app.service('AdminService', ['$http' ,function($http) {
 			adminCtrl.companies = data;
 		})
 		.error(function(data, status, headers, config) {
+			alert("getCompanies failed status=" + status + " : " + data);
 			/*
 			console.log("data=" + data + " status=" + status);
 			if (status == 401)
@@ -406,7 +404,7 @@ app.service('AdminService', ['$http' ,function($http) {
 			adminCtrl.refresh();
 		})
 		.error(function(data, status, headers, config) {
-			alert("createCompany failed status=" + status);
+			alert("createCompany failed status=" + status + " : " + data);
 		})
 
 	};
@@ -425,7 +423,7 @@ app.service('AdminService', ['$http' ,function($http) {
 			adminCtrl.refresh();
 		})
 		.error(function(data, status, headers, config) {
-			alert("updateCompany failed status=" + status);
+			alert("updateCompany failed status=" + status + " : " + data);
 		})
 
 	};
@@ -442,7 +440,7 @@ app.service('AdminService', ['$http' ,function($http) {
 			adminCtrl.refresh();
 		})
 		.error(function(data, status, headers, config) {
-			alert("removeCompany failed status=" + status);
+			alert("removeCompany failed status=" + status + " : " + data);
 		})
 
 	};	

@@ -57,8 +57,9 @@ app.controller('navController', function($scope,$location,AuthService,CustomerSe
         AuthService.logout();
     };
     
+    // get the current customer (it will be shown in the nav bar as : hello <name>
     CustomerService.getCurrentCustomer($scope);
-    //$scope.myid = 'me me me';
+    
 });
 
 // the controller for the customer template

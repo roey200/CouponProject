@@ -14,6 +14,8 @@ import com.rands.couponproject.dao.CompanyDAO;
 import com.rands.couponproject.dao.CompanyDBDAO;
 import com.rands.couponproject.dao.CouponDAO;
 import com.rands.couponproject.dao.CouponDBDAO;
+import com.rands.couponproject.dao.CustomerDAO;
+import com.rands.couponproject.dao.CustomerDBDAO;
 import com.rands.couponproject.exceptions.CouponProjectException.CompanyException;
 import com.rands.couponproject.exceptions.CouponProjectException.CompanyLoginException;
 import com.rands.couponproject.exceptions.CouponProjectException.CouponException;
@@ -22,6 +24,7 @@ import com.rands.couponproject.model.ClientType;
 import com.rands.couponproject.model.Company;
 import com.rands.couponproject.model.Coupon;
 import com.rands.couponproject.model.CouponType;
+import com.rands.couponproject.model.Customer;
 
 /**
  * CompanyFacade - The CompanyFacade operates on behalf of a specific Company (the logedin Company). <br>
@@ -75,6 +78,18 @@ public class CompanyFacade implements CouponClientFacade {
 		return company;
 	}
 
+	
+	public void updateCompany(Company company) throws Exception {
+		CompanyDAO companyDAO = new CompanyDBDAO();
+		
+		if (company.getId() != companyId ){
+			logger.error("updateCompany only the current company may be modified : id = " + company.getId() + " current id = " + companyId);
+			throw new CouponException("only the current company may be modified");
+		}
+		companyDAO.updateCompany(company);
+	}	
+	
+	
 	private Connection getConnection() throws Exception {
 		try {
 			ConnectionPool pool = ConnectionPool.getInstance();

@@ -72,6 +72,16 @@ public class CustomerFacade implements CouponClientFacade {
 		}		
 
 		return customer;
+	}
+	
+	public void updateCustomer(Customer customer) throws Exception {
+		CustomerDAO customerDAO = new CustomerDBDAO();
+		
+		if (customer.getId() != customerId ){
+			logger.error("updateCustomer only the current customer may be modified : id = " + customer.getId() + " current id = " + customerId);
+			throw new CouponException("only the current customer may be modified");
+		}
+		customerDAO.updateCustomer(customer);
 	}	
 
 	public void purchaseCoupon(Coupon coupon) throws Exception {
@@ -205,4 +215,56 @@ public class CustomerFacade implements CouponClientFacade {
 		
 		return purchableCoupons;
 	}
+
+	/**
+	 * 
+	 * @param type
+	 * @return all coupons that the customer can buy limited by type
+	 * @throws Exception
+	 */
+	
+	public Collection<Coupon> getPurchableCouponsByType(CouponType type) throws Exception {
+		Collection<Coupon> coupons = new ArrayList<Coupon>();
+
+		for (Coupon coupon : getPurchableCoupons()) {
+			if (coupon.getType() == type)
+				coupons.add(coupon);
+		}
+		return coupons;
+	}
+
+	/**
+	 * 
+	 * @param price
+	 * @return all coupons that the customer can buy limited by price 
+	 * @throws Exception
+	 */
+	
+	public Collection<Coupon> getPurchableCouponsByPrice(long price) throws Exception {
+		Collection<Coupon> coupons = new ArrayList<Coupon>();
+
+		for (Coupon coupon : getPurchableCoupons()) {
+			if (coupon.getPrice() <= price)
+				coupons.add(coupon);
+		}
+
+		return coupons;
+	}
+	
+	/**
+	 * 
+	 * @param toDate
+	 * @return all coupons that the customer can buy where endDate < toDate
+	 * @throws Exception
+	 */
+	public Collection<Coupon> getPurchableCouponsByDate(Date toDate) throws Exception {
+		Collection<Coupon> coupons = new ArrayList<Coupon>();
+
+		for (Coupon coupon : getPurchableCoupons()) {
+			if (coupon.getEndDate().before(toDate))
+				coupons.add(coupon);
+		}
+
+		return coupons;
+	}	
 }

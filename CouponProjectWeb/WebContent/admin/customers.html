@@ -6,7 +6,7 @@
 <span class="glyphicon glyphicon-refresh"></span>  Refresh
 </button>
 <button class="btn btn-default" ng-click="customerController.scrollTo('bottom')">
-<span class="glyphicon glyphicon-triangle-bottom"></span> bot
+<span class="glyphicon glyphicon-triangle-bottom"></span> down
 </button>
 </span>
 </h3>
@@ -54,22 +54,22 @@
 <form class="form-horizontal">
   <div class="form-group">
     <label class="col-sm-2 control-label">Customer Name:</label>
-    <div class="col-sm-10">
-    <input type="text" ng-model="customerController.customerName" ng-disabled="!customerController.create" placeholder="Customer Name">
+    <div class="col-sm-4">
+    <input class="form-control" type="text" ng-model="customerController.customerName" ng-disabled="!customerController.create" placeholder="Customer Name">
     </div>
   </div> 
   <div class="form-group">
     <label class="col-sm-2 control-label">Password:</label>
-    <div class="col-sm-10">
+    <div class="col-sm-2">
     <!-- <input type="password" ng-model="customerController.passw1" placeholder="Password">  -->
-    <input type="text" ng-model="customerController.passw1" placeholder="Password">
+    <input class="form-control" type="text" ng-model="customerController.passw1" placeholder="Password">
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label">Repeat:</label>
-    <div class="col-sm-10">
+    <div class="col-sm-2">
     <!--  <input type="password" ng-model="customerController.passw2" placeholder="Repeat Password"> -->
-    <input type="text" ng-model="customerController.passw2" placeholder="Repeat Password">
+    <input class="form-control" type="text" ng-model="customerController.passw2" placeholder="Repeat Password">
     </div>
   </div>
 </form>
@@ -80,7 +80,7 @@
 <span class="glyphicon glyphicon-save"></span>  Save Changes
 </button>
 <button class="btn btn-default pull-right" ng-click="customerController.scrollTo('top')">
-<span class="glyphicon glyphicon-triangle-top"></span> top
+<span class="glyphicon glyphicon-triangle-top"></span> up
 </button>
 </div>
 

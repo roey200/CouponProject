@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -19,6 +20,7 @@ import com.rands.couponproject.facede.CompanyFacade;
 import com.rands.couponproject.facede.CustomerFacade;
 import com.rands.couponproject.model.Coupon;
 import com.rands.couponproject.model.CouponType;
+import com.rands.couponproject.model.Customer;
 import com.rands.couponproject.utils.Utils;
 import com.rands.couponproject.auth.AuthUtils;
 import com.rands.couponproject.exceptions.CouponProjectException;
@@ -51,6 +53,29 @@ public class CustomerService {
 	private CustomerFacade getCustomerFacade() throws LoginException {
 		return AuthUtils.getCredentials(CustomerFacade.class, request);
 	}
+	
+	// example :
+	// http://localhost:9090/CouponProjectWeb/customer/current
+	//
+	@Path("/current")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Customer getCurrentCustomer() throws Exception {
+		logger.debug("getCurrentCustomer");
+
+		CustomerFacade customerFacade = getCustomerFacade();
+    	return customerFacade.getCustomer();
+	}
+	
+	@Path("/current") 
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void updateCurrentCustomer(Customer customer) throws Exception {
+		logger.debug("updateCurrentCustomer " + customer);		
+
+		CustomerFacade customerFacade = getCustomerFacade();
+    	customerFacade.updateCustomer(customer);
+	}	
 
 	// example :
 	// http://localhost:9090/CouponProjectWeb/customer/coupons
@@ -123,7 +148,52 @@ public class CustomerService {
 		CustomerFacade customerFacade = getCustomerFacade();
     	return customerFacade.getPurchableCoupons();
 	}
+
+	// example :
+	// http://localhost:9090/CouponProjectWeb/customer/buylist/SPORTS
+	//
+	@Path("/buylist/{CouponType}") 
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Coupon> getPurchableCouponsByType(@PathParam("CouponType") CouponType couponType) throws Exception {
+		logger.debug("getPurchableCouponsByType " + couponType);
+		
+		CustomerFacade customerFacade = getCustomerFacade();
+    	return customerFacade.getPurchableCouponsByType(couponType);
+	}
 	
+	// example :
+	// http://localhost:9090/CouponProjectWeb/customer/buylist/100
+	//
+	@Path("/buylist/{price : \\d+}") 
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Coupon> getPurchableCouponsByPrice(@PathParam("price") int couponPrice) throws Exception {
+		logger.debug("getPurchableCouponsByPrice " + couponPrice);		
+
+		CustomerFacade customerFacade = getCustomerFacade();
+    	return customerFacade.getPurchableCouponsByPrice(couponPrice);
+	}
+	
+	// example :
+	// http://localhost:9090/CouponProjectWeb/company/buylist/2016-12-24
+	//
+	@Path("/buylist/date/{toDate}") 
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Coupon> getPurchableCouponsByDate(@PathParam("toDate") String toDate) throws Exception {
+		logger.debug("getPurchableCouponsByDate " + toDate);
+		
+		CustomerFacade customerFacade = getCustomerFacade();
+		try {
+			Date date = Utils.string2Date(toDate);
+	    	return customerFacade.getPurchableCouponsByDate(date);
+		}
+		catch (Exception e) {
+			throw new CouponProjectException("Invalid date : " + toDate);
+		}
+	}	
+		
 	
 	@Path("/buy") 
 	@POST

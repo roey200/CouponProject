@@ -65,40 +65,9 @@ app.controller('CustomerController',['CustomerService','$window', function(Custo
 	this.customerName = '';
 	this.passw1 = '';
 	this.passw2 = '';
-	this.customers = [];
-
-	this.create = false;
-	this.edit = true;
+	
 	this.error = false;
 	this.incomplete = false; 
-
-	/* editCustomer : handles the id,customerName,passw1,passw2 and create fields.
-	 * when the Create new Customer button is clicked we call this function with 'new' as the parameter.
-	 * when the Edit button is clicked we call this function with the row index ($index) of the customer.
-	 * the create field marks the requested operation (create/update).
-	 */
-	this.editCustomer = function(indx) {
-		if ( indx == 'new') { // the Create new Customer button was clicked
-			this.create = true;
-			this.edit = true;
-			this.incomplete = true;
-			
-			this.id = 0;
-			this.customerName = '';
-			this.passw1 = '';
-			this.passw2 = '';			
-		} else { // the edit (customer row) button was clicked
-			this.create = false;
-			this.edit = false;
-			
-			var customer = this.customers[indx];
-			this.id = customer.id;
-			this.customerName = customer.customerName;
-			this.passw1 = customer.password;
-			this.passw2 = customer.password;
-		}
-		this.scrollTo('bottom');		
-	};
 
 	/* watch : checks if the save changes button may by clicked. it checks that : customerName is not empty,
 	 * passw1 and passw2 are equal and not empty.
@@ -121,24 +90,15 @@ app.controller('CustomerController',['CustomerService','$window', function(Custo
 		
 		// create a customer object from the fields in the form
 		var customer = {'id':this.id,'customerName': this.customerName,'password':this.passw1,'coupons':[]};
-		if (this.create) {
-			CustomerService.createCustomer(this,customer);
-		} else {
-			CustomerService.updateCustomer(this,customer);
-		}
+
+		CustomerService.updateCustomer(this,customer);
 	};
 	
-	this.removeCustomer = function(indx){
-		var id = this.customers[indx].id;
-		CustomerService.removeCustomer(this , id);
-		
-	}
-
 	/* refresh : refreshes the coupons list (by calling getAllPurchasedCoupons).
 	 */
 	this.refresh = function() {
-		alert("refresh");
-		CustomerService.getAllPurchasedCoupons(this);
+		//alert("refresh");
+		CustomerService.getCurrentCustomer(this);
 	}
 	
 	this.scrollTo = function(where) {
@@ -154,17 +114,9 @@ app.controller('CustomerController',['CustomerService','$window', function(Custo
 }]);
 
 app.controller('CouponController',['CustomerService','$window','Upload', function(CustomerService,$window,Upload) {
-//app.controller('CouponController',['CustomerService','$window', function(CustomerService,$window) {
-//	this.id = 0;
-//	this.title = '';
-//	this.type = '';
-//	this.startDate = '';
-//	this.endDate = '';
-//	this.image = '';
-//	this.massage = '';
-//	this.price = '';
+
 	this.coupons = [];
-	this.couponTypes = ['FOOD','SPORTS','ZZZ'];
+	this.couponTypes = [];
 	
 	Object.defineProperty(this,'couponType', { // clear price and endDate when type is set
 		  get: function() {
@@ -287,7 +239,7 @@ app.controller('CouponController',['CustomerService','$window','Upload', functio
 app.controller('PurchaseController',['CustomerService','$window','Upload', function(CustomerService,$window,Upload) {
 
 	this.coupons = [];
-	this.couponTypes = ['FOOD','SPORTS','ZZZ'];
+	this.couponTypes = [];
 	
 	Object.defineProperty(this,'couponType', { // clear price and endDate when type is set
 		  get: function() {
@@ -337,17 +289,17 @@ app.controller('PurchaseController',['CustomerService','$window','Upload', funct
 	}
 	
 	this.search = function() {
-		
+		//alert("search");
 		if (this.couponType.length) {
-			//alert('serach by type ' + this.couponType);
-			CustomerService.getAllPurchasedCouponsByType(this,this.couponType);
+			alert('serach by type ' + this.couponType);
+			CustomerService.getPurchableCouponsByType(this,this.couponType);
 		}
 		else if (angular.isNumber(this.couponPrice)) {
 			//alert('serach by price ' + this.couponPrice);
-			CustomerService.getAllPurchasedCouponsByPrice(this,this.couponPrice);
+			CustomerService.getPurchableCouponsByPrice(this,this.couponPrice);
 		} else if (this.endDate) {
 			//alert('serach by date ' + this.endDate);
-			CustomerService.getAllPurchasedCouponsByDate(this,this.endDate);
+			CustomerService.getPurchableCouponsByDate(this,this.endDate);
 		}
 		else {
 			//alert('serach all');
@@ -425,6 +377,48 @@ app.service('CustomerService', ['$http' ,function($http) {
 		})		
 		
 	}
+	
+	
+	
+	// getCurrentCustomer : gets the current customer. 
+	this.getCurrentCustomer = function(ctrl) {
+		//alert('getCurrentCustomer');
+		$http({
+			method: 'GET',
+			url: '/CouponProjectWeb/rest/customer/current',
+
+		})
+		.success(function(data, status, headers, config) {
+			console.log("data=" + data + " status=" + status);
+			//alert("data=" + data);
+			//ctrl.customer = data;
+			ctrl.id = data.id;
+			ctrl.customerName = data.customerName;
+			ctrl.passw1 = data.password;
+			ctrl.passw2 = data.password;
+		})
+		.error(function(data, status, headers, config) {
+		})
+	};
+
+	// updateCustomer : updates a customer
+	this.updateCustomer = function(ctrl,customer) {
+		
+		$http({
+			method: 'PUT',
+			url: '/CouponProjectWeb/rest/customer/current',
+			data: customer,
+		//	headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+		})
+		.success(function(data, status, headers, config) {
+			console.log("data=" + data + " status=" + status);
+			ctrl.refresh();
+		})
+		.error(function(data, status, headers, config) {
+			alert("updateCustomer failed status=" + status);
+		})
+
+	};	
 	
 	// getAllPurchasedCoupons : gets all the coupons that the customer bought. 
 	this.getAllPurchasedCoupons = function(ctrl) {
@@ -517,9 +511,58 @@ app.service('CustomerService', ['$http' ,function($http) {
 		})
 	};
 	
+
+	// getPurchableCouponsByType : gets all the coupons that the customer can buy by type 
+	this.getPurchableCouponsByType = function(ctrl , couponType) {
+		
+		$http({
+			method: 'GET',
+			url: '/CouponProjectWeb/rest/customer/buylist/' + couponType,
+
+		})
+		.success(function(data, status, headers, config) {
+			console.log("data=" + data + " status=" + status);
+			//alert("data=" + data);
+			ctrl.coupons = data;
+		})
+		.error(function(data, status, headers, config) {
+		})
+	};
 	
-	
-	
+	// getPurchableCouponsByPrice : gets all the coupons that the customer can buy by price.
+	this.getPurchableCouponsByPrice = function(ctrl , couponPrice) {
+		
+		$http({
+			method: 'GET',
+			url: '/CouponProjectWeb/rest/customer/buylist/' + couponPrice,
+
+		})
+		.success(function(data, status, headers, config) {
+			console.log("data=" + data + " status=" + status);
+			//alert("data=" + data);
+			ctrl.coupons = data;
+		})
+		.error(function(data, status, headers, config) {
+		})
+	};
+
+	// getPurchableCouponsByDate : gets all the coupons that the customer can buy by date 
+	this.getPurchableCouponsByDate = function(ctrl , endDate) {
+		
+		$http({
+			method: 'GET',
+			url: '/CouponProjectWeb/rest/customer/buylist/' + endDate,
+
+		})
+		.success(function(data, status, headers, config) {
+			console.log("data=" + data + " status=" + status);
+			//alert("data=" + data);
+			ctrl.coupons = data;
+		})
+		.error(function(data, status, headers, config) {
+		})
+	};
+/////	
 	
 	this.purchaseCoupon = function(ctrl,coupon) {
 		
@@ -537,28 +580,8 @@ app.service('CustomerService', ['$http' ,function($http) {
 		})
 
 	};
-	
-//////////////not implemented yet
 
-	// updateCustomer : updates a customer
-	this.updateCustomer = function(ctrl,customer) {
-		
-		$http({
-			method: 'PUT',
-			url: '/CouponProjectWeb/rest/customer/customer',
-			data: customer,
-		//	headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-		})
-		.success(function(data, status, headers, config) {
-			console.log("data=" + data + " status=" + status);
-			ctrl.refresh();
-		})
-		.error(function(data, status, headers, config) {
-			alert("updateCustomer failed status=" + status);
-		})
 
-	};
-	
 }]);
 
 

@@ -38,21 +38,6 @@ public class CompanyService {
 	@Context
 	HttpServletRequest request;
 
-//	private CompanyFacade getCompanyFacade() throws LoginException {
-//		HttpSession session = request.getSession();
-//
-//		CompanyFacade facade;
-//		try {
-//			facade = (CompanyFacade) session.getAttribute(Globals.FACADE_KEY);
-//		} catch (ClassCastException e) { // may be logged in as admin or customer
-//			throw new AccessForbiddenException("company access forbidden");
-//		}
-//		if (null == facade) {
-//			throw new AdminLoginException("not logged in yet");
-//		}
-//		return facade;
-//	}
-	
 	private CompanyFacade getCompanyFacade() throws LoginException {
 		return AuthUtils.getCredentials(CompanyFacade.class, request);
 	}	

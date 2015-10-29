@@ -35,21 +35,6 @@ public class CustomerService {
 	@Context
 	HttpServletRequest request;
 
-//	private CustomerFacade getCustomerFacade() throws LoginException {
-//		HttpSession session = request.getSession();
-//
-//		CustomerFacade facade;
-//		try {
-//			facade = (CustomerFacade) session.getAttribute(Globals.FACADE_KEY);
-//		} catch (ClassCastException e) { // may be logged in as admin or company
-//			throw new AccessForbiddenException("customer access forbidden");
-//		}
-//		if (null == facade) {
-//			throw new CustomerLoginException("not logged in yet");
-//		}
-//		return facade;
-//	}
-	
 	private CustomerFacade getCustomerFacade() throws LoginException {
 		return AuthUtils.getCredentials(CustomerFacade.class, request);
 	}
@@ -227,8 +212,5 @@ public class CustomerService {
 		
 		return CouponType.values();
 	}
-
-
-	
 	
 }

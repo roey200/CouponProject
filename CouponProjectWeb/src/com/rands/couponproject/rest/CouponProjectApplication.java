@@ -12,8 +12,7 @@ import com.rands.couponproject.rest.services.UploadService;
 import java.util.HashSet;
 import java.util.Set;
 
-//@ApplicationPath("/")
-//@ApplicationPath("") // same
+
 @ApplicationPath("/rest")
 public class CouponProjectApplication extends Application {
 	

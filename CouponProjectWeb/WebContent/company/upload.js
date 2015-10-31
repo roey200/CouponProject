@@ -1,11 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script>
-
+//<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 function uploadFile(file,saveAs)
 {
 
@@ -49,12 +42,19 @@ function uploadFile(file,saveAs)
 }
 
 function doUpload() {
+	alert('doUpload zzzzzzzzzz');
+	var saveas = document.getElementById("saveAs").value;
+//	alert('doUpload saveas=',saveas);
+
+	var elem = document.getElementById("theFile");
+//	alert('doUpload elem=',elem);
 	var files = document.getElementById("theFile").files;
-	alert('doUpload files=',files);
+//	alert('doUpload files=',files);
 	var file = files[0];
 	
 	var saveas = document.getElementById("saveAs").value;
-	alert('doUpload saveas=',saveas);
+//	alert('doUpload saveas=',saveas);
+	
 	uploadFile(file,saveas);
 	
 }
@@ -63,33 +63,3 @@ function refreshImage(fileName) {
 	alert("fileName = " + fileName)
 	document.getElementById("theImage").src='uploads/' + fileName;
 }
-
-</script>
-<title>Form Page</title>
-</head>
-<body>
-<h1>Upload a File</h1>
-
-	<form action="files/upload" method="post" enctype="multipart/form-data" name="myForm">
-
-	   <p>
-		Select a file : <input type="file" name="file" size="50" id="theFile"/>
-	   </p>
-	   <p>
-		save as : <input type="text" name="saveas" size="50" id="saveAs"/>
-	   </p>
-
-	   <input type="submit" value="SERVLET Upload It" />
-	</form>
-	
-	
-	<button onclick="doUpload()">OK</button>
-	
-	<button onclick="refreshImage(document.getElementById('saveAs').value)">Refresh Image</button>
-	
-	<h2>The image</h2>
-	<img id="theImage" src="uploads/image.jpg" alt="Missing image" style="width:200px;height:300px;">
-	
-
-</body>
-</html>

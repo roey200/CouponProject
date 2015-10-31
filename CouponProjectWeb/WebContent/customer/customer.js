@@ -1,4 +1,4 @@
-var app = angular.module('customerApp', ['ngRoute','ngFileUpload']);
+var app = angular.module('customerApp', ['ngRoute']);
 
 //disable http get caching (for internet explorer)
 app.config(function($httpProvider){
@@ -111,7 +111,7 @@ app.controller('CustomerController',['CustomerService','$window', function(Custo
 
 }]);
 
-app.controller('CouponController',['CustomerService','$window','Upload', function(CustomerService,$window,Upload) {
+app.controller('CouponController',['CustomerService','$window', function(CustomerService,$window) {
 
 	this.coupons = [];
 	this.couponTypes = [];
@@ -208,24 +208,6 @@ app.controller('CouponController',['CustomerService','$window','Upload', functio
 			$window.scrollTo(0,document.body.scrollHeight);
 	}
 	
-	this.onFileSelect = function($files) {
-		alert('onFileSelect $files = ' + $files);
-		//$files: an array of files selected, each file has name, size, and type.
-		for (var i = 0; i < $files.length; i++) {
-			var $file = $files[i];
-			alert('file=' + $file.name);
-			Upload.upload({
-				url : 'my/upload/url',
-				file : $file,
-				progress : function(e) {
-				}
-			}).then(function(data, status, headers, config) {
-				// file is uploaded successfully
-				console.log(data);
-			});
-		}
-	}	
-
 	CustomerService.getCouponTypes(this);
 	// refresh the companies list
 	this.refresh();
@@ -234,7 +216,7 @@ app.controller('CouponController',['CustomerService','$window','Upload', functio
 
 
 
-app.controller('PurchaseController',['CustomerService','$window','Upload', function(CustomerService,$window,Upload) {
+app.controller('PurchaseController',['CustomerService','$window', function(CustomerService,$window) {
 
 	this.coupons = [];
 	this.couponTypes = [];

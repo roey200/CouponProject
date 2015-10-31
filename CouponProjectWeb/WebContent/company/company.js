@@ -1,4 +1,4 @@
-var app = angular.module('companyApp', ['ngRoute','ngFileUpload']);
+var app = angular.module('companyApp', ['ngRoute']);
 
 // disable http get caching (for internet explorer)
 app.config(function($httpProvider){
@@ -42,7 +42,7 @@ app.config(['$routeProvider' ,function($routeProvider) {
 //});
 
 //create the controller for the nav bar and inject Angular's $scope and $location
-app.controller('navController', function($scope,$location,AuthService) {
+app.controller('navController', function($scope,$location,AuthService,CompanyService) {
 	// highlight the selected item from the navbar
     $scope.isActive = function (viewLocation) { 
         return viewLocation === $location.path();
@@ -51,6 +51,10 @@ app.controller('navController', function($scope,$location,AuthService) {
     $scope.logout = function () {
         AuthService.logout();
     };
+    
+    // get the current company (it will be shown in the nav bar as : hello <name>
+    CompanyService.getCurrentCompany($scope);
+    
 });
 
 // the controller for the company template
@@ -89,7 +93,7 @@ app.controller('CompanyController',['CompanyService','$window', function(Company
 		// update a company object from the fields in the form
 		var company = {'id':this.id,'companyName': this.companyName,'email':this.email,'password':this.passw1,'coupons':[]};
 		CompanyService.updateCurrentCompany(this,company);
-		
+
 	};
 	
 	/* refresh : refreshes the coupons list (by calling getCoupons).
@@ -111,7 +115,7 @@ app.controller('CompanyController',['CompanyService','$window', function(Company
 
 }]);
 
-app.controller('CouponController',['CompanyService','$window','Upload', function(CompanyService,$window,Upload) {
+app.controller('CouponController',['CompanyService','$window', function(CompanyService,$window) {
 //app.controller('CouponController',['CompanyService','$window', function(CompanyService,$window) {
 	
 	// coupon fields
@@ -288,6 +292,8 @@ app.controller('CouponController',['CompanyService','$window','Upload', function
 			//alert('updating coupon');
 			CompanyService.updateCoupon(this,coupon);
 		}
+		alert("uploaddd")
+		doUpload();
 	};
 	
 	this.removeCoupon = function(indx){
@@ -298,24 +304,6 @@ app.controller('CouponController',['CompanyService','$window','Upload', function
 	}
 	
 	
-	this.onFileSelect = function($files) {
-		alert('onFileSelect $files = ' + $files);
-		//$files: an array of files selected, each file has name, size, and type.
-		for (var i = 0; i < $files.length; i++) {
-			var $file = $files[i];
-			alert('file=' + $file.name);
-			Upload.upload({
-				url : 'my/upload/url',
-				file : $file,
-				progress : function(e) {
-				}
-			}).then(function(data, status, headers, config) {
-				// file is uploaded successfully
-				console.log(data);
-			});
-		}
-	}	
-
 	CompanyService.getCouponTypes(this);
 	// refresh the companies list
 	this.refresh();

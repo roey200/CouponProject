@@ -21,7 +21,7 @@
         </span>
         <span class="input-group-btn">
 	    <!-- <input type="date" class="form-control" placeholder="yyyy-MM-dd" title="start date" min="1970-01-01" ng-model="couponController.startDate" /> -->
-	    <input type="date" class="form-control" placeholder="yyyy-MM-dd" title="end date" max="2079-12-31"  ng-model="couponController.couponEndDate" />
+	    <input type="date" class="form-control" placeholder="yyyy-MM-dd" title="end date" max="2099-12-31"  ng-model="couponController.couponEndDate" />
         </span>
         <span class="input-group-btn">
 			<button class="btn btn-default"	ng-click="couponController.refresh()">
@@ -136,7 +136,7 @@
     </div>
     <div class="col-sm-5">
     <!-- <input class="form-control" type="file" name="file" id="theFile" ng-model="couponController.file" placeholder="file"/>  -->
-    <input class="form-control" type="file" name="file" id="theFile" />
+    <input class="form-control" type="file" id="theFile" ng-model="couponController.thefile" />
     </div>
    </div>
    <div class="form-group">

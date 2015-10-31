@@ -278,7 +278,7 @@ app.controller('CouponController',['CompanyService','$window', function(CompanyS
 	 */
 	this.saveChanges = function() {
 		//alert('saveChanges');
-
+		
 		var coupon = {'id':this.id,'title': this.title,'type':this.type
 				     ,'startDate':this.startDate,'endDate':this.endDate
 				     ,'image':this.image,'massage':this.massage
@@ -292,10 +292,10 @@ app.controller('CouponController',['CompanyService','$window', function(CompanyS
 			//alert('updating coupon');
 			CompanyService.updateCoupon(this,coupon);
 		}
-		alert("uploaddd")
+
 		doUpload();
 	};
-	
+
 	this.removeCoupon = function(indx){
 		//alert('removeCoupon indx=' + indx);
 		var id = this.coupons[indx].id;

@@ -33,6 +33,10 @@ function uploadFile(file,saveAs)
     });
 }
 
+//function setSaveAs() {
+//	document.getElementById("saveAs").value = getSelectedFileName();
+//}
+
 function isFileSelected() {
 	var files = document.getElementById("theFile").files;
 	var file = files[0];
@@ -42,6 +46,18 @@ function isFileSelected() {
 	    return false;
 	}
 	return true;
+	
+}
+
+function getSelectedFileName() {
+	var files = document.getElementById("theFile").files;
+	var file = files[0];
+
+	if(typeof file === 'undefined'){
+	    //alert('NO FILE SELECTED');
+	    return '';
+	}
+	return file.name;
 	
 }
 

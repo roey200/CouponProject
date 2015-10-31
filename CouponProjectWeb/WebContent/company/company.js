@@ -118,6 +118,7 @@ app.controller('CompanyController',['CompanyService','$window', function(Company
 app.controller('CouponController',['CompanyService','$window', function(CompanyService,$window) {
 //app.controller('CouponController',['CompanyService','$window', function(CompanyService,$window) {
 	
+	this.refresh = 0;
 	// coupon fields
 	this.id = 0;
 	this.title = '';
@@ -260,7 +261,7 @@ app.controller('CouponController',['CompanyService','$window', function(CompanyS
 	 * passw1 and passw2 are equal and not empty.
 	 */
 	this.watch = function() {
-		if (!this.title.length || !this.massage.length || !this.image.length)
+		if (!this.title.length || !this.massage.length)
 			return false;
 		if (!this.startDate || !this.endDate)
 			return false;
@@ -268,6 +269,10 @@ app.controller('CouponController',['CompanyService','$window', function(CompanyS
 			return false;
 		if (!isNumber(this.amount))
 			return false;
+		
+		if (!this.image.length && !isFileSelected)
+			return false;
+
 		return true;
 	};
 	
@@ -278,6 +283,12 @@ app.controller('CouponController',['CompanyService','$window', function(CompanyS
 	 */
 	this.saveChanges = function() {
 		//alert('saveChanges');
+		this.refresh++;
+		//doUpload();
+
+		if (!this.image.length) {
+			this.image = getSelectedFileName();
+		}
 		
 		var coupon = {'id':this.id,'title': this.title,'type':this.type
 				     ,'startDate':this.startDate,'endDate':this.endDate

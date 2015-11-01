@@ -10,7 +10,8 @@ function uploadFile(file,saveAs)
     data.append('saveas',saveAs)
 
     $.ajax({
-        url: '/CouponProjectWeb/files/upload',
+        //url: '/CouponProjectWeb/files/upload',
+        url: '/CouponProjectWeb/uploads',
         type: 'POST',
         data: data,
         cache: false,
@@ -20,7 +21,7 @@ function uploadFile(file,saveAs)
         success: function(data, textStatus, jqXHR)
         {
         	console.log('uploadFile done: ' + data);
-        	alert('uploadFile done : ' + data); 
+        	//alert('uploadFile done : ' + data); 
         },
         error: function(jqXHR, textStatus, errorThrown)
         {
@@ -32,10 +33,6 @@ function uploadFile(file,saveAs)
         }
     });
 }
-
-//function setSaveAs() {
-//	document.getElementById("saveAs").value = getSelectedFileName();
-//}
 
 function isFileSelected() {
 	var files = document.getElementById("theFile").files;

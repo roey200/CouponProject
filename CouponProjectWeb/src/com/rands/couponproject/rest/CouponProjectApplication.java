@@ -7,7 +7,6 @@ import com.rands.couponproject.rest.services.AdminService;
 import com.rands.couponproject.rest.services.CompanyService;
 import com.rands.couponproject.rest.services.CustomerService;
 import com.rands.couponproject.rest.services.LoginLogOutService;
-import com.rands.couponproject.rest.services.UploadService;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,8 +30,7 @@ public class CouponProjectApplication extends Application {
         classes.add(CompanyService.class);
         classes.add(CustomerService.class);
 
-        classes.add(UploadService.class);
-        
+   
         // need to add ExceptionMapper class as well
         classes.add(CouponProjectExceptionMapper.class);        
 

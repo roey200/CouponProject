@@ -35,22 +35,23 @@
 	</servlet-mapping>
 
 	<servlet>
-		<servlet-name>UploadServlet</servlet-name>
-		<servlet-class>com.rands.couponproject.upload.UploadServlet</servlet-class>
+		<servlet-name>UploadDownloadServlet</servlet-name>
+		<servlet-class>com.rands.couponproject.upload.UploadDownloadServlet</servlet-class>
 
 		<init-param>
 			<param-name>uploadDir</param-name>
-			<param-value>uploads</param-value>
+			<!-- <param-value>uploads</param-value> -->
+			<param-value>c:\users\oded\uploads</param-value>
 		</init-param>
 		
 		<load-on-startup>1</load-on-startup>
 
 	</servlet>
-
+	
 	<!-- 	    
 	<servlet-mapping>
-		<servlet-name>FileUploadServletNew</servlet-name>
-		<url-pattern>/files/*</url-pattern>
+		<servlet-name>UploadDownloadServlet</servlet-name>
+		<url-pattern>/uploads/*</url-pattern>
 	</servlet-mapping>
 	-->	
 	    

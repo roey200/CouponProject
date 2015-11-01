@@ -289,6 +289,7 @@ app.controller('CouponController',['CompanyService','$window', function(CompanyS
 	this.saveChanges = function() {
 		//alert('saveChanges');
 		//doUpload();
+		
 		this.refreshCount++;
 		
 		if (angular.isNumber(this.indx)) {

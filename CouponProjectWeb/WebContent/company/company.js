@@ -96,7 +96,7 @@ app.controller('CompanyController',['CompanyService','$window', function(Company
 
 	};
 	
-	/* refresh : refreshes the coupons list (by calling getCoupons).
+	/* refresh : refreshes the company info
 	 */
 	this.refresh = function() {
 		//alert("refresh");
@@ -118,7 +118,6 @@ app.controller('CompanyController',['CompanyService','$window', function(Company
 app.controller('CouponController',['CompanyService','$window', function(CompanyService,$window) {
 //app.controller('CouponController',['CompanyService','$window', function(CompanyService,$window) {
 	
-	this.refresh = 0;
 	// coupon fields
 	this.id = 0;
 	this.title = '';
@@ -172,6 +171,7 @@ app.controller('CouponController',['CompanyService','$window', function(CompanyS
 	/* refresh : refreshes the coupons list (by calling getCoupons... ).
 	 */
 	this.refresh = function() {
+		alert('refresh');
 		this.couponType = '';
 		this.couponPrice = '';
 		this.couponEndDate = '';
@@ -183,7 +183,7 @@ app.controller('CouponController',['CompanyService','$window', function(CompanyS
 	}
 	
 	this.search = function() {
-		
+		alert('search');
 		if (this.couponType.length) {
 			//alert('serach by type ' + this.couponType);
 			CompanyService.getCouponsByType(this,this.couponType);
@@ -283,7 +283,7 @@ app.controller('CouponController',['CompanyService','$window', function(CompanyS
 	 */
 	this.saveChanges = function() {
 		//alert('saveChanges');
-		this.refresh++;
+		//this.refreshCount++;
 		//doUpload();
 
 		if (!this.image.length) {
@@ -417,11 +417,11 @@ app.service('CompanyService', ['$http' ,function($http) {
 	
 	// getCoupons : gets all the coupons that the company bought. 
 	this.getCoupons = function(ctrl) {
-		//alert('getCoupons');
+		alert('getCoupons');
 		$http({
 			method: 'GET',
 			url: '/CouponProjectWeb/rest/company/coupons',
-			 //params: { 'preventCaching': new Date().getTime() }
+			params: { 'preventCaching': new Date().getTime() }
 
 
 		})

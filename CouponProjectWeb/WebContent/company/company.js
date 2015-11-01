@@ -117,7 +117,7 @@ app.controller('CompanyController',['CompanyService','$window', function(Company
 
 app.controller('CouponController',['CompanyService','$window', function(CompanyService,$window) {
 //app.controller('CouponController',['CompanyService','$window', function(CompanyService,$window) {
-	
+
 	// coupon fields
 	this.id = 0;
 	this.title = '';
@@ -131,6 +131,7 @@ app.controller('CouponController',['CompanyService','$window', function(CompanyS
 	
 	this.coupons = [];
 	this.couponTypes = [];
+	this.indx = '';
 	
 	Object.defineProperty(this,'couponType', { // clear price and couponEndDate when type is set
 		  get: function() {
@@ -171,7 +172,7 @@ app.controller('CouponController',['CompanyService','$window', function(CompanyS
 	/* refresh : refreshes the coupons list (by calling getCoupons... ).
 	 */
 	this.refresh = function() {
-		alert('refresh');
+		//alert('refresh');
 		this.couponType = '';
 		this.couponPrice = '';
 		this.couponEndDate = '';
@@ -183,7 +184,7 @@ app.controller('CouponController',['CompanyService','$window', function(CompanyS
 	}
 	
 	this.search = function() {
-		alert('search');
+		//alert('search');
 		if (this.couponType.length) {
 			//alert('serach by type ' + this.couponType);
 			CompanyService.getCouponsByType(this,this.couponType);
@@ -213,7 +214,9 @@ app.controller('CouponController',['CompanyService','$window', function(CompanyS
 	this.create = false;
 	this.edit = true;
 	this.error = false;
-	this.incomplete = false; 
+	this.incomplete = false;
+	
+	this.refreshCount = 0;
 
 	/* editCoupon : handles the coupon fields.
 	 * when the Create new Coupon button is clicked we call this function with 'new' as the parameter.
@@ -221,6 +224,8 @@ app.controller('CouponController',['CompanyService','$window', function(CompanyS
 	 * the create field marks the requested operation (create/update).
 	 */
 	this.editCoupon = function(indx) {
+		this.indx = indx;
+		
 		if ( indx == 'new') { // the Create new Coupon button was clicked
 			this.create = true;
 			this.edit = true;
@@ -283,8 +288,12 @@ app.controller('CouponController',['CompanyService','$window', function(CompanyS
 	 */
 	this.saveChanges = function() {
 		//alert('saveChanges');
-		//this.refreshCount++;
 		//doUpload();
+		this.refreshCount++;
+		
+		if (angular.isNumber(this.indx)) {
+			this.coupons[this.indx].image = ''; // so that the image will be refreshed
+		}
 
 		if (!this.image.length) {
 			this.image = getSelectedFileName();
@@ -417,7 +426,7 @@ app.service('CompanyService', ['$http' ,function($http) {
 	
 	// getCoupons : gets all the coupons that the company bought. 
 	this.getCoupons = function(ctrl) {
-		alert('getCoupons');
+		//alert('getCoupons');
 		$http({
 			method: 'GET',
 			url: '/CouponProjectWeb/rest/company/coupons',

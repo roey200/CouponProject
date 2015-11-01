@@ -73,8 +73,8 @@
 				-->
 				<td style="white-space:nowrap;">{{ coupon.startDate | date:'yyyy-MM-dd' }}</td>
 				<td style="white-space:nowrap;">{{ coupon.endDate | date:'yyyy-MM-dd' }}</td>
-				<!--<td><img id="theImage" ng-src="{{'/CouponProjectWeb/uploads/' + coupon.image + '#' + refreshCount}}" alt="no image" title="{{ coupon.image }}" onError="this.onerror=null;this.src='/CouponProjectWeb/no_image.png';" style="width:50px;height:30px;"></td> -->
-				<td><img id="theImage" ng-src="{{'/CouponProjectWeb/uploads/' + coupon.image}}" alt="no image" title="{{ coupon.image }}" onError="this.onerror=null;this.src='/CouponProjectWeb/no_image.png';" style="width:50px;height:30px;"></td>
+				<td><img ng-src="{{'/CouponProjectWeb/uploads/' + coupon.image + '?r=' + couponController.refreshCount }}" alt="no image" title="{{ coupon.image }}" onError="this.onerror=null;this.src='/CouponProjectWeb/no_image.png';" style="width:50px;height:30px;"></td>
+				<!-- <td><img ng-src="{{'/CouponProjectWeb/uploads/' + coupon.image}}" alt="no image" title="{{ coupon.image }}" onError="this.onerror=null;this.src='/CouponProjectWeb/no_image.png';" style="width:50px;height:30px;"></td> -->
 				<!-- <td>{{ coupon.image }}</td>  -->
 				<td>{{ coupon.massage }}</td>
 				<td>{{ coupon.price }}</td>

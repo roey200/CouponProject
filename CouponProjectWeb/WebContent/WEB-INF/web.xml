@@ -41,7 +41,7 @@
 		<init-param>
 			<param-name>uploadDir</param-name>
 			<!-- <param-value>uploads</param-value> -->
-			<param-value>c:\users\oded\uploads</param-value>
+			<param-value>${USERPROFILE}\uploads</param-value>
 		</init-param>
 		
 		<load-on-startup>1</load-on-startup>

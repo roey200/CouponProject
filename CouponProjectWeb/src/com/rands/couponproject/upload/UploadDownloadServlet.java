@@ -24,6 +24,8 @@ import javax.servlet.http.Part;
 
 import org.apache.log4j.Logger;
 
+import com.rands.couponproject.utils.Utils;
+
 // The @MultipartConfig annotation indicates that the servlet expects requests to made using the multipart/form-data MIME type.
 @WebServlet(name = "UploadDownloadServlet", urlPatterns = { "/uploads/*" }
 		, initParams = { @WebInitParam(name = "uploadDir", value = "uploads"), @WebInitParam(name = "myParam2", value = "222") }
@@ -67,6 +69,7 @@ public class UploadDownloadServlet extends HttpServlet {
 	
 	private File getUploadDir(HttpServletRequest request,boolean create) {
 		uploadDir = getInitParameter("uploadDir");
+		uploadDir = Utils.expandEnvVars(uploadDir);
 	    logger.debug("uploadDir = " + uploadDir);
 	    
 		// gets absolute path of the web application

@@ -106,10 +106,11 @@ public class UploadDownloadServlet extends HttpServlet {
 		String saveAs = getPartData(request.getPart("saveas"));
 		
 		String name = part.getName();
-		String fileName = part.getSubmittedFileName();
+		String submittedFileName = part.getSubmittedFileName();
 		String contentType = part.getContentType();
+		String fileName = Paths.get(submittedFileName).getFileName().toString();
 		
-		logger.debug("part name=" + name + " context type=" + contentType + " SubmittedFileName=" + fileName);
+		logger.debug("part name=" + name + " context type=" + contentType + " SubmittedFileName=" + submittedFileName + " fileName=" + fileName);
 
         String uploadFilePath = getUploadDir(request, true).getAbsolutePath();
 

@@ -76,6 +76,7 @@ public class AuthenticationFilter implements Filter {
         		return;
         	}
         	
+        	// else redirect to the login page 
            	logIt("AuthenticationFilter : redirecting to login page");
    			String loginPage = "/login.html";
     			
@@ -83,7 +84,14 @@ public class AuthenticationFilter implements Filter {
    			return;
         }
 		// proceed with the request
-
+        if (!isAuthorized(httpRequest)) {
+        	logIt("AuthenticationFilter : Unauthorized request");
+        	String unauthorizedPage = "/unauthorized.html";
+        	
+    		httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+   			httpResponse.sendRedirect(httpRequest.getContextPath() + unauthorizedPage);
+    		return;        	
+        }
 		// pass the request along the filter chain
 		chain.doFilter(request, response);
 		
@@ -102,31 +110,66 @@ public class AuthenticationFilter implements Filter {
 	}
 
 	/**
+	 * isRestServiceRequest : checks checks if the incoming request is for a login/logout page/rest web service
+	 * note that all the rest web services in this web application are "under" the /rest path.
+	 * @param httpRequest
+	 * @return true if the incoming request is for a login/logout page/rest web service, false otherwise
+	 */
+	private boolean isLoginLogoutRequest(HttpServletRequest httpRequest) {
+		String uri = httpRequest.getRequestURI();
+		if (uri.contains("/login")){ // this is a login request (assume /login.html or /rest/login)
+			return true;
+		}
+		if (uri.contains("/logout")){ // this is a logout request
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * isAuthenticationRequired : checks if the incoming request may proceed or not.
 	 * the incoming request may proceed, if it is a request for authentication or if it was already authenticated.
 	 * @param httpRequest
 	 * @return true if authentication is required, false otherwise (the request may proceed)
 	 */
 	private boolean isAuthenticationRequired(HttpServletRequest httpRequest) {
-		
-		if (httpRequest.getRequestURI().contains("/login")){ // this is a login request, let it proceed
+		if (isLoginLogoutRequest(httpRequest))
 			return false;
-		}
-		if (httpRequest.getRequestURI().contains("/logout")){ // this is a logout request, let it proceed
-			return false;
-		}
-//		if (httpRequest.getRequestURI().contains("/upload")){ // for testing
-//			return false;
-//		}
 		
 		// check if it was already authenticated
 		try {
 			AuthUtils.getCredentials(CouponClientFacade.class, httpRequest);
-		} catch (Exception e) {
+		} catch (Exception e) { // not authenticated
 			return true;
 		}
 		
 		return false; // let it proceed
+	}
+	
+	/**
+	 * isAuthorized : checks if the incoming request may proceed or not.
+	 * the incoming request may proceed, if it had passed authentication and if the 'client' is allowed to access the requested url. 
+	 * @param httpRequest
+	 * @return true if authentication is required, false otherwise (the request may proceed)
+	 */	
+	private boolean isAuthorized(HttpServletRequest httpRequest) {
+		String path = httpRequest.getServletPath();
+		if (path.lastIndexOf('/') == 0) // will account for "1st level" pages, rest and uploads requests 
+			return true; 
+		
+		// now check if the requested url starts with the client type 
+		String clientType = null;
+		try {
+			clientType = AuthUtils.getCredentials(CouponClientFacade.class, httpRequest).getClientType();
+		} catch (Exception e) {
+			return false;
+		}
+		
+		if (path.startsWith(clientType, 1)) // skip the /
+			return true;
+		
+		logger.info("Unauthorized " + clientType + " " +  httpRequest.getRequestURI());
+		return false;
 	}
 	
 	@Override

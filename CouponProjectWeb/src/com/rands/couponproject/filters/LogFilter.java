@@ -75,14 +75,6 @@ public class LogFilter implements Filter {
 		if (contentLength > MAX_CONTENT_LEN_TO_LOG)
 			logRequestBody = false; // MultiReadHttpServletRequest can't handle long requests
 
-		if (logRequestBody) {
-			request = new MultiReadHttpServletRequest((HttpServletRequest) request);
-		}
-
-		if (logResponseBody) {
-			response = new MultiReadHttpServletResponse((HttpServletResponse) response);
-		}		
-
 		// the incoming direction (request)
 		try {
 			if (logRequest)
@@ -168,12 +160,7 @@ public class LogFilter implements Filter {
 		}
 
 		//if (logRequestBody) {
-		if (r instanceof MultiReadHttpServletRequest) {
-			String body = ((MultiReadHttpServletRequest)r).getContent();
-			
-			if (null != body)
-				logIt("<< Body {" + body + "}");
-		}
+
 	}
 
 	private void logParts(HttpServletRequest r) {
@@ -227,31 +214,8 @@ public class LogFilter implements Filter {
 		}
 		
 		//if (logResponseBody) {
-		if (r instanceof MultiReadHttpServletResponse) {
-			String body = ((MultiReadHttpServletResponse)r).getContent();
 
-			if (null != body)
-				logIt("<< Body {" + body + "}");
-		}		
 	}
-	
-//	private String extractBody(HttpServletRequest request) {
-//		String method = request.getMethod().toUpperCase();
-//		if ("POST".equals(method) || "PUT".equals(method) ) {
-//			try {
-//				// wrap the request in order to read the inputstream multiple times
-//			    MultiReadHttpServletRequest multiReadRequest = new MultiReadHttpServletRequest(request);
-//
-//			    //use multiReadRequest.getInputStream(); or multiReadRequest.getReader();
-//				Scanner s = new Scanner(multiReadRequest.getInputStream(), "UTF-8").useDelimiter("\\A");
-//				return s.hasNext() ? s.next() : "";
-//			} catch (Exception e) {
-//
-//			}
-//		}
-//		return null;
-//
-//	}
 	
 	private boolean isMultiPart(HttpServletRequest request) {
 		String contentType = request.getContentType();

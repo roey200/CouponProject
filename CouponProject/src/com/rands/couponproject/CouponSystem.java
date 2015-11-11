@@ -1,5 +1,7 @@
 package com.rands.couponproject;
 
+import java.sql.Connection;
+
 import org.apache.log4j.Logger;
 
 import com.rands.couponproject.exceptions.CouponProjectException.LoginException;
@@ -8,6 +10,7 @@ import com.rands.couponproject.facede.CompanyFacade;
 import com.rands.couponproject.facede.CouponClientFacade;
 import com.rands.couponproject.facede.CustomerFacade;
 import com.rands.couponproject.model.ClientType;
+import com.rands.couponproject.utils.Utils;
 
 public class CouponSystem {
 
@@ -42,6 +45,8 @@ public class CouponSystem {
 	DailyCouponExpirationTask dailyTask=null;
 	// the private constructor
 	private CouponSystem() {
+		createDataBase();
+		
 		dailyTask = new DailyCouponExpirationTask();
 		dailyTask.start();
 	}
@@ -96,4 +101,26 @@ public class CouponSystem {
 	public void setDailyTaskSleepTime(long sleepTime) {
 		dailyTask.setSleepTime(sleepTime);
 	}
+	
+	/**
+	 * createDataBase - creates the database tables from the scrapbook file
+	 */
+	private void createDataBase() {
+		System.out.println("Creating the database");
+		Connection conn = null;
+		try {
+			conn = ConnectionPool.getInstance().getConnection();
+			Utils.executeSqlScript(conn, "scrapbook.sql");
+		} catch (Exception e) {
+			logger.error("createDataBase failed : " + e.toString());
+			return;
+		} finally {
+			try {
+				ConnectionPool.getInstance().returnConnection(conn);
+			} catch (Exception e) {
+			}
+		}
+		System.out.println("Creating the database done");
+
+	}	
 }

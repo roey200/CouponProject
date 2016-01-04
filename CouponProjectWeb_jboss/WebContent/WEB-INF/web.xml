@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+	<display-name>CouponProjectApplication</display-name>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+	
+  <context-param>
+    <param-name>resteasy.scan</param-name>
+    <param-value>true</param-value>
+  </context-param>
+  <context-param>
+    <param-name>resteasy.servlet.mapping.prefix</param-name>
+    <param-value>/rest</param-value>
+  </context-param>
+  <listener>
+    <listener-class>
+            org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap
+        </listener-class>
+  </listener>	
+
+    <servlet>
+    <servlet-name>Resteasy</servlet-name>
+    <servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
+    <init-param>
+      <param-name>javax.ws.rs.Application</param-name>
+      <param-value>com.rands.couponproject.rest.CouponProjectApplication</param-value>
+    </init-param>
+  </servlet>
+  
+
+
+	<servlet-mapping>
+		<servlet-name>Resteasy</servlet-name>
+		<url-pattern>/rest/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>UploadDownloadServlet</servlet-name>
+		<servlet-class>com.rands.couponproject.upload.UploadDownloadServlet</servlet-class>
+
+		<init-param>
+			<param-name>uploadDir</param-name>
+			<!-- <param-value>uploads</param-value> -->
+			<param-value>${USERPROFILE}\uploads</param-value>
+		</init-param>
+		
+		<load-on-startup>1</load-on-startup>
+
+	</servlet>
+	
+	<!-- 	    
+	<servlet-mapping>
+		<servlet-name>UploadDownloadServlet</servlet-name>
+		<url-pattern>/uploads/*</url-pattern>
+	</servlet-mapping>
+	-->	
+	    
+	<listener>
+		<listener-class>com.rands.couponproject.rest.CouponpPojectContextListener</listener-class>
+	</listener>
+
+	<context-param>
+		<param-name>dailytask.sleep</param-name>
+		<param-value>10</param-value>
+	</context-param>
+	<context-param>
+		<param-name>createDB</param-name>
+		<param-value>false</param-value>
+	</context-param>
+
+	<filter>
+		<filter-name>LogFilter</filter-name>
+		<filter-class>com.rands.couponproject.filters.LogFilter</filter-class>
+		<init-param>
+			<param-name>logRequest</param-name>
+			<param-value>headers,parameters,cookies,body</param-value>
+		</init-param>
+		<init-param>
+			<param-name>logResponse</param-name>
+			<param-value>headers,body</param-value>
+		</init-param>
+	</filter>
+
+	<filter>
+		<filter-name>AuthenticationFilter</filter-name>
+		<filter-class>com.rands.couponproject.filters.AuthenticationFilter</filter-class>
+	</filter>
+
+
+	<filter-mapping>
+		<filter-name>LogFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>AuthenticationFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+
+</web-app>

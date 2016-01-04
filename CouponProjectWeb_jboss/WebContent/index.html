@@ -1,0 +1,27 @@
+<html>
+<head>
+<head>
+<script>
+
+function redirectToClientPage() {
+
+	var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", "/CouponProjectWeb/rest/clientType", false); // false for synchronous request
+    xmlHttp.send();
+    
+    if (xmlHttp.status === 200) { // redirect to client's page
+        var clientType = xmlHttp.responseText;
+        window.location.href = '/CouponProjectWeb/' + clientType + '/' + clientType + '.html';
+    } else {
+    	alert('redirectToClientPage failed status = ' + xmlHttp.status)
+    	window.location.href = '/CouponProjectWeb/login.html'; // redirect to the login page
+    }
+
+}
+redirectToClientPage();
+</script>
+<title>Redirect</title>
+</head>
+<body>
+</body>
+</html>
